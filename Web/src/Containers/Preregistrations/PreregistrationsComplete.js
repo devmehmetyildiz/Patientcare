@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PreregistrationsComplete from "../../Pages/Preregistrations/PreregistrationsComplete"
-import { handleCompletemodal, handleSelectedPatient, fillPatientnotification, CompletePatients } from '../../Redux/PatientSlice'
+import { fillPatientnotification, CompletePatients } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetStocks } from '../../Redux/StockSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
@@ -40,7 +40,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    handleCompletemodal, handleSelectedPatient, fillPatientnotification, CompletePatients, GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
+    fillPatientnotification, CompletePatients, GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
     GetStocktypes, GetStocktypegroups, GetUsers, GetFiles, GetUsagetypes, GetCostumertypes, GetPatienttypes, GetBeds, GetFloors, GetRooms
 }
 

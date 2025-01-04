@@ -5,9 +5,10 @@ import { Contentwrapper, PatientsDetailCard } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
 import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../Utils/Constants'
 
-export default function PreregistrationsCheck(props) {
+export default function PreregistrationsCancelCheck(props) {
+
   const {
-    CheckPatients,
+    CancelCheckPatients,
     Profile,
     Patients,
     Patientdefines,
@@ -122,7 +123,7 @@ export default function PreregistrationsCheck(props) {
       }}
       open={open}
     >
-      <Modal.Header>{t('Pages.Preregistrations.Page.Modal.CheckHeader')}</Modal.Header>
+      <Modal.Header>{t('Pages.Preregistrations.Page.Modal.CancelCheckHeader')}</Modal.Header>
       <PatientsDetailCard
         record={record}
         Profile={Profile}
@@ -196,7 +197,7 @@ export default function PreregistrationsCheck(props) {
           {t('Common.Button.Goback')}
         </Button>
         <Button
-          content={t('Common.Button.Check')}
+          content={t('Common.Button.CancelCheck')}
           labelPosition='right'
           icon='checkmark'
           className=' !bg-[#2355a0] !text-white'
@@ -215,9 +216,9 @@ export default function PreregistrationsCheck(props) {
                 Uuid
               } = record || {}
 
-              CheckPatients({
+              CancelCheckPatients({
                 Uuid,
-                Checkinfo: selectedinfo,
+                Cancelcheckinfo: selectedinfo,
                 CaseID: selectedcase,
                 Isoninstitution: selectedIsoninstitution
               })

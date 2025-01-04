@@ -20,7 +20,7 @@ export default function PatienthealthcasesCreate(props) {
 
   const Patientsoptions = (Patients?.list || []).filter(u => u.Isactive && u.Isalive && !u.Isleft && !u.Ispreregistration).map(patient => {
     const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-    return { key: patient.Uuid, text: `${patientdefine.Firstname} ${patientdefine.Lastname}`, value: patient.Uuid }
+    return { key: patient.Uuid, text: `${patientdefine?.Firstname} ${patientdefine?.Lastname}`, value: patient.Uuid }
   })
 
   const Patienthealthcasedefinesoptions = (Patienthealthcasedefines?.list || []).filter(u => u.Isactive).map(define => {

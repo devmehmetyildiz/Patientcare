@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
@@ -6,128 +6,39 @@ import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
 import PreregistrationsPrepare from '../../Containers/Preregistrations/PreregistrationsPrepare'
-export default class PreregistrationsEdit extends Component {
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
-  PAGE_NAME = 'PreregistrationsEdit'
+export default function PreregistrationsEdit(props) {
+  const PAGE_NAME = 'PreregistrationsEdit'
+  const { GetPatient, GetStocks, GetFiles, fillPatientnotification, EditPatients, match, history } = props
+  const { Stockdefines, Stocktypes, Patients, Files, Stocks, Profile } = props
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      isDatafetched: false,
-      selectedFiles: [],
-      selectedStocks: [],
-    }
+  const [fetched, setFetched] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [selectedStocks, setSelectedStocks] = useState([])
+  const { calculateRedirectUrl } = usePreviousUrl()
+
+  const context = useContext(FormContext)
+
+  const t = Profile?.i18n?.t
+
+  const { selected_record, isLoading } = Patients
+  const setselectedFiles = (files) => {
+    setSelectedFiles([...files])
+  }
+  const setselectedStocks = (stocks) => {
+    setSelectedStocks([...stocks])
   }
 
-  componentDidMount() {
-    const { GetPatient, GetStocks, GetFiles, match, history } = this.props
-    if (match.params.PatientID) {
-      GetPatient(match.params.PatientID)
-      GetStocks()
-      GetFiles()
-    } else {
-      history.push("/Preregistrations")
-    }
-  }
-
-  componentDidUpdate() {
-    const { Patients, Files, Stocks } = this.props
-    const { selected_record, isLoading } = Patients
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && !isLoading && !Files.isLoading && !Stocks.isLoading && !this.state.isDatafetched) {
-      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
-        return {
-          ...element,
-          key: Math.random(),
-          Usagetype: (element.Usagetype.split(',') || []).map(u => {
-            return u
-          })
-        }
-      });
-      var stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
-        return {
-          ...element,
-          key: Math.random()
-        }
-      });
-      this.setState({
-        isDatafetched: true,
-        selectedFiles: [...files] || [],
-        selectedStocks: (stocks || []).map(u => {
-          if (validator.isISODate(u.Skt)) {
-            return { ...u, Skt: Formatdate(u.Skt) }
-          } else {
-            return { ...u }
-          }
-        }),
-      })
-      this.context.setForm(this.PAGE_NAME,
-        {
-          ...selected_record,
-          [`Happensdate`]: Formatdate(selected_record?.Happensdate),
-          [`Approvaldate`]: Formatdate(selected_record?.Approvaldate),
-        })
-    }
-  }
-
-
-  render() {
-
-    const { Patients, history, Profile } = this.props
-    const t = Profile?.i18n?.t
-
-    const { isLoading } = Patients
-
-    return (
-      isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Preregistrations"}>
-                <Breadcrumb.Section>{t('Pages.Preregistrations.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Preregistrations.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <PreregistrationsPrepare
-              Preparestatus={'edit'}
-              PAGE_NAME={this.PAGE_NAME}
-              selectedFiles={this.state.selectedFiles}
-              selectedStocks={this.state.selectedStocks}
-              setselectedFiles={this.setselectedFiles}
-              setselectedStocks={this.setselectedStocks}
-              Profile={Profile}
-            />
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Preregistrations"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { fillPatientnotification, Patients, EditPatients, history, Profile, Stockdefines, Stocktypes } = this.props
     const t = Profile?.i18n?.t
-    const PatientdefinePagename = `${this.PAGE_NAME}-Patientdefine`
-    let patientdata = this.context.getForm(PatientdefinePagename)
-    let data = this.context.getForm(this.PAGE_NAME)
+    const PatientdefinePagename = `${PAGE_NAME}-Patientdefine`
+    let patientdata = context.getForm(PatientdefinePagename)
+    let data = context.getForm(PAGE_NAME)
     data.Patientdefine = patientdata
-    data.Stocks = this.state.selectedStocks
+    data.Stocks = selectedStocks
 
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
@@ -186,15 +97,96 @@ export default class PreregistrationsEdit extends Component {
         fillPatientnotification(error)
       })
     } else {
-      EditPatients({ data: { ...Patients.selected_record, ...data }, history, redirectUrl: "/Preregistrations", files: this.state.selectedFiles })
+      EditPatients({
+        data: { ...Patients.selected_record, ...data },
+        history,
+        redirectUrl: calculateRedirectUrl({ url: '/Preregistrations', usePrev: true }),
+        files: selectedFiles
+      })
     }
   }
 
-  setselectedFiles = (files) => {
-    this.setState({ selectedFiles: [...files] })
-  }
-  setselectedStocks = (stocks) => {
-    this.setState({ selectedStocks: [...stocks] })
-  }
+  useEffect(() => {
+    if (selected_record && validator.isObject(selected_record) && !Stocks.isLoading && !Files.isLoading && !fetched) {
+      var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random(),
+          Usagetype: (element.Usagetype.split(',') || []).map(u => {
+            return u
+          })
+        }
+      });
+      var stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+        return {
+          ...element,
+          key: Math.random()
+        }
+      });
+
+      setselectedFiles([...files] || [])
+      setselectedStocks((stocks || []).map(u => {
+        if (validator.isISODate(u.Skt)) {
+          return { ...u, Skt: Formatdate(u.Skt) }
+        } else {
+          return { ...u }
+        }
+      }))
+      setFetched(true)
+      context.setForm(PAGE_NAME,
+        {
+          ...selected_record,
+          [`Happensdate`]: Formatdate(selected_record?.Happensdate),
+          [`Approvaldate`]: Formatdate(selected_record?.Approvaldate),
+        })
+    }
+  }, [selected_record, Stocks, Files, fetched])
+
+  useEffect(() => {
+    if (match.params.PatientID) {
+      GetPatient(match.params.PatientID)
+      GetStocks()
+      GetFiles()
+    } else {
+      history.push("/Preregistrations")
+    }
+  }, [])
+
+  return (
+    <Pagewrapper dimmer isLoading={isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Preregistrations"}>
+            <Breadcrumb.Section>{t('Pages.Preregistrations.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Preregistrations.Page.CreateHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <PreregistrationsPrepare
+          Preparestatus={'edit'}
+          PAGE_NAME={PAGE_NAME}
+          selectedFiles={selectedFiles}
+          selectedStocks={selectedStocks}
+          setselectedFiles={setselectedFiles}
+          setselectedStocks={setselectedStocks}
+          Profile={Profile}
+        />
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Preregistrations"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={isLoading}
+          buttonText={t('Common.Button.Update')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper >
+  )
 }
-PreregistrationsEdit.contextType = FormContext

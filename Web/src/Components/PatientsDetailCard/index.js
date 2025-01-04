@@ -16,6 +16,7 @@ export default function PatientsDetailCard(props) {
 
     const [movementsOpen, setMovementsOpen] = useState(false)
     const {
+        record,
         usecontext,
         PAGE_NAME,
         Profile,
@@ -40,7 +41,7 @@ export default function PatientsDetailCard(props) {
     const t = Profile?.i18n?.t || null
     const context = useContext(FormContext)
     const [selectedfile, setSelectedfile] = useState(null)
-    const selected_record = usecontext ? context.getForm(PAGE_NAME) : Patients?.selected_record
+    const selected_record = usecontext ? context.getForm(PAGE_NAME) : record
     const {
         Uuid,
         PatientdefineID,
@@ -197,8 +198,8 @@ export default function PatientsDetailCard(props) {
                                         <Card.Meta>{`${(files || []).length} ${t('Pages.Preregistrations.DetailCard.Label.Filesprefix')}`}</Card.Meta>
                                         <Card.Description>
                                             <div className='w-full gap-2 justify-start items-start flex flex-col'>
-                                                {files.map(file => {
-                                                    return <div className='cursor-pointer flex flex-row'
+                                                {files.map((file, index) => {
+                                                    return <div key={index} className='cursor-pointer flex flex-row'
                                                         onClick={() => {
                                                             if (!usecontext) {
                                                                 setSelectedfile(file?.Uuid)

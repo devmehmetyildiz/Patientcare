@@ -2,19 +2,19 @@ import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
 export default function PreregistrationsDelete(props) {
-  const { Profile, Patients, DeletePreregisrations, handleDeletemodal, handleSelectedPatient, Patientdefines } = props
-  const { isDeletemodalopen, selected_record } = Patients
+ 
+  const { Profile, Patients, DeletePreregisrations, Patientdefines, open, setOpen, record, setRecord } = props
 
   const t = Profile?.i18n?.t
-  const patient = selected_record
+  const patient = record
   const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
   const patientName = `${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`
 
   return (
     <Modal
-      onClose={() => handleDeletemodal(false)}
-      onOpen={() => handleDeletemodal(true)}
-      open={isDeletemodalopen}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
     >
       <Modal.Header>{t('Pages.Preregistrations.Delete.Page.Header')}</Modal.Header>
       <Modal.Content image>
@@ -27,19 +27,20 @@ export default function PreregistrationsDelete(props) {
       </Modal.Content>
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleDeletemodal(false)
-          handleSelectedPatient({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Giveup')}
         </Button>
         <Button
+          loading={Patients.isLoading}
           content={t('Common.Button.Delete')}
           labelPosition='right'
           icon='checkmark'
           onClick={() => {
-            DeletePreregisrations(selected_record)
-            handleDeletemodal(false)
-            handleSelectedPatient({})
+            DeletePreregisrations(record)
+            setOpen(false)
+            setRecord(null)
           }}
           positive
         />

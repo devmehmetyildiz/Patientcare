@@ -1,81 +1,42 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Button } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import PreregistrationsPrepare from '../../Containers/Preregistrations/PreregistrationsPrepare'
-export default class PreregistrationsCreate extends Component {
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
-  PAGE_NAME = 'PreregistrationsCreate'
+export default function PreregistrationsCreate(props) {
+  const PAGE_NAME = 'PreregistrationsCreate'
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedFiles: [],
-      selectedStocks: [],
-    }
+  const { Patients, fillPatientnotification, AddPatients, history, Profile, closeModal, Stocktypes, Stockdefines } = props
+
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [selectedStocks, setSelectedStocks] = useState([])
+  const { calculateRedirectUrl } = usePreviousUrl()
+
+  const context = useContext(FormContext)
+
+  const t = Profile?.i18n?.t
+  const { isLoading } = Patients
+
+  const setselectedFiles = (files) => {
+    setSelectedFiles([...files])
+  }
+  const setselectedStocks = (stocks) => {
+    setSelectedStocks([...stocks])
   }
 
-  render() {
-
-    const { Patients, Profile, history, closeModal } = this.props
-
-    const t = Profile?.i18n?.t
-    const { isLoading } = Patients
-
-    return (
-      isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Preregistrations"}>
-                <Breadcrumb.Section>{t('Pages.Preregistrations.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Preregistrations.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <PreregistrationsPrepare
-              Preparestatus={2}
-              PAGE_NAME={this.PAGE_NAME}
-              selectedFiles={this.state.selectedFiles}
-              selectedStocks={this.state.selectedStocks}
-              setselectedFiles={this.setselectedFiles}
-              setselectedStocks={this.setselectedStocks}
-              Profile={Profile}
-            />
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Preregistrations"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { fillPatientnotification, AddPatients, history, Profile, closeModal, Stocktypes, Stockdefines } = this.props
     const t = Profile?.i18n?.t
-    const PatientdefinePagename = `${this.PAGE_NAME}-Patientdefine`
-    let patientdata = this.context.getForm(PatientdefinePagename)
-    let data = this.context.getForm(this.PAGE_NAME)
+    const PatientdefinePagename = `${PAGE_NAME}-Patientdefine`
+    let patientdata = context.getForm(PatientdefinePagename)
+    let data = context.getForm(PAGE_NAME)
     data.Patientdefine = patientdata
-    data.Stocks = this.state.selectedStocks
-    console.log('data: ', data);
+    data.Stocks = selectedStocks
 
     if (!validator.isISODate(data.Approvaldate)) {
       data.Approvaldate = null
@@ -135,16 +96,52 @@ export default class PreregistrationsCreate extends Component {
         fillPatientnotification(error)
       })
     } else {
-      AddPatients({ data, history, redirectUrl: "/Preregistrations", closeModal, files: this.state.selectedFiles })
+      AddPatients({
+        data,
+        history,
+        redirectUrl: calculateRedirectUrl({ url: '/Preregistrations', usePrev: true }),
+        closeModal,
+        files: selectedFiles
+      })
     }
   }
 
-  setselectedFiles = (files) => {
-    this.setState({ selectedFiles: [...files] })
-  }
-  setselectedStocks = (stocks) => {
-    this.setState({ selectedStocks: [...stocks] })
-  }
-
+  return (
+    <Pagewrapper dimmer isLoading={isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Preregistrations"}>
+            <Breadcrumb.Section>{t('Pages.Preregistrations.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Preregistrations.Page.CreateHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <PreregistrationsPrepare
+          Preparestatus={2}
+          PAGE_NAME={PAGE_NAME}
+          selectedFiles={selectedFiles}
+          selectedStocks={selectedStocks}
+          setselectedFiles={setselectedFiles}
+          setselectedStocks={setselectedStocks}
+          Profile={Profile}
+        />
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Preregistrations"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={isLoading}
+          buttonText={t('Common.Button.Create')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper >
+  )
 }
-PreregistrationsCreate.contextType = FormContext

@@ -8,8 +8,6 @@ import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../Utils
 
 export default function PreregistrationsComplete(props) {
   const {
-    handleCompletemodal,
-    handleSelectedPatient,
     fillPatientnotification,
     CompletePatients,
     Profile,
@@ -45,23 +43,26 @@ export default function PreregistrationsComplete(props) {
     GetCostumertypes,
     GetFloors,
     GetRooms,
-    GetBeds
+    GetBeds,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
-
-  const { isCompletemodalopen, selected_record } = Patients
 
   const {
     CaseID,
     Uuid,
     Approvaldate,
     Isoninstitution
-  } = selected_record
+  } = record || {}
 
   const [selectedcase, setSelectedcase] = useState(CaseID)
   const [selectedapprovaldate, setSelectedapprovaldate] = useState(Formatdate(Approvaldate))
   const [selectedinfo, setSelectedinfo] = useState(null)
   const [selectedbed, setSelectedbed] = useState(null)
   const [selectedIsoninstitution, setSelectedIsoninstitution] = useState(Isoninstitution)
+
   const t = Profile?.i18n?.t || null
 
   const isLoadingstatus =
@@ -79,10 +80,10 @@ export default function PreregistrationsComplete(props) {
     Usagetypes.isLoading ||
     Floors.isLoading ||
     Rooms.isLoading ||
-    Beds.isLoading 
+    Beds.isLoading
 
   useEffect(() => {
-    if (isCompletemodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetPatientdefines()
       GetStocks()
       GetStockdefines()
@@ -100,12 +101,12 @@ export default function PreregistrationsComplete(props) {
       GetRooms()
       GetBeds()
     }
-  }, [isCompletemodalopen])
+  }, [open])
 
 
   const Notfound = t('Common.NoDataFound')
 
-  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === record?.Uuid).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -146,7 +147,7 @@ export default function PreregistrationsComplete(props) {
   return (
     <Modal
       onClose={() => {
-        handleCompletemodal(false)
+        setOpen(false)
         setSelectedcase(null)
         setSelectedinfo(null)
         setSelectedIsoninstitution(false)
@@ -155,12 +156,13 @@ export default function PreregistrationsComplete(props) {
         setSelectedcase(null)
         setSelectedinfo(null)
         setSelectedIsoninstitution(false)
-        handleCompletemodal(true)
+        setOpen(true)
       }}
-      open={isCompletemodalopen}
+      open={open}
     >
       <Modal.Header>{t('Pages.Preregistrations.Complete.Page.ModalHeader')}</Modal.Header>
       <PatientsDetailCard
+        record={record}
         Profile={Profile}
         Patients={Patients}
         Patientdefines={Patientdefines}
@@ -263,15 +265,16 @@ export default function PreregistrationsComplete(props) {
       </Modal.Content>
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleCompletemodal(false)
+          setOpen(false)
           setSelectedcase(null)
           setSelectedinfo(null)
           setSelectedIsoninstitution(false)
-          handleSelectedPatient({})
+          setRecord(null)
         }}>
           {t('Common.Button.Goback')}
         </Button>
         <Button
+          loading={Patients.isLoading}
           content={t('Common.Button.Complete')}
           labelPosition='right'
           icon='checkmark'
@@ -298,22 +301,28 @@ export default function PreregistrationsComplete(props) {
                 fillPatientnotification(error)
               })
             } else {
+
               const {
                 Uuid
-              } = selected_record
+              } = record || {}
+
               CompletePatients({
-                Uuid,
-                Completeinfo: selectedinfo,
-                CaseID: selectedcase,
-                Isoninstitution: selectedIsoninstitution,
-                Approvaldate: selectedapprovaldate,
-                FloorID: floor?.Uuid,
-                RoomID: room?.Uuid,
-                BedID: bed?.Uuid,
-                isTransferstocks: false
+                data: {
+                  Uuid,
+                  Completeinfo: selectedinfo,
+                  CaseID: selectedcase,
+                  Isoninstitution: selectedIsoninstitution || false,
+                  Approvaldate: selectedapprovaldate,
+                  FloorID: floor?.Uuid,
+                  RoomID: room?.Uuid,
+                  BedID: bed?.Uuid,
+                  isTransferstocks: false
+                },
+                onSuccess: () => {
+                  setOpen(false)
+                  setRecord(null)
+                }
               })
-              handleCompletemodal(false)
-              handleSelectedPatient({})
             }
           }}
           positive

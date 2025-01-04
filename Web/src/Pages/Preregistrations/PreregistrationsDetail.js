@@ -21,7 +21,6 @@ export default function PreregistrationsDetail(props) {
     Costumertypes,
     Patienttypes,
     Usagetypes,
-    handleDetailmodal,
     GetPatientdefines,
     GetStocks,
     GetStockdefines,
@@ -35,17 +34,19 @@ export default function PreregistrationsDetail(props) {
     GetUsagetypes,
     GetPatienttypes,
     GetCostumertypes,
-    handleSelectedPatient,
-    fillPatientnotification
+    fillPatientnotification,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
 
 
-  const { isDetailmodalopen, selected_record } = Patients
-  const { Uuid } = selected_record
+  const { Uuid } = record || {}
   const t = Profile?.i18n?.t || null
 
   useEffect(() => {
-    if (isDetailmodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetPatientdefines()
       GetStocks()
       GetStockdefines()
@@ -60,9 +61,9 @@ export default function PreregistrationsDetail(props) {
       GetCostumertypes()
       GetPatienttypes()
     }
-  }, [isDetailmodalopen])
+  }, [open])
 
-  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === record?.Uuid).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -82,12 +83,13 @@ export default function PreregistrationsDetail(props) {
 
   return (
     <Modal
-      onClose={() => handleDetailmodal(false)}
-      onOpen={() => handleDetailmodal(true)}
-      open={isDetailmodalopen}
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
     >
       <Modal.Header>{t('Pages.Preregistrations.Detail.Page.Header')}</Modal.Header>
       <PatientsDetailCard
+        record={record}
         Profile={Profile}
         Patients={Patients}
         Patientdefines={Patientdefines}
@@ -109,8 +111,8 @@ export default function PreregistrationsDetail(props) {
       />
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleDetailmodal(false)
-          handleSelectedPatient({})
+          setOpen(false)
+          setRecord(null)
         }}>
           {t('Common.Button.Goback')}
         </Button>

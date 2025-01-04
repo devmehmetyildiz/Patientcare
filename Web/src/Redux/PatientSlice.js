@@ -340,7 +340,7 @@ export const CancelApprovePatients = createAsyncThunk(
 
 export const CompletePatients = createAsyncThunk(
     'Patients/CompletePatients',
-    async (data, { dispatch, getState }) => {
+    async ({ data, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
@@ -351,6 +351,7 @@ export const CompletePatients = createAsyncThunk(
                 code: t('Common.Code.Complete'),
                 description: t('Redux.Patients.Messages.Complete'),
             }));
+            onSuccess && onSuccess()
             return response?.data?.list || [];
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);

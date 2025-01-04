@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Checkbox, Dimmer, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, Profilephoto } from '../../Components'
+import { Breadcrumb, Button, Checkbox, Grid, GridColumn, Icon, List, Loader, Popup, Tab } from 'semantic-ui-react'
+import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper, Profilephoto } from '../../Components'
 import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, GENDER_OPTION_MEN } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
 import PatientsLeftModal from '../../Containers/Patients/PatientsLeftModal'
@@ -18,6 +18,7 @@ import PatientsMakeactiveModal from '../../Containers/Patients/PatientsMakeactiv
 import PatientsEntereventModal from '../../Containers/Patients/PatientsEntereventModal'
 import PatientsEnterhealthcaseModal from '../../Containers/Patients/PatientsEnterhealthcaseModal'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import validator from '../../Utils/Validator'
 
 export default function Patients(props) {
 
@@ -27,44 +28,21 @@ export default function Patients(props) {
 
   const { isLoading } = Patients
 
-  const Columns = [
-    { Header: t('Common.Column.Id'), accessor: 'Id' },
-    { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
-    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row), Title: true },
-    { Header: t('Pages.Patients.Column.Gender'), accessor: row => genderCellhandler(row) },
-    { Header: t('Pages.Patients.Column.Approvaldate'), accessor: row => dateCellhandler(row?.Approvaldate) },
-    { Header: t('Pages.Patients.Column.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), key: 'left' },
-    { Header: t('Pages.Patients.Column.Leftinfo'), accessor: 'Leftinfo', key: 'left' },
-    { Header: t('Pages.Patients.Column.Deathdate'), accessor: row => dateCellhandler(row?.Deathdate), key: 'dead' },
-    { Header: t('Pages.Patients.Column.Deadinfo'), accessor: 'Deadinfo', key: 'dead' },
-    { Header: t('Pages.Patients.Column.Floor'), accessor: row => floorCellhandler(row?.FloorID), Lowtitle: true, Withtext: true, key: 'pass' },
-    { Header: t('Pages.Patients.Column.Room'), accessor: row => roomCellhandler(row?.RoomID), Lowtitle: true, Withtext: true, key: 'pass' },
-    { Header: t('Pages.Patients.Column.Bed'), accessor: row => bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true, key: 'pass' },
-    { Header: t('Pages.Patients.Column.Case'), accessor: row => caseCellhandler(row?.CaseID), Subtitle: true },
-    { Header: t('Pages.Patients.Column.Info'), accessor: 'Info' },
-    { Header: t('Pages.Patients.Column.Guardiannote'), accessor: 'Guardiannote' },
-    { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
-    { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
-    { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
-    { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.define'), accessor: 'define', disableProps: true },
-  ]
-
-  let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
-  let deadCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_DEATH).map(u => u.Uuid)
-  let leftCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
-
-  const list = (Patients.list || []).filter(u => u.Isactive && !u.Ispreregistration).map(item => {
-    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === item?.PatientdefineID)
-    return {
-      ...item,
-      define: <Link key={item?.Uuid} to={`/Patientdefines/${patientdefine?.Uuid}/edit`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
-    }
-  })
-
-  const passList = list.filter(u => (passCaselist || []).includes(u?.CaseID))
-  const deadList = list.filter(u => (deadCaselist || []).includes(u?.CaseID))
-  const leftList = list.filter(u => (leftCaselist || []).includes(u?.CaseID))
+  const [selectedRecords, setSelectedRecords] = useState([])
+  const [openMulti, setOpenMulti] = useState(false)
+  const [openhealthcase, setOpenhealthcase] = useState(false)
+  const [openaddmovement, setOpenaddmovement] = useState(false)
+  const [openinsertstock, setOpeninsertstock] = useState(false)
+  const [openreducestock, setOpenreducestock] = useState(false)
+  const [openeditplace, setOpeneditplace] = useState(false)
+  const [openeditcase, setOpeneditcase] = useState(false)
+  const [openentercash, setOpenentercash] = useState(false)
+  const [openstatus, setOpenstatus] = useState(false)
+  const [opendead, setOpendead] = useState(false)
+  const [openleft, setOpenleft] = useState(false)
+  const [openactive, setOpenactive] = useState(false)
+  const [opendetail, setOpendetail] = useState(false)
+  const [record, setRecord] = useState(null)
 
   const nameCellhandler = (row) => {
     const patient = row
@@ -109,27 +87,16 @@ export default function Patients(props) {
     }
   }
 
-  const floorCellhandler = (value) => {
-    if (Floors.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return `${(Floors.list || []).find(u => u.Uuid === value)?.Name || ''}`
-    }
-  }
-
-  const roomCellhandler = (value) => {
-    if (Rooms.isLoading) {
-      return <Loader size='small' active inline='centered' ></Loader>
-    } else {
-      return `${(Rooms.list || []).find(u => u.Uuid === value)?.Name || ''}`
-    }
-  }
 
   const bedCellhandler = (value) => {
-    if (Beds.isLoading) {
+    if (Beds.isLoading || Floors.isLoading || Rooms.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>
     } else {
-      return `${(Beds.list || []).find(u => u.Uuid === value)?.Name || ''}`
+      const bed = (Beds.list || []).find(u => u.Uuid === value)
+      const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
+      const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
+
+      return validator.isUUID(value) ? `${floor?.Name} - ${room?.Name} - ${bed?.Name}` : value
     }
   }
 
@@ -148,150 +115,63 @@ export default function Patients(props) {
     return null
   }
 
-  const tabOrder = [
-    'pass',
-    'dead',
-    'left',
-  ]
+  const renderView = ({ list, Columns, keys, initialConfig }) => {
 
-  const { activeTab, setActiveTab } = useTabNavigation({
-    history,
-    tabOrder,
-    mainRoute: 'Patients'
-  })
+    const searchbykey = (data, searchkeys) => {
+      let ok = false
+      searchkeys.forEach(key => {
 
-  useEffect(() => {
-    const {
-      GetPatients,
-      GetPatientdefines,
-      GetRooms,
-      GetBeds,
-      GetFloors,
-      GetCases,
-      GetStockdefines,
-      GetUsagetypes,
-      GetFiles
-    } = props
-    GetPatients()
-    GetPatientdefines()
-    GetRooms()
-    GetBeds()
-    GetFloors()
-    GetCases()
-    GetUsagetypes()
-    GetStockdefines()
-    GetFiles()
-  }, [])
+        if (!ok) {
+          if (data.includes(key)) {
+            ok = true
+          }
+        }
+      });
 
-  return (
-    <React.Fragment>
-      <Pagewrapper dimmer isLoading={isLoading}>
-        <Headerwrapper>
-          <Grid columns='2' >
-            <GridColumn width={8}>
-              <Breadcrumb size='big'>
-                <Link to={"/Patients"}>
-                  <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
-                </Link>
-              </Breadcrumb>
-            </GridColumn>
-          </Grid>
-        </Headerwrapper>
-        <Pagedivider />
-        <Contentwrapper>
-          <Tab
-            onTabChange={(_, { activeIndex }) => {
-              setActiveTab(activeIndex)
-            }}
-            activeIndex={activeTab}
-            className="w-full !bg-transparent"
-            panes={[
-              {
-                menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
-                pane: {
-                  key: 'pass',
-                  content: <PassPatientList
-                    Profile={Profile}
-                    list={passList}
-                    Columns={Columns}
-                    handleSelectedPatient={handleSelectedPatient}
-                    handleDetailmodal={handleDetailmodal}
-                  />
-                }
-              },
-              {
-                menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
-                pane: {
-                  key: 'dead',
-                  content: <DeadPatientList
-                    Profile={Profile}
-                    list={deadList}
-                    Columns={Columns}
-                    handleSelectedPatient={handleSelectedPatient}
-                    handleDetailmodal={handleDetailmodal}
-                  />
-                }
-              },
-              {
-                menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
-                pane: {
-                  key: 'left',
-                  content: <LeftPatientList
-                    Profile={Profile}
-                    list={leftList}
-                    Columns={Columns}
-                    handleSelectedPatient={handleSelectedPatient}
-                    handleDetailmodal={handleDetailmodal}
-                  />
-                }
-              },
-            ]}
-            renderActiveOnly={false}
-          />
-        </Contentwrapper>
-      </Pagewrapper>
-      <PatientsDetailModal />
-    </React.Fragment >
-  )
-}
+      return ok
+    }
 
-function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
+    const columns = Columns.filter(u => searchbykey((u?.keys || []), keys) || !(u?.keys))
 
-  const [selectedRecords, setSelectedRecords] = useState([])
-  const [openMulti, setOpenMulti] = useState(false)
-  const [openhealthcase, setOpenhealthcase] = useState(false)
-  const [openaddmovement, setOpenaddmovement] = useState(false)
-  const [openinsertstock, setOpeninsertstock] = useState(false)
-  const [openreducestock, setOpenreducestock] = useState(false)
-  const [openeditplace, setOpeneditplace] = useState(false)
-  const [openeditcase, setOpeneditcase] = useState(false)
-  const [openentercash, setOpenentercash] = useState(false)
-  const [openstatus, setOpenstatus] = useState(false)
-  const [opendead, setOpendead] = useState(false)
-  const [openleft, setOpenleft] = useState(false)
-  const [record, setRecord] = useState(null)
-
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
+    return list.length > 0 ?
+      <div className='w-full mx-auto '>
+        {Profile.Ismobile ?
+          <MobileTable Columns={columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+          <DataTable Columns={columns} Data={list} Config={initialConfig} />}
+      </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
   }
 
-  const metaKey = "patients"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
-  const t = Profile?.i18n?.t || null
+  const Columns = [
+    { Header: t('Common.Column.Id'), accessor: 'Id' },
+    { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
+    { Header: t('Pages.Patients.Column.Name'), accessor: row => nameCellhandler(row), Title: true },
+    { Header: t('Pages.Patients.Column.Gender'), accessor: row => genderCellhandler(row) },
+    { Header: t('Pages.Patients.Column.Approvaldate'), accessor: row => dateCellhandler(row?.Approvaldate) },
+    { Header: t('Pages.Patients.Column.Leavedate'), accessor: row => dateCellhandler(row?.Leavedate), keys: ['left'] },
+    { Header: t('Pages.Patients.Column.Leftinfo'), accessor: 'Leftinfo', keys: ['left'] },
+    { Header: t('Pages.Patients.Column.Deathdate'), accessor: row => dateCellhandler(row?.Deathdate), keys: ['dead'] },
+    { Header: t('Pages.Patients.Column.Deadinfo'), accessor: 'Deadinfo', keys: ['dead'] },
+    { Header: t('Pages.Patients.Column.Bed'), accessor: row => bedCellhandler(row?.BedID), Lowtitle: true, Withtext: true, keys: ['pass'] },
+    { Header: t('Pages.Patients.Column.Case'), accessor: row => caseCellhandler(row?.CaseID), Subtitle: true },
+    { Header: t('Pages.Patients.Column.Info'), accessor: 'Info' },
+    { Header: t('Pages.Patients.Column.Guardiannote'), accessor: 'Guardiannote' },
+    { Header: t('Common.Column.summary'), accessor: 'summary', disableProps: true, keys: ['left', 'dead', 'pass'], hidden: openMulti },
+    { Header: t('Common.Column.process'), accessor: 'process', disableProps: true, keys: ['pass'], hidden: openMulti },
+    { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true, keys: ['left', 'dead'] },
+    { Header: t('Common.Column.define'), accessor: 'define', disableProps: true },
+    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true, keys: ['pass'], hidden: openMulti },
+    { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
+    { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
+    { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
+    { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+  ]
 
-  const filteredColumns = openMulti ? (Columns || []).filter(u => u.accessor !== 'define') : Columns
-  const columns = [
-    { Header: t('Common.Column.Empty'), accessor: 'select', disableProps: true, hidden: !openMulti },
-    ...filteredColumns.filter(u => u.key ? u.key === 'pass' : true),
-    { Header: t('Common.Column.summary'), accessor: 'summary', disableProps: true, hidden: openMulti },
-    { Header: t('Common.Column.process'), accessor: 'process', disableProps: true, hidden: openMulti },
-    { Header: t('Common.Column.detail'), accessor: 'actions', disableProps: true, hidden: openMulti }
-  ].filter(u => !u.hidden).map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+  let passCaselist = (Cases.list || []).filter(u => u.Patientstatus !== CASE_PATIENT_STATUS_DEATH && u.Patientstatus !== CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
+  let deadCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_DEATH).map(u => u.Uuid)
+  let leftCaselist = (Cases.list || []).filter(u => u.Patientstatus === CASE_PATIENT_STATUS_LEFT).map(u => u.Uuid)
 
-  const decoratedList = list.map(item => {
-
+  const list = (Patients.list || []).filter(u => u.Isactive && !u.Ispreregistration).map(item => {
+    const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === item?.PatientdefineID)
     return {
       ...item,
       select: <div
@@ -425,38 +305,123 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         </div>}
       />,
       summary: <Icon link size='large' color='grey' name='history' onClick={() => {
-        handleSelectedPatient(item)
-        handleDetailmodal(true)
+        setRecord(item)
+        setOpendetail(true)
+      }} />,
+      define: <Link key={item?.Uuid} to={`/Patientdefines/${patientdefine?.Uuid}/edit`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+      activate: <Icon link size='large' color='green' name='sync' onClick={() => {
+        setOpenactive(true)
+        setRecord(item)
       }} />,
       actions: <Link key={item?.Uuid} to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
     }
   })
 
+  const passList = list.filter(u => (passCaselist || []).includes(u?.CaseID))
+  const deadList = list.filter(u => (deadCaselist || []).includes(u?.CaseID))
+  const leftList = list.filter(u => (leftCaselist || []).includes(u?.CaseID))
+
+  const metaKey = "patients"
+  let initialConfig = GetInitialconfig(Profile, metaKey)
+
+  const tabOrder = [
+    'pass',
+    'dead',
+    'left',
+  ]
+
+  const { activeTab, setActiveTab } = useTabNavigation({
+    history,
+    tabOrder,
+    mainRoute: 'Patients'
+  })
+
+  useEffect(() => {
+    const {
+      GetPatients,
+      GetPatientdefines,
+      GetRooms,
+      GetBeds,
+      GetFloors,
+      GetCases,
+      GetStockdefines,
+      GetUsagetypes,
+      GetFiles
+    } = props
+    GetPatients()
+    GetPatientdefines()
+    GetRooms()
+    GetBeds()
+    GetFloors()
+    GetCases()
+    GetUsagetypes()
+    GetStockdefines()
+    GetFiles()
+  }, [])
+
   return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={columns}
-            list={decoratedList}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-            Additionalfunctiontxt={openMulti ? t('Common.Button.Singleselect') : t('Common.Button.Multiselect')}
-            Additionalfunction={() => { setOpenMulti(!openMulti) }}
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Patients"}>
+                  <Breadcrumb.Section>{t('Pages.Patients.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Columns={Columns}
+              list={List}
+              initialConfig={initialConfig}
+              metaKey={metaKey}
+              Showexcelexport
+            />
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
+                pane: {
+                  key: 'pass',
+                  content: renderView({ list: passList, Columns, keys: ['pass'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
+                pane: {
+                  key: 'dead',
+                  content: renderView({ list: deadList, Columns, keys: ['dead'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
+                pane: {
+                  key: 'left',
+                  content: renderView({ list: leftList, Columns, keys: ['left'], initialConfig })
+                }
+              },
+            ]}
+            renderActiveOnly={false}
           />
-        </Grid>
-      </Headerwrapper>
-      {list.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
+        </Contentwrapper>
+      </Pagewrapper>
+      <PatientsDetailModal
+        open={opendetail}
+        setOpen={setOpendetail}
+        record={record}
+        setRecord={setRecord}
+      />
       <PatientsLeftModal
         open={openleft}
         setOpen={setOpenleft}
@@ -526,68 +491,6 @@ function PassPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         record={record}
         setRecord={setRecord}
       />
-    </>
-  )
-}
-
-function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
-
-  const [openactive, setOpenactive] = useState(false)
-  const [record, setRecord] = useState(null)
-
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
-
-  const metaKey = "patients"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
-  const t = Profile?.i18n?.t || null
-
-  const columns = [
-    ...Columns.filter(u => u.key ? u.key === 'left' : true),
-    { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true },
-    { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
-
-  const decoratedList = list.map(item => {
-    return {
-      ...item,
-      actions: <Icon link size='large' color='grey' name='history' onClick={() => {
-        handleSelectedPatient(item)
-        handleDetailmodal(true)
-      }} />,
-      activate: <Icon link size='large' color='green' name='sync' onClick={() => {
-        setOpenactive(true)
-        setRecord(item)
-      }} />,
-    }
-  })
-
-  return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={columns}
-            list={decoratedList}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {decoratedList.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
       <PatientsMakeactiveModal
         isPatientspage
         open={openactive}
@@ -595,75 +498,6 @@ function LeftPatientList({ Profile, Columns, list, handleSelectedPatient, handle
         record={record}
         setRecord={setRecord}
       />
-    </>
-  )
-}
-
-function DeadPatientList({ Profile, Columns, list, handleSelectedPatient, handleDetailmodal }) {
-
-  const [openactive, setOpenactive] = useState(false)
-  const [record, setRecord] = useState(null)
-
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
-
-  const metaKey = "patients"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
-  const t = Profile?.i18n?.t || null
-
-  const columns = [
-    ...Columns.filter(u => u.key ? u.key === 'dead' : true),
-    { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true },
-    { Header: t('Common.Column.summary'), accessor: 'actions', disableProps: true }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
-
-  const decoratedList = list.map(item => {
-    return {
-      ...item,
-      actions: <Icon link size='large' color='grey' name='history' onClick={() => {
-        handleSelectedPatient(item)
-        handleDetailmodal(true)
-      }} />,
-      activate: <Icon link size='large' color='green' name='sync' onClick={() => {
-        setOpenactive(true)
-        setRecord(item)
-      }} />,
-    }
-  })
-
-  return (
-    <>
-      <Headerwrapper>
-        <Grid columns='2' >
-          <GridColumn width={8} />
-          <Settings
-            Profile={Profile}
-            Columns={columns}
-            list={decoratedList}
-            initialConfig={initialConfig}
-            metaKey={metaKey}
-            Showcolumnchooser
-            Showexcelexport
-          />
-        </Grid>
-      </Headerwrapper>
-      {decoratedList.length > 0 ?
-        <div className='w-full mx-auto '>
-          {Profile.Ismobile ?
-            <MobileTable Columns={columns} Data={decoratedList} Config={initialConfig} Profile={Profile} /> :
-            <DataTable Columns={columns} Data={decoratedList} Config={initialConfig} />}
-        </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
-      }
-      <PatientsMakeactiveModal
-        isPatientspage
-        open={openactive}
-        setOpen={setOpenactive}
-        record={record}
-        setRecord={setRecord}
-      />
-    </>
+    </React.Fragment >
   )
 }

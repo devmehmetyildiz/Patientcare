@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PreregistrationsDelete from "../../Pages/Preregistrations/PreregistrationsDelete"
-import { DeletePreregisrations, handleDeletemodal, handleSelectedPatient } from "../../Redux/PatientSlice"
+import { DeletePreregisrations, } from "../../Redux/PatientSlice"
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeletePreregisrations, handleDeletemodal, handleSelectedPatient
+    DeletePreregisrations,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsDelete)

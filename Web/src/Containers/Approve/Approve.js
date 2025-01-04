@@ -1,11 +1,8 @@
 import { connect } from 'react-redux'
 import Approve from "../../Pages/Approve/Approve"
 import { GetStocks } from '../../Redux/StockSlice'
-import { GetStockmovements, ApproveStockmovements } from '../../Redux/StockmovementSlice'
-import { GetPatients, ApprovePatients } from '../../Redux/PatientSlice'
-import { GetCases } from '../../Redux/CaseSlice'
-import { GetFiles } from '../../Redux/FileSlice'
-import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
+import { GetStockmovements } from '../../Redux/StockmovementSlice'
+import { GetPatients } from '../../Redux/PatientSlice'
 import { GetStocktypes } from '../../Redux/StocktypeSlice'
 import { GetUnits } from '../../Redux/UnitSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
@@ -16,6 +13,14 @@ import { GetUsers } from '../../Redux/UserSlice'
 import { GetClaimpaymentparameters } from '../../Redux/ClaimpaymentparameterSlice'
 import { GetClaimpayments } from '../../Redux/ClaimpaymentSlice'
 import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
+import { GetPatientvisits } from '../../Redux/PatientvisitSlice'
+import { GetPatientactivities } from '../../Redux/PatientactivitySlice'
+import { GetUserincidents } from '../../Redux/UserincidentSlice'
+import { GetSurveys } from '../../Redux/SurveySlice'
+import { GetTrainings } from '../../Redux/TrainingSlice'
+import { GetMainteanceplans } from '../../Redux/MainteanceplanSlice'
+import { GetEquipments } from '../../Redux/EquipmentSlice'
+import { GetCareplans } from '../../Redux/CareplanSlice'
 
 const mapStateToProps = (state) => ({
     Claimpayments: state.Claimpayments,
@@ -29,19 +34,25 @@ const mapStateToProps = (state) => ({
     Stocktypes: state.Stocktypes,
     Users: state.Users,
     Units: state.Units,
-    Cases: state.Cases,
-    Usagetypes: state.Usagetypes,
-    Files: state.Files,
     Patients: state.Patients,
     Patientdefines: state.Patientdefines,
+    Patientvisits: state.Patientvisits,
+    Patientactivities: state.Patientactivities,
+    Userincidents: state.Userincidents,
+    Surveys: state.Surveys,
+    Trainings: state.Trainings,
+    Mainteanceplans: state.Mainteanceplans,
+    Equipments: state.Equipments,
+    Careplans: state.Careplans,
     Profile: state.Profile
 })
 
 const mapDispatchToProps = {
-    GetStocks, GetStockmovements, GetPatients, GetCases, GetStockdefines, GetPurchaseorders, GetClaimpaymentparameters,
-    GetFiles, GetUsagetypes, GetUsers, GetStocktypes, GetUnits, GetPatientdefines, GetWarehouses, GetClaimpayments,
-    GetCostumertypes,
-    ApproveStockmovements, ApprovePatients
+    GetStocks, GetStockmovements, GetPatients, GetStockdefines, GetPurchaseorders, GetClaimpaymentparameters,
+    GetUsers, GetStocktypes, GetUnits, GetPatientdefines, GetWarehouses, GetClaimpayments, GetMainteanceplans,
+    GetCostumertypes, GetPatientvisits, GetPatientactivities, GetUserincidents, GetSurveys, GetTrainings,
+    GetEquipments, GetCareplans
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Approve)

@@ -7,11 +7,8 @@ import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT } from '../../Utils
 
 export default function PreregistrationsApprove(props) {
   const {
-    handleApprovemodal,
-    handleSelectedPatient,
     fillPatientnotification,
     ApprovePatients,
-    CancelApprovePatients,
     Profile,
     Patients,
     Patientdefines,
@@ -40,9 +37,11 @@ export default function PreregistrationsApprove(props) {
     GetUsagetypes,
     GetPatienttypes,
     GetCostumertypes,
+    open,
+    setOpen,
+    record,
+    setRecord
   } = props
-
-  const { isApprovemodalopen, selected_record, isApprovedeactive } = Patients
 
   const t = Profile?.i18n?.t
 
@@ -50,15 +49,14 @@ export default function PreregistrationsApprove(props) {
     CaseID,
     Uuid,
     Isoninstitution
-  } = selected_record
+  } = record || {}
 
-  const Isdeactive = isApprovedeactive
   const [selectedcase, setSelectedcase] = useState(CaseID)
   const [selectedinfo, setSelectedinfo] = useState(null)
   const [selectedIsoninstitution, setSelectedIsoninstitution] = useState(Isoninstitution)
 
   useEffect(() => {
-    if (isApprovemodalopen && !Users.isLoading) {
+    if (open && !Users.isLoading) {
       GetPatientdefines()
       GetStocks()
       GetStockdefines()
@@ -73,9 +71,9 @@ export default function PreregistrationsApprove(props) {
       GetCostumertypes()
       GetPatienttypes()
     }
-  }, [isApprovemodalopen])
+  }, [open])
 
-  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
+  const stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === record?.Uuid).map(element => {
     return {
       ...element,
       key: Math.random(),
@@ -112,7 +110,7 @@ export default function PreregistrationsApprove(props) {
   return (
     <Modal
       onClose={() => {
-        handleApprovemodal(false)
+        setOpen(false)
         setSelectedcase(null)
         setSelectedinfo(null)
         setSelectedIsoninstitution(false)
@@ -121,12 +119,13 @@ export default function PreregistrationsApprove(props) {
         setSelectedcase(null)
         setSelectedinfo(null)
         setSelectedIsoninstitution(false)
-        handleApprovemodal({ modal: true, deactive: Isdeactive ? Isdeactive : false })
+        setOpen(false)
       }}
-      open={isApprovemodalopen}
+      open={open}
     >
-      <Modal.Header>{Isdeactive ? t('Pages.Preregistrations.Page.Modal.CancelApproveHeader') : t('Pages.Preregistrations.Page.Modal.ApproveHeader')}</Modal.Header>
+      <Modal.Header>{t('Pages.Preregistrations.Page.Modal.ApproveHeader')}</Modal.Header>
       <PatientsDetailCard
+        record={record}
         Profile={Profile}
         Patients={Patients}
         Patientdefines={Patientdefines}
@@ -189,76 +188,44 @@ export default function PreregistrationsApprove(props) {
       </Modal.Content>
       <Modal.Actions>
         <Button color='black' onClick={() => {
-          handleApprovemodal(false)
+          setOpen(false)
           setSelectedcase(null)
           setSelectedinfo(null)
           setSelectedIsoninstitution(false)
-          handleSelectedPatient({})
+          setRecord(null)
         }}>
           {t('Common.Button.Goback')}
         </Button>
-        {Isdeactive
-          ? <Button
-            content={t('Common.Button.CancelApprove')}
-            labelPosition='right'
-            icon='checkmark'
-            className=' !bg-[#2355a0] !text-white'
-            onClick={() => {
-              let errors = []
-              if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
-              }
-              if (errors.length > 0) {
-                errors.forEach(error => {
-                  fillPatientnotification(error)
-                })
-              } else {
-                const {
-                  Uuid
-                } = selected_record
-                CancelApprovePatients({
-                  Uuid,
-                  Cancelapproveinfo: selectedinfo,
-                  CaseID: selectedcase,
-                  Isoninstitution: selectedIsoninstitution
-                })
-                handleApprovemodal(false)
-                handleSelectedPatient({})
-              }
-            }}
-            positive
-          />
-          : <Button
-            content={t('Common.Button.Approve')}
-            labelPosition='right'
-            icon='checkmark'
-            className=' !bg-[#2355a0] !text-white'
-            onClick={() => {
-              let errors = []
-              if (!validator.isUUID(selectedcase)) {
-                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
-              }
-              if (errors.length > 0) {
-                errors.forEach(error => {
-                  fillPatientnotification(error)
-                })
-              } else {
-                const {
-                  Uuid
-                } = selected_record
-                ApprovePatients({
-                  Uuid,
-                  Approveinfo: selectedinfo,
-                  CaseID: selectedcase,
-                  Isoninstitution: selectedIsoninstitution
-                })
-                handleApprovemodal(false)
-                handleSelectedPatient({})
-              }
-            }}
-            positive
-          />
-        }
+        <Button
+          content={t('Common.Button.Approve')}
+          labelPosition='right'
+          icon='checkmark'
+          className=' !bg-[#2355a0] !text-white'
+          onClick={() => {
+            let errors = []
+            if (!validator.isUUID(selectedcase)) {
+              errors.push({ type: 'Error', code: t('Pages.Preregistrations.Page.Header'), description: t('Pages.Preregistrations.Create.Messages.CaseRequired') })
+            }
+            if (errors.length > 0) {
+              errors.forEach(error => {
+                fillPatientnotification(error)
+              })
+            } else {
+              const {
+                Uuid
+              } = record || {}
+              ApprovePatients({
+                Uuid,
+                Approveinfo: selectedinfo,
+                CaseID: selectedcase,
+                Isoninstitution: selectedIsoninstitution
+              })
+              setOpen(false)
+              setRecord(null)
+            }
+          }}
+          positive
+        />
       </Modal.Actions>
     </Modal>
   )

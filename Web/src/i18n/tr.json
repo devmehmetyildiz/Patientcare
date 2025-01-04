@@ -306,6 +306,7 @@
         "Pages.Preregistrations.Complete.Label.Department": "Departman",
         "Pages.Preregistrations.Complete.Label.Movements": "Hareketler",
         "Pages.Preregistrations.Complete.Label.Info": "Açıklama",
+        "Pages.Preregistrations.Complete.Messages.ApprovaldateRequired": "Kabul Tarihi Gerekli",
         "Pages.Preregistrations.Complete.Messages.CaseRequired": "Durum Gerekli",
         "Pages.Preregistrations.Complete.Messages.FloorRequired": "Kat Gerekli",
         "Pages.Preregistrations.Complete.Messages.RoomRequired": "Oda Gerekli",

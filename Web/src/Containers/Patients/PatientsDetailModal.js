@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PatientsDetailModal from "../../Pages/Patients/PatientsDetailModal"
-import { handleDetailmodal, handleSelectedPatient, fillPatientnotification } from '../../Redux/PatientSlice'
+import { fillPatientnotification } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetStocks } from '../../Redux/StockSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
@@ -34,7 +34,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    handleDetailmodal, handleSelectedPatient, GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
+    GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
     GetStocktypes, GetStocktypegroups, fillPatientnotification, GetUsers, GetFiles, GetUsagetypes, GetCostumertypes, GetPatienttypes
 }
 

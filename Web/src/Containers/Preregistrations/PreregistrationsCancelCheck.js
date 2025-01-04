@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import PreregistrationsApprove from "../../Pages/Preregistrations/PreregistrationsApprove"
-import { fillPatientnotification, ApprovePatients } from '../../Redux/PatientSlice'
+import PreregistrationsCancelCheck from "../../Pages/Preregistrations/PreregistrationsCancelCheck"
+import { fillPatientnotification, CancelCheckPatients } from '../../Redux/PatientSlice'
 import { GetPatientdefines } from '../../Redux/PatientdefineSlice'
 import { GetStocks } from '../../Redux/StockSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
@@ -34,8 +34,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    fillPatientnotification, ApprovePatients, GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
+    fillPatientnotification, CancelCheckPatients, GetPatientdefines, GetStocks, GetStockdefines, GetUnits, GetCases, GetDepartments,
     GetStocktypes, GetStocktypegroups, GetUsers, GetFiles, GetUsagetypes, GetCostumertypes, GetPatienttypes
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsApprove)
+export default connect(mapStateToProps, mapDispatchToProps)(PreregistrationsCancelCheck)
