@@ -175,9 +175,8 @@ export default function Purchaseorders(props) {
   }, [])
 
   return (
-    isLoading ? <LoadingPage /> :
       <React.Fragment>
-        <Pagewrapper>
+        <Pagewrapper isLoading={isLoading} dimmer>
           <Headerwrapper>
             <Grid columns='2' >
               <GridColumn width={8}>

@@ -4,9 +4,9 @@ import { Button, Modal } from 'semantic-ui-react'
 export default class PatientcashregistersDelete extends Component {
   render() {
     const { Profile, Patientcashregisters, DeletePatientcashregisters, handleDeletemodal, handleSelectedPatientcashregister } = this.props
-  
+
     const t = Profile?.i18n?.t
-  
+
     const { isDeletemodalopen, selected_record } = Patientcashregisters
     return (
       <Modal
@@ -31,6 +31,7 @@ export default class PatientcashregistersDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Patientcashregisters.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

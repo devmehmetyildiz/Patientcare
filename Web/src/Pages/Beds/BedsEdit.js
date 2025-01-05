@@ -70,8 +70,7 @@ export default function BedsEdit(props) {
   }, [Rooms.isLoading, Beds.isLoading, Floors.isLoading])
 
   return (
-    loading ? <LoadingPage /> :
-      <Pagewrapper>
+      <Pagewrapper dimmer isLoading={loading}>
         <Headerwrapper>
           <Headerbredcrump>
             <Link to={"/Beds"}>

@@ -49,37 +49,36 @@ export default class FloorsEdit extends Component {
     ]
 
     return (
-      Floors.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Floors"}>
-                <Breadcrumb.Section >{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Floors.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Gender')} name="Gender" options={Genderoptions} formtype='dropdown' />
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Floors"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Floors.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper isLoading={Floors.isLoading} dimmer>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Floors"}>
+              <Breadcrumb.Section >{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Floors.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Name')} name="Name" />
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Gender')} name="Gender" options={Genderoptions} formtype='dropdown' />
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Floors"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Floors.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

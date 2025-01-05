@@ -78,8 +78,8 @@ export default class EquipmentsCreate extends Component {
               </Form.Group>
               <Form.Group widths={'equal'}>
                 <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Floor')} name="FloorID" options={Flooroptions} formtype="dropdown" />
-                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipment.Column.Room')} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
-                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipment.Column.Bed')} name="BedID" options={Bedsoptions} formtype="dropdown" />}
+                {validator.isUUID(data?.FloorID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Room')} name="RoomID" options={Roomsoptions} formtype="dropdown" />}
+                {validator.isUUID(data?.FloorID) && validator.isUUID(data?.RoomID) && <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Equipments.Column.Bed')} name="BedID" options={Bedsoptions} formtype="dropdown" />}
               </Form.Group>
               <Table celled className='overflow-x-auto' key='table' >
                 <Table.Header>

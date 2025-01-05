@@ -184,13 +184,13 @@ export const PatienttypesSlice = createSlice({
             .addCase(GetPatienttypes.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetPatienttypes.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetPatienttypes.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

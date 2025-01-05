@@ -13,7 +13,10 @@ export default function PreregistrationsEdit(props) {
   const { GetPatient, GetStocks, GetFiles, fillPatientnotification, EditPatients, match, history } = props
   const { Stockdefines, Stocktypes, Patients, Files, Stocks, Profile } = props
 
-  const [fetched, setFetched] = useState(false)
+  const [isFirstRenderStocks, setIsFirstRenderStocks] = useState(true);
+  const [isFirstRenderFiles, setIsFirstRenderFiles] = useState(true);
+  const [fetchedStocks, setFetchedStocks] = useState(false)
+  const [fetchedFiles, setFetchedFiles] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedStocks, setSelectedStocks] = useState([])
   const { calculateRedirectUrl } = usePreviousUrl()
@@ -23,6 +26,7 @@ export default function PreregistrationsEdit(props) {
   const t = Profile?.i18n?.t
 
   const { selected_record, isLoading } = Patients
+
   const setselectedFiles = (files) => {
     setSelectedFiles([...files])
   }
@@ -107,7 +111,22 @@ export default function PreregistrationsEdit(props) {
   }
 
   useEffect(() => {
-    if (selected_record && validator.isObject(selected_record) && !Stocks.isLoading && !Files.isLoading && !fetched) {
+    if (!isLoading && validator.isObject(selected_record)) {
+      context.setForm(PAGE_NAME,
+        {
+          ...selected_record,
+          [`Happensdate`]: Formatdate(selected_record?.Happensdate),
+          [`Approvaldate`]: Formatdate(selected_record?.Approvaldate),
+        })
+    }
+  }, [selected_record])
+
+  useEffect(() => {
+    if (isFirstRenderFiles) {
+      setIsFirstRenderFiles(false);
+      return;
+    }
+    if (!fetchedFiles && !Files.isLoading && validator.isObject(selected_record)) {
       var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
@@ -117,14 +136,23 @@ export default function PreregistrationsEdit(props) {
           })
         }
       });
+      setselectedFiles([...files] || [])
+      setFetchedFiles(true)
+    }
+  }, [Files, selected_record, fetchedFiles, setFetchedFiles, selected_record])
+
+  useEffect(() => {
+    if (isFirstRenderStocks) {
+      setIsFirstRenderStocks(false);
+      return;
+    }
+    if (!fetchedStocks && !Stocks.isLoading && validator.isObject(selected_record)) {
       var stocks = (Stocks.list || []).filter(u => u.Isactive).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random()
         }
       });
-
-      setselectedFiles([...files] || [])
       setselectedStocks((stocks || []).map(u => {
         if (validator.isISODate(u.Skt)) {
           return { ...u, Skt: Formatdate(u.Skt) }
@@ -132,15 +160,9 @@ export default function PreregistrationsEdit(props) {
           return { ...u }
         }
       }))
-      setFetched(true)
-      context.setForm(PAGE_NAME,
-        {
-          ...selected_record,
-          [`Happensdate`]: Formatdate(selected_record?.Happensdate),
-          [`Approvaldate`]: Formatdate(selected_record?.Approvaldate),
-        })
+      setFetchedStocks(true)
     }
-  }, [selected_record, Stocks, Files, fetched])
+  }, [Stocks, selected_record, fetchedStocks, setFetchedStocks, selected_record])
 
   useEffect(() => {
     if (match.params.PatientID) {

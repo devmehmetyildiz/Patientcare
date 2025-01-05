@@ -31,6 +31,7 @@ export default class UnitsDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Units.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

@@ -45,43 +45,42 @@ export default class UnitsCreate extends Component {
     ]
 
     return (
-      Units.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Units"}>
-                <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Units.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Units"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Units.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Units.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Units"}>
+              <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Units.Page.CreateHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <Form.Group widths='equal'>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+            </Form.Group>
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Units"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Units.isLoading}
+            buttonText={t('Common.Button.Create')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

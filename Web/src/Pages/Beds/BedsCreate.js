@@ -22,14 +22,13 @@ export default class BedsCreate extends Component {
     const { Beds, Rooms, Floors, Profile, history, closeModal } = this.props
 
     const t = Profile?.i18n?.t
-   
+
     const Roomsoptions = (Rooms.list || []).filter(u => u.Isactive).map(room => {
       return { key: room.Uuid, text: `${room.Name} (${(Floors.list || []).find(u => u.Uuid === room.FloorID)?.Name})`, value: room.Uuid }
     })
 
     return (
-      Beds.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
+        <Pagewrapper dimmer isLoading={Beds.isLoading}>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Beds"}>

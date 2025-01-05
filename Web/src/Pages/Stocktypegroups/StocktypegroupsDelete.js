@@ -33,6 +33,7 @@ export default class StocktypegroupsDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Stocktypegroups.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

@@ -161,13 +161,13 @@ export const PatientcashregistersSlice = createSlice({
             .addCase(GetPatientcashregisters.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetPatientcashregisters.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetPatientcashregisters.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

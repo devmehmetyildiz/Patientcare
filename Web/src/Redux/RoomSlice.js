@@ -184,13 +184,13 @@ export const RoomsSlice = createSlice({
             .addCase(GetRooms.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetRooms.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetRooms.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

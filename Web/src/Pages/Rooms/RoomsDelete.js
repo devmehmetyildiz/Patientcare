@@ -31,6 +31,7 @@ export default class RoomsDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Rooms.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

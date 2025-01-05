@@ -64,42 +64,41 @@ export default class UnitsEdit extends Component {
     ]
 
     return (
-      Units.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Units"}>
-                <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Units.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
-              </Form.Group>
-              <Form.Group widths='equal'>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Units"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Units.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Units.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Units"}>
+              <Breadcrumb.Section >{t('Pages.Units.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Units.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <Form.Group widths='equal'>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Unittype')} name="Unittype" options={unitstatusOption} formtype='dropdown' />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Units.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype='dropdown' modal={DepartmentsCreate} />
+            </Form.Group>
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Units"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Units.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

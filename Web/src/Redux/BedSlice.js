@@ -181,13 +181,13 @@ export const BedsSlice = createSlice({
             .addCase(GetBeds.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetBeds.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetBeds.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })

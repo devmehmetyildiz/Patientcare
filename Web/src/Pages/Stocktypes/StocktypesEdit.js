@@ -44,46 +44,45 @@ export default class StocktypesEdit extends Component {
     const t = Profile?.i18n?.t
 
     return (
-      Stocktypes.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Stocktypes"}>
-                <Breadcrumb.Section >{t('Pages.Stocktypes.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Stocktypes.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypes.Column.Info')} name="Info" />
-              </Form.Group>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Issktneed')} name="Issktneed" formtype='checkbox' />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isbarcodeneed')} name="Isbarcodeneed" formtype='checkbox' />
-              </Form.Group>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isredpill')} name="Isredpill" formtype='checkbox' />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Stocktypes"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Stocktypes.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Stocktypes.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Stocktypes"}>
+              <Breadcrumb.Section >{t('Pages.Stocktypes.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Stocktypes.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypes.Column.Info')} name="Info" />
+            </Form.Group>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Issktneed')} name="Issktneed" formtype='checkbox' />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isbarcodeneed')} name="Isbarcodeneed" formtype='checkbox' />
+            </Form.Group>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypes.Column.Isredpill')} name="Isredpill" formtype='checkbox' />
+            </Form.Group>
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Stocktypes"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Stocktypes.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

@@ -56,42 +56,41 @@ export default class StocktypegroupsEdit extends Component {
     })
 
     return (
-      Stocktypegroups.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Stocktypegroups"}>
-                <Breadcrumb.Section >{t('Pages.Stocktypegroups.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Stocktypegroups.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypegroups.Column.Info')} name="Info" />
-              </Form.Group>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Stocktypes')} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Stocktypegroups"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Stocktypegroups.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Stocktypegroups.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Stocktypegroups"}>
+              <Breadcrumb.Section >{t('Pages.Stocktypegroups.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Stocktypegroups.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stocktypegroups.Column.Info')} name="Info" />
+            </Form.Group>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stocktypegroups.Column.Stocktypes')} options={Stocktypesoption} name="Stocktypes" formtype='dropdown' multiple modal={StocktypesCreate} />
+            </Form.Group>
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Stocktypegroups"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Stocktypegroups.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

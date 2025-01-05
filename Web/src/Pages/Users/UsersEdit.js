@@ -80,44 +80,43 @@ export default class UsersEdit extends Component {
       Usagetypes.isLoading ||
       Professions.isLoading
 
-    return isLoadingstatus ? <LoadingPage /> :
-      <Pagewrapper>
-        <Headerwrapper>
-          <Headerbredcrump>
-            <Link to={"/Users"}>
-              <Breadcrumb.Section >{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
-            </Link>
-            <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section>{t('Pages.Users.Page.EditHeader')}</Breadcrumb.Section>
-          </Headerbredcrump>
-        </Headerwrapper>
-        <Pagedivider />
-        <Contentwrapper>
-          <UsersPrepare
-            isEditpage
-            selectedFiles={this.state.selectedFiles}
-            setselectedFiles={this.setselectedFiles}
-            fillnotification={fillUsernotification}
-            Usagetypes={Usagetypes}
-            Roles={Roles}
-            Professions={Professions}
-            PAGE_NAME={this.PAGE_NAME}
-            Profile={Profile}
-          />
-        </Contentwrapper>
-        <Footerwrapper>
-          <Gobackbutton
-            history={history}
-            redirectUrl={"/Users"}
-            buttonText={t('Common.Button.Goback')}
-          />
-          <Submitbutton
-            isLoading={Users.isLoading}
-            buttonText={t('Common.Button.Update')}
-            submitFunction={this.handleSubmit}
-          />
-        </Footerwrapper>
-      </Pagewrapper >
+    return <Pagewrapper isLoading={isLoadingstatus} dimmer>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Users"}>
+            <Breadcrumb.Section >{t('Pages.Users.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Users.Page.EditHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <UsersPrepare
+          isEditpage
+          selectedFiles={this.state.selectedFiles}
+          setselectedFiles={this.setselectedFiles}
+          fillnotification={fillUsernotification}
+          Usagetypes={Usagetypes}
+          Roles={Roles}
+          Professions={Professions}
+          PAGE_NAME={this.PAGE_NAME}
+          Profile={Profile}
+        />
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Users"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={Users.isLoading}
+          buttonText={t('Common.Button.Update')}
+          submitFunction={this.handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper>
   }
 
   handleSubmit = (e) => {

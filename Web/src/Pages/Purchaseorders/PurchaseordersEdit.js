@@ -19,7 +19,8 @@ export default function PurchaseordersEdit(props) {
 
   const context = useContext(FormContext)
 
-  const [fetched, setFetched] = useState(false)
+  const [fetchedStocks, setFetchedStocks] = useState(false)
+  const [fetchedFiles, setFetchedFiles] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [selectedStocks, setSelectedStocks] = useState([])
 
@@ -90,17 +91,13 @@ export default function PurchaseordersEdit(props) {
   }
 
   useEffect(() => {
-    if (validator.isUUID(Id)) {
-      GetPurchaseorder(Id)
-      GetFiles()
-      GetStocks()
-    } else {
-      history.push("/Purchaseorder")
+    if (!isLoading && validator.isObject(selected_record)) {
+      context.setForm(PAGE_NAME, { ...selected_record })
     }
-  }, [])
+  }, [selected_record])
 
   useEffect(() => {
-    if (!isLoading && validator.isObject(selected_record) && !Files.isLoading && !Stocks.isLoading && !fetched) {
+    if (!fetchedFiles && !Files.isLoading) {
       var files = (Files.list || []).filter(u => u.Isactive && u.ParentID === selected_record?.Uuid).map(element => {
         return {
           ...element,
@@ -110,13 +107,19 @@ export default function PurchaseordersEdit(props) {
           })
         }
       });
+      setselectedFiles(files)
+      setFetchedFiles(true)
+    }
+  }, [Files, selected_record, fetchedFiles, setFetchedFiles])
+
+  useEffect(() => {
+    if (!fetchedStocks && !Stocks.isLoading) {
       var stocks = (Stocks.list || []).filter(u => u.WarehouseID === selected_record?.Uuid).map(element => {
         return {
           ...element,
           key: Math.random()
         }
       });
-      setselectedFiles(files)
       setselectedStocks((stocks || []).map(u => {
         if (validator.isISODate(u.Skt)) {
           return { ...u, Skt: Formatdate(u.Skt) }
@@ -124,10 +127,19 @@ export default function PurchaseordersEdit(props) {
           return { ...u }
         }
       }))
-      setFetched(true)
-      context.setForm(PAGE_NAME, selected_record)
+      setFetchedStocks(true)
     }
-  }, [selected_record, Stocks, Files, fetched])
+  }, [Stocks, selected_record, fetchedStocks, setFetchedStocks])
+
+  useEffect(() => {
+    if (validator.isUUID(Id)) {
+      GetPurchaseorder(Id)
+      GetFiles()
+      GetStocks()
+    } else {
+      history.push("/Purchaseorder")
+    }
+  }, [])
 
   return (
     Purchaseorders.isLoading ? <LoadingPage /> :

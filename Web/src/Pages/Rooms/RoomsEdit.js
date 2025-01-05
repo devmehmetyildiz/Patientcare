@@ -52,37 +52,36 @@ export default class RoomsEdit extends Component {
     })
 
     return (
-      Rooms.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Rooms"}>
-                <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Rooms.Page.EditHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Rooms"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Rooms.isLoading}
-              buttonText={t('Common.Button.Update')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Rooms.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Rooms"}>
+              <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Rooms.Page.EditHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Rooms"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Rooms.isLoading}
+            buttonText={t('Common.Button.Update')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

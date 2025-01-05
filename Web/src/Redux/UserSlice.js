@@ -246,7 +246,6 @@ export const UsersSlice = createSlice({
             .addCase(GetUsers.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetUsers.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -254,6 +253,7 @@ export const UsersSlice = createSlice({
             })
             .addCase(GetUsers.rejected, (state, action) => {
                 state.isLoading = false;
+                state.list = [];
                 state.errMsg = action.error.message;
             })
             .addCase(GetUsersforsearch.pending, (state) => {

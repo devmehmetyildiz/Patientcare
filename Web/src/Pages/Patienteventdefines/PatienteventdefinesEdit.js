@@ -44,8 +44,7 @@ export default class PatienteventdefinesEdit extends Component {
     const t = Profile?.i18n?.t
 
     return (
-      Patienteventdefines.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
+        <Pagewrapper dimmer isLoading={Patienteventdefines.isLoading}>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Patienteventdefines"}>

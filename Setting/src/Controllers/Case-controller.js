@@ -109,7 +109,6 @@ async function AddCase(req, res, next) {
     const {
         Name,
         Shortname,
-        Casecolor,
         CaseStatus,
         Departments,
     } = req.body
@@ -119,9 +118,6 @@ async function AddCase(req, res, next) {
     }
     if (!validator.isString(Shortname)) {
         validationErrors.push(req.t('Cases.Error.ShortnameRequired'))
-    }
-    if (!validator.isString(Casecolor)) {
-        validationErrors.push(req.t('Cases.Error.CasecolorRequired'))
     }
     if (!validator.isNumber(CaseStatus)) {
         validationErrors.push(req.t('Cases.Error.CasestatusRequired'))
@@ -182,7 +178,6 @@ async function UpdateCase(req, res, next) {
     const {
         Name,
         Shortname,
-        Casecolor,
         CaseStatus,
         Departments,
         Uuid
@@ -199,9 +194,6 @@ async function UpdateCase(req, res, next) {
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(req.t('Cases.Error.UnsupportedCaseID'))
-    }
-    if (!validator.isString(Casecolor)) {
-        validationErrors.push(req.t('Cases.Error.CasecolorRequired'))
     }
     if (!validator.isNumber(CaseStatus)) {
         validationErrors.push(req.t('Cases.Error.CasestatusRequired'))

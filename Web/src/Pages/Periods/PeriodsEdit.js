@@ -56,7 +56,7 @@ export default class PeriodsEdit extends Component {
                 <Breadcrumb.Section >{t('Pages.Periods.Page.Header')}</Breadcrumb.Section>
               </Link>
               <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Periods.Page.CreateHeader')}</Breadcrumb.Section>
+              <Breadcrumb.Section>{t('Pages.Periods.Page.EditHeader')}</Breadcrumb.Section>
             </Headerbredcrump>
           </Headerwrapper>
           <Pagedivider />
@@ -79,7 +79,7 @@ export default class PeriodsEdit extends Component {
             />
             <Submitbutton
               isLoading={Periods.isLoading}
-              buttonText={t('Common.Button.Create')}
+              buttonText={t('Common.Button.Update')}
               submitFunction={this.handleSubmit}
             />
           </Footerwrapper>

@@ -33,53 +33,52 @@ export default class StockdefinesCreate extends Component {
     const Isbarcodeneed = (Stocktypes.list || []).find(item => item.Uuid === selectedstocktypeId)?.Isbarcodeneed
 
     return (
-      Stockdefines.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Stockdefines"}>
-                <Breadcrumb.Section >{t('Pages.Stockdefines.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Stockdefines.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
+      <Pagewrapper dimmer isLoading={Stockdefines.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Stockdefines"}>
+              <Breadcrumb.Section >{t('Pages.Stockdefines.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Stockdefines.Page.CreateHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Name')} name="Name" />
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Brand')} name="Brand" />
+            </Form.Group>
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Stocktype')} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
+              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Unit')} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
+            </Form.Group>
+            {Isbarcodeneed ?
               <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Brand')} name="Brand" />
+                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Barcode')} name="Barcode" />
               </Form.Group>
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Stocktype')} options={Stocktypesoption} name="StocktypeID" formtype='dropdown' modal={StocktypesCreate} />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Unit')} options={Unitoption} name="UnitID" formtype='dropdown' modal={UnitsCreate} />
-              </Form.Group>
-              {Isbarcodeneed ?
-                <Form.Group widths={"equal"}>
-                  <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Stockdefines.Column.Barcode')} name="Barcode" />
-                </Form.Group>
-                : null
-              }
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Info')} name="Info" />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Stockdefines"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Stockdefines.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+              : null
+            }
+            <Form.Group widths={"equal"}>
+              <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Stockdefines.Column.Info')} name="Info" />
+            </Form.Group>
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Stockdefines"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Stockdefines.isLoading}
+            buttonText={t('Common.Button.Create')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

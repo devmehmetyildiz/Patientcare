@@ -16,9 +16,9 @@ export default class Floors extends Component {
 
   render() {
     const { Floors, Profile, handleDeletemodal, handleSelectedFloor, handleFastcreatemodal } = this.props
- 
+
     const t = Profile?.i18n?.t
- 
+
     const { isLoading } = Floors
 
     const colProps = {
@@ -55,46 +55,45 @@ export default class Floors extends Component {
     })
 
     return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Floors"}>
-                      <Breadcrumb.Section>{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Floors.Page.CreateHeader')}
-                  Pagecreatelink={"/Floors/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                  Additionalfunction={() => { handleFastcreatemodal(true) }}
-                  Additionalfunctiontxt={t('Pages.Floors.Column.Fastcreate')}
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-            }
-          </Pagewrapper>
-          <FloorsDelete />
-          <FloorsFastcreate />
-        </React.Fragment>
+      <React.Fragment>
+        <Pagewrapper isLoading={isLoading}>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Floors"}>
+                    <Breadcrumb.Section>{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Floors.Page.CreateHeader')}
+                Pagecreatelink={"/Floors/Create"}
+                Columns={Columns}
+                list={list}
+                initialConfig={initialConfig}
+                metaKey={metaKey}
+                Showcreatebutton
+                Showcolumnchooser
+                Showexcelexport
+                Additionalfunction={() => { handleFastcreatemodal(true) }}
+                Additionalfunctiontxt={t('Pages.Floors.Column.Fastcreate')}
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+          }
+        </Pagewrapper>
+        <FloorsDelete />
+        <FloorsFastcreate />
+      </React.Fragment>
     )
   }
 

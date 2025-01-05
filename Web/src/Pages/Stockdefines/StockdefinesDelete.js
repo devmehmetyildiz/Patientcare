@@ -31,6 +31,7 @@ export default class StockdefinesDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Stockdefines.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

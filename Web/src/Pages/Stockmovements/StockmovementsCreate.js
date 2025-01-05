@@ -65,7 +65,7 @@ export default function StockmovementsCreate(props) {
         })
       }
     }
-  }, [location.search])
+  }, [location.search, context])
 
   useEffect(() => {
     GetStocks()

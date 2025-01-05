@@ -124,6 +124,7 @@ export default function FloorsFastcreate({ Profile, Floors, FastcreateFloors, ha
                     {t('Common.Button.Giveup')}
                 </Button>
                 <Button
+                    loading={Floors.isLoading}
                     content={t('Common.Button.Create')}
                     labelPosition='right'
                     icon='checkmark'

@@ -59,43 +59,42 @@ export default class Stockdefines extends Component {
     })
 
     return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Stockdefines"}>
-                      <Breadcrumb.Section>{t('Pages.Stockdefines.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Stockdefines.Page.CreateHeader')}
-                  Pagecreatelink={"/Stockdefines/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-            }
-          </Pagewrapper>
-          <StockdefinesDelete />
-        </React.Fragment>
+      <React.Fragment>
+        <Pagewrapper dimmer isLoading={isLoading}>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Stockdefines"}>
+                    <Breadcrumb.Section>{t('Pages.Stockdefines.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Stockdefines.Page.CreateHeader')}
+                Pagecreatelink={"/Stockdefines/Create"}
+                Columns={Columns}
+                list={list}
+                initialConfig={initialConfig}
+                metaKey={metaKey}
+                Showcreatebutton
+                Showcolumnchooser
+                Showexcelexport
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+          }
+        </Pagewrapper>
+        <StockdefinesDelete />
+      </React.Fragment>
     )
   }
 

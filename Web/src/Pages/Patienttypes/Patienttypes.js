@@ -52,43 +52,42 @@ export default class Patienttypes extends Component {
     })
 
     return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Patienttypes"}>
-                      <Breadcrumb.Section>{t('Pages.Patienttypes.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Patienttypes.Page.CreateHeader')}
-                  Pagecreatelink={"/Patienttypes/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-            }
-          </Pagewrapper>
-          <PatienttypesDelete />
-        </React.Fragment>
+      <React.Fragment>
+        <Pagewrapper isLoading={isLoading} dimmer>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Patienttypes"}>
+                    <Breadcrumb.Section>{t('Pages.Patienttypes.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Patienttypes.Page.CreateHeader')}
+                Pagecreatelink={"/Patienttypes/Create"}
+                Columns={Columns}
+                list={list}
+                initialConfig={initialConfig}
+                metaKey={metaKey}
+                Showcreatebutton
+                Showcolumnchooser
+                Showexcelexport
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+          }
+        </Pagewrapper>
+        <PatienttypesDelete />
+      </React.Fragment>
     )
   }
 

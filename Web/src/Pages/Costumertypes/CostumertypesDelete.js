@@ -31,6 +31,7 @@ export default class CostumertypesDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Costumertypes.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

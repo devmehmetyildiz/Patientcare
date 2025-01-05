@@ -22,7 +22,7 @@ import validator from '../../Utils/Validator'
 
 export default function Patients(props) {
 
-  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, handleSelectedPatient, handleDetailmodal, fillPatientnotification, history } = props
+  const { Patients, Profile, Cases, Patientdefines, Files, Usagetypes, Floors, Rooms, Beds, fillPatientnotification, history } = props
 
   const t = Profile?.i18n?.t || null
 
@@ -346,17 +346,45 @@ export default function Patients(props) {
       GetCases,
       GetStockdefines,
       GetUsagetypes,
-      GetFiles
+      GetFiles,
+      GetDepartments,
+      GetPatienttypes,
+      GetUnits,
+      GetStocktypegroups,
+      GetStocktypes,
+      GetUsers,
+      GetCostumertypes,
+      GetStocks,
+      GetPatientcashregisters,
+      GetPatientcashmovements,
+      GetStockmovements,
+      GetPatienteventdefines,
+      GetPatienthealthcases,
+      GetPatienthealthcasedefines
     } = props
     GetPatients()
     GetPatientdefines()
+    GetFiles()
+    GetUsagetypes()
+    GetCases()
+    GetDepartments()
+    GetPatienttypes()
+    GetCostumertypes()
+    GetFloors()
     GetRooms()
     GetBeds()
-    GetFloors()
-    GetCases()
-    GetUsagetypes()
+    GetPatientcashmovements()
+    GetPatientcashregisters()
+    GetStocks()
     GetStockdefines()
-    GetFiles()
+    GetStockmovements()
+    GetUsers()
+    GetStocktypes()
+    GetStocktypegroups()
+    GetUnits()
+    GetPatienteventdefines()
+    GetPatienthealthcases()
+    GetPatienthealthcasedefines()
   }, [])
 
   return (

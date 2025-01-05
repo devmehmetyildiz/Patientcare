@@ -31,38 +31,37 @@ export default class RoomsCreate extends Component {
     })
 
     return (
-      Rooms.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Rooms"}>
-                <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Rooms.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Rooms"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Rooms.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper dimmer isLoading={Rooms.isLoading}>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Rooms"}>
+              <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Rooms.Page.CreateHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Rooms"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Rooms.isLoading}
+            buttonText={t('Common.Button.Create')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

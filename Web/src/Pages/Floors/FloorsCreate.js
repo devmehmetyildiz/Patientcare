@@ -20,38 +20,37 @@ export default class FloorsCreate extends Component {
     ]
 
     return (
-      Floors.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Floors"}>
-                <Breadcrumb.Section >{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Floors.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Gender')} name="Gender" options={Genderoptions} formtype='dropdown' />
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Floors"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Floors.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper isLoading={Floors.isLoading} dimmer>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Floors"}>
+              <Breadcrumb.Section >{t('Pages.Floors.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Floors.Page.CreateHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Name')} name="Name" />
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Floors.Column.Gender')} name="Gender" options={Genderoptions} formtype='dropdown' />
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Floors"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Floors.isLoading}
+            buttonText={t('Common.Button.Create')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 
@@ -59,9 +58,9 @@ export default class FloorsCreate extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { AddFloors, history, fillFloornotification, Profile, closeModal } = this.props
-   
+
     const t = Profile?.i18n?.t
-   
+
     const data = this.context.getForm(this.PAGE_NAME)
 
     let errors = []

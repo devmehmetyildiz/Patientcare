@@ -51,43 +51,42 @@ export default class Patienthealthcasedefines extends Component {
     })
 
     return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Patienthealthcasedefines"}>
-                      <Breadcrumb.Section>{t('Pages.Patienthealthcasedefines.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Patienthealthcasedefines.Page.CreateHeader')}
-                  Pagecreatelink={"/Patienthealthcasedefines/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-            }
-          </Pagewrapper>
-          <PatienthealthcasedefinesDelete />
-        </React.Fragment>
+      <React.Fragment>
+        <Pagewrapper dimmer isLoading={isLoading}>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Patienthealthcasedefines"}>
+                    <Breadcrumb.Section>{t('Pages.Patienthealthcasedefines.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Patienthealthcasedefines.Page.CreateHeader')}
+                Pagecreatelink={"/Patienthealthcasedefines/Create"}
+                Columns={Columns}
+                list={list}
+                initialConfig={initialConfig}
+                metaKey={metaKey}
+                Showcreatebutton
+                Showcolumnchooser
+                Showexcelexport
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+          }
+        </Pagewrapper>
+        <PatienthealthcasedefinesDelete />
+      </React.Fragment>
     )
   }
 }

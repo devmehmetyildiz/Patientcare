@@ -66,9 +66,6 @@ export default function CasesCreate(props) {
     if (!validator.isNumber(data.Personelstatus)) {
       errors.push({ type: 'Error', code: t('Pages.Cases.Page.Header'), description: t('Pages.Cases.Messages.Personelstatusrequired') })
     }
-    if (!validator.isString(data.Casecolor)) {
-      errors.push({ type: 'Error', code: t('Pages.Cases.Page.Header'), description: t('Pages.Cases.Messages.Casecolorrequired') })
-    }
     if (!validator.isString(data.Shortname)) {
       errors.push({ type: 'Error', code: t('Pages.Cases.Page.Header'), description: t('Pages.Cases.Messages.Shortnamerequired') })
     }

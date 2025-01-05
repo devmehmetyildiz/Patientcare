@@ -55,43 +55,42 @@ export default class Rooms extends Component {
     })
 
     return (
-      isLoading ? <LoadingPage /> :
-        <React.Fragment>
-          <Pagewrapper>
-            <Headerwrapper>
-              <Grid columns='2' >
-                <GridColumn width={8}>
-                  <Breadcrumb size='big'>
-                    <Link to={"/Rooms"}>
-                      <Breadcrumb.Section>{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
-                    </Link>
-                  </Breadcrumb>
-                </GridColumn>
-                <Settings
-                  Profile={Profile}
-                  Pagecreateheader={t('Pages.Rooms.Page.CreateHeader')}
-                  Pagecreatelink={"/Rooms/Create"}
-                  Columns={Columns}
-                  list={list}
-                  initialConfig={initialConfig}
-                  metaKey={metaKey}
-                  Showcreatebutton
-                  Showcolumnchooser
-                  Showexcelexport
-                />
-              </Grid>
-            </Headerwrapper>
-            <Pagedivider />
-            {list.length > 0 ?
-              <div className='w-full mx-auto '>
-                {Profile.Ismobile ?
-                  <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                  <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-              </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-            }
-          </Pagewrapper>
-          <RoomsDelete />
-        </React.Fragment>
+      <React.Fragment>
+        <Pagewrapper isLoading={isLoading} dimmer>
+          <Headerwrapper>
+            <Grid columns='2' >
+              <GridColumn width={8}>
+                <Breadcrumb size='big'>
+                  <Link to={"/Rooms"}>
+                    <Breadcrumb.Section>{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
+                  </Link>
+                </Breadcrumb>
+              </GridColumn>
+              <Settings
+                Profile={Profile}
+                Pagecreateheader={t('Pages.Rooms.Page.CreateHeader')}
+                Pagecreatelink={"/Rooms/Create"}
+                Columns={Columns}
+                list={list}
+                initialConfig={initialConfig}
+                metaKey={metaKey}
+                Showcreatebutton
+                Showcolumnchooser
+                Showexcelexport
+              />
+            </Grid>
+          </Headerwrapper>
+          <Pagedivider />
+          {list.length > 0 ?
+            <div className='w-full mx-auto '>
+              {Profile.Ismobile ?
+                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+          }
+        </Pagewrapper>
+        <RoomsDelete />
+      </React.Fragment>
     )
   }
 

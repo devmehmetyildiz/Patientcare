@@ -222,7 +222,6 @@ export const FloorsSlice = createSlice({
             .addCase(GetFloors.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetFloors.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -230,6 +229,7 @@ export const FloorsSlice = createSlice({
             })
             .addCase(GetFloors.rejected, (state, action) => {
                 state.isLoading = false;
+                state.list = [];
                 state.errMsg = action.error.message;
             })
             .addCase(GetFloor.pending, (state) => {

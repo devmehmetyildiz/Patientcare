@@ -27,38 +27,37 @@ export default class CostumertypesCreate extends Component {
     })
 
     return (
-      Costumertypes.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Costumertypes"}>
-                <Breadcrumb.Section >{t('Pages.Costumertypes.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Costumertypes.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Name')} name="Name" />
-              <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Costumertypes"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Costumertypes.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
+      <Pagewrapper isLoading={Costumertypes.isLoading} dimmer>
+        <Headerwrapper>
+          <Headerbredcrump>
+            <Link to={"/Costumertypes"}>
+              <Breadcrumb.Section >{t('Pages.Costumertypes.Page.Header')}</Breadcrumb.Section>
+            </Link>
+            <Breadcrumb.Divider icon='right chevron' />
+            <Breadcrumb.Section>{t('Pages.Costumertypes.Page.CreateHeader')}</Breadcrumb.Section>
+          </Headerbredcrump>
+          {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Form>
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Name')} name="Name" />
+            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Costumertypes.Column.Department')} name="Departments" multiple options={Departmentoptions} formtype="dropdown" modal={DepartmentsCreate} />
+          </Form>
+        </Contentwrapper>
+        <Footerwrapper>
+          <Gobackbutton
+            history={history}
+            redirectUrl={"/Costumertypes"}
+            buttonText={t('Common.Button.Goback')}
+          />
+          <Submitbutton
+            isLoading={Costumertypes.isLoading}
+            buttonText={t('Common.Button.Create')}
+            submitFunction={this.handleSubmit}
+          />
+        </Footerwrapper>
+      </Pagewrapper >
     )
   }
 

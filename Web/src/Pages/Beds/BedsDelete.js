@@ -28,6 +28,7 @@ export default function BedsDelete(props) {
           {t('Common.Button.Giveup')}
         </Button>
         <Button
+          loading={Beds.isLoading}
           content={t('Common.Button.Delete')}
           labelPosition='right'
           icon='checkmark'

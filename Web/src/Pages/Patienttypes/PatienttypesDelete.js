@@ -31,6 +31,7 @@ export default class PatienttypesDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Patienttypes.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'

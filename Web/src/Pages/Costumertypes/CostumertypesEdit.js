@@ -54,7 +54,7 @@ export default class CostumertypesEdit extends Component {
 
     return (
       Costumertypes.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
+        <Pagewrapper dimmer isLoading={Costumertypes.isLoading}>
           <Headerwrapper>
             <Headerbredcrump>
               <Link to={"/Costumertypes"}>

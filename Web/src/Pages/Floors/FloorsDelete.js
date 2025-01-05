@@ -31,6 +31,7 @@ export default class FloorsDelete extends Component {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
+            loading={Floors.isLoading}
             content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
