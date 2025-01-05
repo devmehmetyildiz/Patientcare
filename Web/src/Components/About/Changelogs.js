@@ -380,6 +380,18 @@ const version1_1_0_14 = {
     ],
 }
 
+const version1_1_0_15 = {
+    version: "1.1.0.15",
+    features: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Bekleyen Onaylar Sayfası Eklendi",
+            ],
+        },
+
+    ],
+}
+
 export {
     version1_1_0_1,
     version1_1_0_2,
@@ -394,4 +406,5 @@ export {
     version1_1_0_12,
     version1_1_0_13,
     version1_1_0_14,
+    version1_1_0_15,
 }
