@@ -7,6 +7,12 @@ const bcrypt = require('bcrypt')
 const CreateNotification = require("../Utilities/CreateNotification")
 const { notificationTypes, usermovementypes } = require("../Constants/Defines")
 
+const USERNAME_REGEX = /^[a-z][a-z0-9]{2,24}$/
+
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 async function Register(req, res, next) {
 
     try {
@@ -183,9 +189,22 @@ async function AddUser(req, res, next) {
         Language,
         Email,
         Password,
+        PasswordRe,
         Roles,
     } = req.body
 
+    if (!USERNAME_REGEX.test(Username)) {
+        validationErrors.push(req.t('Users.Error.UsernameHint'))
+    }
+    if (!PASSWORD_REGEX.test(Password)) {
+        validationErrors.push(req.t('Users.Error.PasswordHint'))
+    }
+    if (!EMAIL_REGEX.test(Email)) {
+        validationErrors.push(req.t('Users.Error.EmailHint'))
+    }
+    if (Password !== PasswordRe) {
+        validationErrors.push(req.t('Users.Error.PasswordSameHint'))
+    }
     if (!validator.isString(Username)) {
         validationErrors.push(req.t('Users.Error.UsernameRequired'))
     }
@@ -200,6 +219,9 @@ async function AddUser(req, res, next) {
     }
     if (!validator.isString(Password)) {
         validationErrors.push(req.t('Users.Error.PasswordRequired'))
+    }
+    if (!validator.isString(PasswordRe)) {
+        validationErrors.push(req.t('Users.Error.PasswordReRequired'))
     }
     if (!validator.isString(Email)) {
         validationErrors.push(req.t('Users.Error.EmailRequired'))

@@ -9,7 +9,7 @@ import 'react-clock/dist/Clock.css';
 
 export default function FormInput(props) {
 
-    const { validationfunc, validationmessage, display, additionalicon, page, isFormvisible, disableOnchange, effect } = props
+    const { validationfunc, validationmessage, display, additionalicon, page, isFormvisible, disableOnchange, effect, nonValid, nonValidMessage } = props
     const name = `${page}/${props.name}`
     const context = React.useContext(FormContext)
     const [formdata, setFormdata] = useState(context.formstates)
@@ -200,6 +200,12 @@ export default function FormInput(props) {
                 {validationmessage && (!isvalidate && <Popup
                     trigger={<Icon link color='red' name='bell' />}
                     content={<Label color='red' ribbon>{validationmessage}</Label>}
+                    position='left center'
+                    on='click'
+                />)}
+                {nonValidMessage && (nonValid && <Popup
+                    trigger={<Icon link color='red' name='bell' />}
+                    content={<Label color='red' ribbon>{nonValidMessage}</Label>}
                     position='left center'
                     on='click'
                 />)}

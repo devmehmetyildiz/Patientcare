@@ -244,6 +244,13 @@ export const STORAGE_KEY_PATIENTCARE_ACCESSTOKEN = 'ELDERCAMP_STORAGE_KEY_1'
 export const STORAGE_KEY_PATIENTCARE_REFRESHTOKEN = 'ELDERCAMP_STORAGE_KEY_2'
 export const STORAGE_KEY_PATIENTCARE_LANGUAGE = 'ELDERCAMP_STORAGE_KEY_3'
 export const STORAGE_KEY_PATIENTCARE_EXPIRETIME = 'ELDERCAMP_STORAGE_KEY_4'
+export const STORAGE_KEY_PATIENTCARE_SHOWEDVERSION = 'ELDERCAMP_STORAGE_KEY_5'
 
 export const CASH_TYPE_OUTCOME = -1
 export const CASH_TYPE_INCOME = 1
+
+export const USERNAME_REGEX = /^[a-z][a-z0-9]{2,24}$/
+
+export const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/
+
+export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

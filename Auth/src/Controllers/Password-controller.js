@@ -10,6 +10,8 @@ const validator = require('../Utilities/Validator')
 const nodemailer = require('nodemailer');
 const { Createresettemplate } = require('../Utilities/Htmltemplates')
 
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/
+
 async function Createrequest(req, res, next) {
   let validationErrors = []
   if (!req.params.email) {
@@ -31,6 +33,9 @@ async function Createrequest(req, res, next) {
         }
       })
       user = userresponse.data
+      if (!user) {
+        return next(createAuthError(req.t('Oauth.Error.UserNotFound'), req.t('Oauth'), req.language))
+      }
     } catch (error) {
       return next(requestErrorCatcher(error, 'Userrole'))
     }
@@ -148,7 +153,6 @@ async function Getrequestbyuser(req, res, next) {
   }
 }
 
-
 async function Validateresetrequest(req, res, next) {
   let validationErrors = []
   if (!req.params.requestId) {
@@ -202,6 +206,9 @@ async function Resetpassword(req, res, next) {
   let validationErrors = []
   if (!validator.isString(Password)) {
     validationErrors.push(req.t('Password.Error.PasswordRequired'))
+  }
+  if (!PASSWORD_REGEX.test(Password)) {
+    validationErrors.push(req.t('Password.Error.PasswordHint'))
   }
   if (!validator.isUUID(RequestId)) {
     validationErrors.push(req.t('Password.Error.RequestIDRequired'))

@@ -4,6 +4,7 @@ import { Sidebar as Sidebarcomponent, LoadingPage, Navbar } from '../../Componen
 import { Icon, Menu, Segment, SidebarPushable, SidebarPusher, Sidebar, Label } from 'semantic-ui-react';
 import UsernotificationSidebar from '../../Containers/Usernotifications/UsernotificationSidebar';
 import { STORAGE_KEY_PATIENTCARE_ACCESSTOKEN, STORAGE_KEY_PATIENTCARE_LANGUAGE } from '../../Utils/Constants';
+import VersionTracker from '../../Components/About/VersionTracker';
 export default class Layout extends Component {
 
   constructor(props) {
@@ -107,6 +108,9 @@ export default class Layout extends Component {
                 </div>
               </div>
             </div>
+            <VersionTracker
+              Profile={Profile}
+            />
           </SidebarPusher>
         </SidebarPushable>
     )

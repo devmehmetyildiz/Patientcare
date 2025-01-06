@@ -1,78 +1,55 @@
-import React, { Component } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, } from 'react-router-dom'
 import { Breadcrumb, Form } from 'semantic-ui-react'
-import Literals from './Literals'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
-import { Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-export default class PasswordChange extends Component {
+import {
+  Contentwrapper, Footerwrapper, FormInput, Gobackbutton, Headerbredcrump,
+  Headerwrapper, Pagedivider, Pagewrapper, Submitbutton
+} from '../../Components'
+import { PASSWORD_REGEX } from '../../Utils/Constants'
 
-  PAGE_NAME = "PasswordChange"
+export default function PasswordChange(props) {
+  const PAGE_NAME = "PasswordChange"
 
-  render() {
+  const { Profile, history, fillnotification, Changepassword } = props
 
-    const { Profile } = this.props
-    const { isLoading, username, history } = Profile
+  const { isLoading, username } = Profile
 
-    return (
-      isLoading  ? <LoadingPage /> :
-        <Pagewrapper Profile={Profile}>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/"}>
-                <Breadcrumb.Section>{Literals.Page.Pageheader[Profile.Language]}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{username}</Breadcrumb.Section>
-              <Breadcrumb.Divider icon='right chevron' />
-            </Headerbredcrump>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Oldpassword[Profile.Language]} name="Oldpassword" />
-              <Form.Group widths={"equal"}>
-                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpassword[Profile.Language]} name="Newpassword" />
-                <FormInput page={this.PAGE_NAME} type='password' placeholder={Literals.Columns.Newpasswordre[Profile.Language]} name="Newpasswordre" />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper Profile={Profile}>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/"}
-              buttonText={Literals.Button.Goback[Profile.Language]}
-            />
-            <Submitbutton
-              isLoading={isLoading}
-              buttonText={Literals.Button.Update[Profile.Language]}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper>
-    )
-  }
+  const t = Profile?.i18n?.t
 
-  handleSubmit = (e) => {
+  const [passwordSame, setPasswordSame] = useState(false)
+  const context = useContext(FormContext)
+
+  const { getRecord, record } = context
+
+  useEffect(() => {
+    const password = getRecord(PAGE_NAME, 'Newpassword')
+    const passwordRe = getRecord(PAGE_NAME, 'Newpasswordre')
+    setPasswordSame(password !== passwordRe)
+  }, [record])
+
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { history, fillnotification, Profile, Changepassword } = this.props
-
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
 
     let errors = []
     if (!validator.isString(data.Oldpassword)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Oldpasswordrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Passwordchange.Page.Header'), description: t('Pages.Passwordchange.Messages.OldpasswordReqired') })
     }
     if (!validator.isString(data.Newpassword)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Newpasswordrequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Passwordchange.Page.Header'), description: t('Pages.Passwordchange.Messages.NewpasswordReqired') })
+    }
+    if (!PASSWORD_REGEX.test(data.Newpassword)) {
+      errors.push({ type: 'Error', code: t('Pages.Passwordchange.Page.Header'), description: t('Pages.Passwordchange.Messages.PasswordHint') })
     }
     if (!validator.isString(data.Newpasswordre)) {
-      errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Newpasswordrerequired[Profile.Language] })
+      errors.push({ type: 'Error', code: t('Pages.Passwordchange.Page.Header'), description: t('Pages.Passwordchange.Messages.NewpasswordConfirmReqired') })
     }
     if (data.Newpassword && data.Newpasswordre) {
       if (data.Newpassword !== data.Newpasswordre) {
-        errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Passworddidntmatch[Profile.Language] })
+        errors.push({ type: 'Error', code: t('Pages.Passwordchange.Page.Header'), description: t('Pages.Passwordchange.Messages.NewPasswordsarenotsame') })
       }
     }
     if (errors.length > 0) {
@@ -83,5 +60,41 @@ export default class PasswordChange extends Component {
       Changepassword({ data, history })
     }
   }
+
+  return (
+    <Pagewrapper dimmer isLoading={isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/"}>
+            <Breadcrumb.Section>{t('Pages.Passwordchange.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{username}</Breadcrumb.Section>
+          <Breadcrumb.Divider icon='right chevron' />
+        </Headerbredcrump>
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <Form>
+          <FormInput page={PAGE_NAME} type='password'  required placeholder={t('Pages.Passwordchange.Columns.Currentpassword')} name="Oldpassword" />
+          <Form.Group widths={"equal"}>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Passwordchange.Columns.Newpassword')} name="Newpassword" type='password' validationfunc={(e) => PASSWORD_REGEX.test(e)} validationmessage={t('Pages.Passwordchange.Messages.PasswordHint')} attention={t('Pages.Users.Messages.PasswordHint')} />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Passwordchange.Columns.NewpasswordRe')} name="Newpasswordre" type='password' nonValid={passwordSame} nonValidMessage={t('Pages.Passwordchange.Messages.PasswordSameHint')} />
+          </Form.Group>
+        </Form>
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={isLoading}
+          buttonText={t('Common.Button.Update')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper>
+  )
 }
-PasswordChange.contextType = FormContext

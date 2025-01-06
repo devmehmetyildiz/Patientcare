@@ -52,7 +52,6 @@ export default function AxiosErrorHelper(error) {
             }
             return notifications
         }
-        console.log('error: ', error);
     }
 
     return null
@@ -61,10 +60,12 @@ export default function AxiosErrorHelper(error) {
 
 
 function handle401Error(error) {
+    let notifications = []
     localStorage.removeItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
     localStorage.removeItem(STORAGE_KEY_PATIENTCARE_REFRESHTOKEN)
     localStorage.removeItem(STORAGE_KEY_PATIENTCARE_LANGUAGE)
     localStorage.removeItem(STORAGE_KEY_PATIENTCARE_EXPIRETIME)
+    console.log('window.location.pathname: ', window.location.pathname);
     if (window.location.pathname !== "/Login") {
         const params = new URLSearchParams(window.location.search);
         const redirecturl = params.get('redirecturl');
@@ -76,8 +77,18 @@ function handle401Error(error) {
         window.location = `/Login?${params.toString().replace(/%2F/g, '/')}`
     }
     if (window.location.pathname === "/Login") {
-        return { type: 'Error', code: error.code, description: 'Kullanıcı Adı veya şifre Hatalı' }
+        if (error.response && error.response.data) {
+            if (error.response.data.list) {
+                let listoferror = error.response.data.list
+                listoferror.forEach(err => {
+                    notifications.push({ type: 'Error', code: err.code ? err.code : 'Server hatası', description: err.description ? err.description : 'Tanımlanamayan hata' })
+                });
+            } else {
+                notifications.push({ type: 'Error', code: error.response.data.code, description: error.response.data.description })
+            }
+        }
+        return notifications.length > 0 ? notifications : { type: 'Error', code: error.code, description: 'Kullanıcı Adı veya şifre Hatalı' }
     } else {
-        return { type: 'Error', code: error.code, description: 'Lütfen Tekrardan Giriş Yapınız' }
+        return { type: 'Error', code: "Elder Camp", description: 'Lütfen Tekrardan Giriş Yapınız' }
     }
 }

@@ -4,6 +4,8 @@ const createNotFoundError = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const bcrypt = require('bcrypt')
 
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/
+
 async function Getusersalt(req, res, next) {
 
     let validationErrors = []
@@ -38,18 +40,18 @@ async function Getuserbyemail(req, res, next) {
     }
     try {
         const user = await db.userModel.findOne({ where: { Email: req.params.email } })
+        if (!user) {
+            return next(createNotFoundError(req.t('Profile.Error.NotFoundByEmail'), req.t('Profile'), req.language))
+        }
+        if (!user.Isactive) {
+            return next(createNotFoundError(req.t('Profile.Error.NotActiveByEmail'), req.t('Profile'), req.language))
+        }
         user.Roleuuids = await db.userroleModel.findAll({
             where: {
                 UserID: user.Uuid
             },
             attributes: ['RoleID']
         })
-        if (!user) {
-            return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
-        }
-        if (!user.Isactive) {
-            return next(createNotFoundError(req.t('Profile.Error.NotActive'), req.t('Profile'), req.language))
-        }
         res.status(200).json(user)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -67,18 +69,18 @@ async function Getuserbyusername(req, res, next) {
     }
     try {
         const user = await db.userModel.findOne({ where: { Username: req.params.username } })
-        user.Roleuuids = await db.userroleModel.findAll({
-            where: {
-                UserID: user.Uuid
-            },
-            attributes: ['RoleID']
-        })
         if (!user) {
             return next(createNotFoundError(req.t('Profile.Error.NotFound'), req.t('Profile'), req.language))
         }
         if (!user.Isactive) {
             return next(createNotFoundError(req.t('Profile.Error.NotActive'), req.t('Profile'), req.language))
         }
+        user.Roleuuids = await db.userroleModel.findAll({
+            where: {
+                UserID: user.Uuid
+            },
+            attributes: ['RoleID']
+        })
         res.status(200).json(user)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
@@ -136,8 +138,11 @@ async function Changepassword(req, res, next) {
         Newpasswordre,
     } = req.body
 
+    if (!PASSWORD_REGEX.test(Newpassword)) {
+        validationErrors.push(req.t('Password.Error.PasswordHint'))
+    }
     if (!validator.isString(Newpassword)) {
-        validationErrors.push(req.t('Profile.Error.NewPasswordRequired'))
+        validationErrors.push(req.t('Users.Error.PasswordHint'))
     }
     if (!validator.isString(Newpasswordre)) {
         validationErrors.push(req.t('Profile.Error.NewPasswordReRequired'))

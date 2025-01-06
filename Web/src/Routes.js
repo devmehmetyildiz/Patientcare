@@ -171,7 +171,6 @@ const Usagetypes = lazy(() => import('./Containers/Usagetypes/Usagetypes'));
 const UsagetypesCreate = lazy(() => import('./Containers/Usagetypes/UsagetypesCreate'));
 const UsagetypesEdit = lazy(() => import('./Containers/Usagetypes/UsagetypesEdit'));
 
-const ProfileEdit = lazy(() => import('./Containers/Auth/ProfileEdit'));
 const PasswordChange = lazy(() => import('./Containers/Auth/PasswordChange'));
 const Passwordforget = lazy(() => import('./Containers/Auth/Passwordforget'));
 const PasswordReset = lazy(() => import('./Containers/Auth/PasswordReset'));
@@ -519,7 +518,6 @@ class Routes extends Component {
 
       { exact: true, path: "/Usernotifications", auth: true, component: Usernotifications, permission: 'notificationview' },
 
-      { exact: true, path: "/Profile/Edit", auth: true, component: ProfileEdit, permission: 'basic' },
       { exact: true, path: "/Profile/Change-Password", auth: true, component: PasswordChange, permission: 'basic' },
       { exact: true, path: "/About", auth: true, component: About },
       { exact: true, path: "/Passwordreset/:RequestID", auth: false, component: PasswordReset },

@@ -6,7 +6,7 @@ export const FormContext = React.createContext()
 const FormProvider = ({ children }) => {
 
     const [formstates, setFormstates] = useState({})
-    
+
     const [buffer, setBuffer] = useState([])
 
     useEffect(() => {
@@ -47,8 +47,12 @@ const FormProvider = ({ children }) => {
         return body
     }
 
+    const getRecord = (pageName, name) => {
+        return formstates[`${pageName}/${name}`]
+    }
+
     return (
-        <FormContext.Provider value={{ formstates, setFormstates, setForm, clearForm, getForm, setBuffer }}>
+        <FormContext.Provider value={{ formstates, setFormstates, setForm, clearForm, getForm, setBuffer, getRecord, record: formstates }}>
             {children}
         </FormContext.Provider>
     )

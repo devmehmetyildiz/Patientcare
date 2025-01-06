@@ -99,6 +99,9 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
             }
         })
         user = userresponse.data
+        if (!user) {
+            return next(createAuthError(req.t('Oauth.Error.PasswordDindtMatch'), req.t('Oauth'), req.language))
+        }
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
@@ -106,17 +109,20 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
     try {
         const usersaltreponse = await axios({
             method: 'GET',
-            url: config.services.Userrole + `Profile/Getusersalt/${user.Uuid}`,
+            url: config.services.Userrole + `Profile/Getusersalt/${user?.Uuid}`,
             headers: {
                 session_key: config.session.secret
             }
         })
         usersalt = usersaltreponse.data
+        if (!usersalt) {
+            return next(createAuthError(req.t('Oauth.Error.PasswordDindtMatch'), req.t('Oauth'), req.language))
+        }
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
 
-    if (!await ValidatePassword(req.body.Password, user.PasswordHash, usersalt.Salt)) {
+    if (!await ValidatePassword(req.body.Password, user?.PasswordHash, usersalt?.Salt)) {
         return next(createAuthError(req.t('Oauth.Error.PasswordDindtMatch'), req.t('Oauth'), req.language))
     }
 
@@ -200,6 +206,9 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
             }
         })
         user = userresponce.data
+        if (!user) {
+            return next(createAuthError(req.t('Oauth.Error.UserNotFound'), req.t('Oauth'), req.language))
+        }
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }

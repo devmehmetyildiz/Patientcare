@@ -1,7 +1,7 @@
 
 
-const version1_1_0_1 = {
-    version: "1.1.0.1",
+const version1_0_1_1 = {
+    version: "1.0.1.1",
     changes: [
         {
             title: "Güvenlik", commits: [
@@ -36,8 +36,8 @@ const version1_1_0_1 = {
     ]
 }
 
-const version1_1_0_2 = {
-    version: "1.1.0.2",
+const version1_0_1_2 = {
+    version: "1.0.1.2",
     features: [
         {
             title: "Hakedişler", commits: [
@@ -60,8 +60,8 @@ const version1_1_0_2 = {
     ],
 }
 
-const version1_1_0_3 = {
-    version: "1.1.0.3",
+const version1_0_1_3 = {
+    version: "1.0.1.3",
     features: [
         {
             title: "Hakedişler", commits: [
@@ -98,8 +98,8 @@ const version1_1_0_3 = {
     ],
 }
 
-const version1_1_0_5 = {
-    version: "1.1.0.5",
+const version1_0_1_5 = {
+    version: "1.0.1.5",
     features: [
         {
             title: "Kurum Yönetimi", commits: [
@@ -139,8 +139,8 @@ const version1_1_0_5 = {
     ],
 }
 
-const version1_1_0_6 = {
-    version: "1.1.0.6",
+const version1_0_1_6 = {
+    version: "1.0.1.6",
     changes: [
         {
             title: "Genel Arama", commits: [
@@ -165,8 +165,8 @@ const version1_1_0_6 = {
     ],
 }
 
-const version1_1_0_7 = {
-    version: "1.1.0.7",
+const version1_0_1_7 = {
+    version: "1.0.1.7",
     bugs: [
         {
             title: "Hastalar", commits: [
@@ -183,8 +183,8 @@ const version1_1_0_7 = {
     ],
 }
 
-const version1_1_0_8 = {
-    version: "1.1.0.8",
+const version1_0_1_8 = {
+    version: "1.0.1.8",
     bugs: [
         {
             title: "Kurum Yönetimi", commits: [
@@ -231,8 +231,8 @@ const version1_1_0_8 = {
     ],
 }
 
-const version1_1_0_9 = {
-    version: "1.1.0.9",
+const version1_0_1_9 = {
+    version: "1.0.1.9",
     bugs: [
         {
             title: "Hastalar", commits: [
@@ -261,8 +261,8 @@ const version1_1_0_9 = {
     ],
 }
 
-const version1_1_0_10 = {
-    version: "1.1.0.10",
+const version1_0_1_10 = {
+    version: "1.0.1.10",
     bugs: [
         {
             title: "Kullanıcılar", commits: [
@@ -279,8 +279,8 @@ const version1_1_0_10 = {
     ],
 }
 
-const version1_1_0_11 = {
-    version: "1.1.0.11",
+const version1_0_1_11 = {
+    version: "1.0.1.11",
     bugs: [
         {
             title: "Sistem", commits: [
@@ -306,8 +306,8 @@ const version1_1_0_11 = {
     ],
 }
 
-const version1_1_0_12 = {
-    version: "1.1.0.12",
+const version1_0_1_12 = {
+    version: "1.0.1.12",
     bugs: [
         {
             title: "Genel", commits: [
@@ -317,8 +317,8 @@ const version1_1_0_12 = {
     ],
 }
 
-const version1_1_0_13 = {
-    version: "1.1.0.13",
+const version1_0_1_13 = {
+    version: "1.0.1.13",
     bugs: [
         {
             title: "Hakedişler", commits: [
@@ -347,8 +347,8 @@ const version1_1_0_13 = {
     ],
 }
 
-const version1_1_0_14 = {
-    version: "1.1.0.14",
+const version1_0_1_14 = {
+    version: "1.0.1.14",
     bugs: [
         {
             title: "Arama", commits: [
@@ -380,8 +380,8 @@ const version1_1_0_14 = {
     ],
 }
 
-const version1_1_0_15 = {
-    version: "1.1.0.15",
+const version1_0_1_15 = {
+    version: "1.0.1.15",
     features: [
         {
             title: "Kurum Yönetimi", commits: [
@@ -392,19 +392,33 @@ const version1_1_0_15 = {
     ],
 }
 
-export {
-    version1_1_0_1,
-    version1_1_0_2,
-    version1_1_0_3,
-    version1_1_0_5,
-    version1_1_0_6,
-    version1_1_0_7,
-    version1_1_0_8,
-    version1_1_0_9,
-    version1_1_0_10,
-    version1_1_0_11,
-    version1_1_0_12,
-    version1_1_0_13,
-    version1_1_0_14,
-    version1_1_0_15,
+const version1_0_1_16 = {
+    version: "1.0.1.16",
+    changes: [
+        {
+            title: "Güvenlik", commits: [
+                "Parolalar artık En Küçük 8 Karakter, En az 1 büyük harf, 1 küçük harf, 1 adet sayı ve 1 adet özel karakter olmalıdır",
+                "Kullanıcı adları Artık küçük harflerden veya sayılardan oluşur, minmum 3 maximum 25 karakter olmalıdır.",
+            ],
+        },
+    ],
 }
+
+export default
+    [
+        version1_0_1_16,
+        version1_0_1_15,
+        version1_0_1_14,
+        version1_0_1_13,
+        version1_0_1_12,
+        version1_0_1_11,
+        version1_0_1_10,
+        version1_0_1_9,
+        version1_0_1_8,
+        version1_0_1_7,
+        version1_0_1_6,
+        version1_0_1_5,
+        version1_0_1_3,
+        version1_0_1_2,
+        version1_0_1_1,
+    ]
