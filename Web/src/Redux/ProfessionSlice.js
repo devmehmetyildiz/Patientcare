@@ -143,12 +143,8 @@ export const ProfessionsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
     },
     reducers: {
-        handleSelectedProfession: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillProfessionnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -156,9 +152,6 @@ export const ProfessionsSlice = createSlice({
         },
         removeProfessionnotification: (state) => {
             state.notifications.splice(0, 1);
-        },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -226,10 +219,8 @@ export const ProfessionsSlice = createSlice({
 });
 
 export const {
-    handleSelectedProfession,
     fillProfessionnotification,
     removeProfessionnotification,
-    handleDeletemodal,
 } = ProfessionsSlice.actions;
 
 export default ProfessionsSlice.reducer;
