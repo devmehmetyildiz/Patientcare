@@ -16,6 +16,26 @@ async function UpdateProfessionpresetting(req, res, next) {
     PermissionHandler(req, next, 'professionpresettingupdate')
 }
 
+async function SavepreviewProfessionpresetting(req, res, next) {
+    PermissionHandler(req, next, 'professionpresettingupdate')
+}
+
+async function ApproveProfessionpresetting(req, res, next) {
+    PermissionHandler(req, next, 'professionpresettingupdate')
+}
+
+async function CompleteProfessionpresetting(req, res, next) {
+    PermissionHandler(req, next, 'professionpresettingupdate')
+}
+
+async function ActivateProfessionpresetting(req, res, next) {
+    PermissionHandler(req, next, 'professionpresettingupdate')
+}
+
+async function DeactivateProfessionpresetting(req, res, next) {
+    PermissionHandler(req, next, 'professionpresettingupdate')
+}
+
 async function DeleteProfessionpresetting(req, res, next) {
     PermissionHandler(req, next, 'professionpresettingdelete')
 }
@@ -25,5 +45,10 @@ module.exports = {
     GetProfessionpresetting,
     AddProfessionpresetting,
     UpdateProfessionpresetting,
+    SavepreviewProfessionpresetting,
+    ApproveProfessionpresetting,
+    CompleteProfessionpresetting,
+    ActivateProfessionpresetting,
+    DeactivateProfessionpresetting,
     DeleteProfessionpresetting,
 }

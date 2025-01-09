@@ -31,9 +31,21 @@ module.exports = sequelize.define('personelpresettingModel', {
     Isinfinite: {
         type: Sequelize.BOOLEAN
     },
-    Isdeactive: {
+
+    Isonpreview: {
         type: Sequelize.BOOLEAN
     },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
+
+    Isplanactive: {
+        type: Sequelize.BOOLEAN
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },

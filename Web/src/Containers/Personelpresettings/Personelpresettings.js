@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Personelpresettings from "../../Pages/Personelpresettings/Personelpresettings"
-import { GetPersonelpresettings, handleDeletemodal, handleSelectedPersonelpresetting } from "../../Redux/PersonelpresettingSlice"
+import { GetPersonelpresettings, } from "../../Redux/PersonelpresettingSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetShiftdefines } from "../../Redux/ShiftdefineSlice"
 import { GetUsers } from "../../Redux/UserSlice"
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetPersonelpresettings, handleDeletemodal, handleSelectedPersonelpresetting,
+  GetPersonelpresettings,
   GetFloors, GetShiftdefines, GetUsers
 }
 

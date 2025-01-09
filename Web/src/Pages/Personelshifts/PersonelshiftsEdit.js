@@ -9,6 +9,7 @@ import PersonelshiftsProfessionpresettings from '../../Containers/Personelshifts
 import PersonelshiftsPersonelpresettings from '../../Containers/Personelshifts/PersonelshiftsPersonelpresettings'
 import PersonelshiftsPrepare from '../../Containers/Personelshifts/PersonelshiftsPrepare'
 import PersonelshiftsFastcreate from '../../Containers/Personelshifts/PersonelshiftsFastcreate'
+import usePreviousUrl from '../../Hooks/usePreviousUrl'
 
 export default function PersonelshiftsEdit(props) {
   const PAGE_NAME = "PersonelshiftsEdit"
@@ -16,7 +17,9 @@ export default function PersonelshiftsEdit(props) {
   const { GetProfessions, GetProfessionpresettings, GetPersonelpresettings, GetFloors, AddPersonelshifts, fillPersonelshiftnotification, GetShiftdefines, GetUsers, GetUsagetypes } = props
   const { Personelshifts, Professions, Professionpresettings, Personelpresettings, Profile, history, closeModal } = props
 
+
   const [calculatedShifts, setCalculatedShifts] = useState([])
+  const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
   const t = Profile?.i18n?.t
@@ -85,7 +88,8 @@ export default function PersonelshiftsEdit(props) {
         data: {
           ...Personelshifts.selected_record,
           ...data
-        }, history, closeModal
+        }, history, closeModal,
+        redirectUrl: calculateRedirectUrl({ url: '/Personelshifts', usePrev: true }),
       })
     }
   }

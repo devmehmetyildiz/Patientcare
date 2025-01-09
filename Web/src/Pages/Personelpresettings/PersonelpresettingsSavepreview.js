@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default function PersonelpresettingsDelete(props) {
+export default function PersonelpresettingsSavepreview(props) {
 
-  const { open, setOpen, record, setRecord, Personelpresettings, Profile, DeletePersonelpresettings } = props
+  const { open, setOpen, record, setRecord, Personelpresettings, Profile, SavepreviewPersonelpresettings } = props
 
   const t = Profile?.i18n?.t
 
@@ -14,15 +14,14 @@ export default function PersonelpresettingsDelete(props) {
         onOpen={() => setOpen(true)}
         open={open}
       >
-        <Modal.Header >{t('Pages.Personelpresettings.Page.DeleteHeader')}</Modal.Header>
+        <Modal.Header >{t('Pages.Personelpresettings.Page.SavepreviewHeader')}</Modal.Header>
         <Modal.Content image>
           <Dimmer inverted active={Personelpresettings.isLoading}>
             <Loader inverted active />
           </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{record?.Startdate} </span>
-              {t('Pages.Personelpresettings.Delete.Label.Check')}
+              {t('Pages.Personelpresettings.Savepreview.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -35,11 +34,11 @@ export default function PersonelpresettingsDelete(props) {
           </Button>
           <Button
             loading={Personelpresettings.isLoading}
-            content={t('Common.Button.Delete')}
+            content={t('Common.Button.Savepreview')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeletePersonelpresettings({
+              SavepreviewPersonelpresettings({
                 uuid: record?.Uuid || '',
                 onSuccess: () => {
                   setOpen(false)

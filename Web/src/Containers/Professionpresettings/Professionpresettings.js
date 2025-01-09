@@ -1,10 +1,9 @@
 import { connect } from 'react-redux'
 import Professionpresettings from "../../Pages/Professionpresettings/Professionpresettings"
-import { GetProfessionpresettings, handleDeletemodal, handleSelectedProfessionpresetting } from "../../Redux/ProfessionpresettingSlice"
+import { GetProfessionpresettings } from "../../Redux/ProfessionpresettingSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 import { GetShiftdefines } from "../../Redux/ShiftdefineSlice"
 import { GetProfessions } from "../../Redux/ProfessionSlice"
-
 
 const mapStateToProps = (state) => ({
   Professionpresettings: state.Professionpresettings,
@@ -15,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetProfessionpresettings, handleDeletemodal, handleSelectedProfessionpresetting, GetFloors,
+  GetProfessionpresettings, GetFloors,
   GetShiftdefines, GetProfessions
 }
 

@@ -1,46 +1,55 @@
-import React, { Component } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
+import React from 'react'
+import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default class ProfessionpresettingsDelete extends Component {
-  render() {
-    const { Profile, Professionpresettings, DeleteProfessionpresettings, handleDeletemodal, handleSelectedProfessionpresetting } = this.props
-    const { isDeletemodalopen, selected_record } = Professionpresettings
-    return (
+export default function ProfessionpresettingsDelete(props) {
+
+  const { open, setOpen, record, setRecord, Professionpresettings, Profile, DeleteProfessionpresettings } = props
+
+  const t = Profile?.i18n?.t
+
+  return (
+    <DimmerDimmable blurring >
       <Modal
-        onClose={() => handleDeletemodal(false)}
-        onOpen={() => handleDeletemodal(true)}
-        open={isDeletemodalopen}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        open={open}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header >{t('Pages.Professionpresettings.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
+          <Dimmer inverted active={Professionpresettings.isLoading}>
+            <Loader inverted active />
+          </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{selected_record?.Name} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              {t('Pages.Professionpresettings.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button color='black' onClick={() => {
-            handleDeletemodal(false)
-            handleSelectedProfessionpresetting({})
+            setOpen(false)
+            setRecord(null)
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            loading={Professionpresettings.isLoading}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeleteProfessionpresettings(selected_record)
-              handleDeletemodal(false)
-              handleSelectedProfessionpresetting({})
+              DeleteProfessionpresettings({
+                uuid: record?.Uuid || '',
+                onSuccess: () => {
+                  setOpen(false)
+                  setRecord(null)
+                }
+              })
             }}
             positive
           />
         </Modal.Actions>
       </Modal>
-    )
-  }
+    </DimmerDimmable>
+  )
 }

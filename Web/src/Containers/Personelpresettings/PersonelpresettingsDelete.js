@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PersonelpresettingsDelete from "../../Pages/Personelpresettings/PersonelpresettingsDelete"
-import { DeletePersonelpresettings, handleDeletemodal, handleSelectedPersonelpresetting } from "../../Redux/PersonelpresettingSlice"
+import { DeletePersonelpresettings } from "../../Redux/PersonelpresettingSlice"
 
 const mapStateToProps = (state) => ({
     Personelpresettings: state.Personelpresettings,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeletePersonelpresettings, handleDeletemodal, handleSelectedPersonelpresetting
+    DeletePersonelpresettings
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonelpresettingsDelete)

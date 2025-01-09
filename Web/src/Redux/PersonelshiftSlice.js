@@ -39,7 +39,7 @@ export const AddPersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Business, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Add'),
                 description: t('Redux.Personelshifts.Messages.Add'),
@@ -64,7 +64,7 @@ export const EditPersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Update'),
@@ -90,7 +90,7 @@ export const SavepreviewPersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Savepreview/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Savepreview'),
@@ -113,7 +113,7 @@ export const ApprovePersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Approve/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Approve'),
@@ -136,7 +136,7 @@ export const CompletePersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Complete/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Complete'),
@@ -159,7 +159,7 @@ export const ActivatePersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Activate/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Activated'),
@@ -182,7 +182,7 @@ export const DeactivatePersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Deactivate/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Update'),
                 description: t('Redux.Personelshifts.Messages.Deactivated'),
@@ -196,6 +196,7 @@ export const DeactivatePersonelshifts = createAsyncThunk(
         }
     }
 );
+
 export const DeletePersonelshifts = createAsyncThunk(
     'Personelshifts/DeletePersonelshifts',
     async ({ uuid, onSuccess }, { dispatch, getState }) => {
@@ -204,7 +205,7 @@ export const DeletePersonelshifts = createAsyncThunk(
             const state = getState()
             const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Business, `${ROUTES.PERSONELSHIFT}/${uuid}`);
-            dispatch(fillPatientvisitnotification({
+            dispatch(fillPersonelshiftnotification({
                 type: 'Success',
                 code: t('Common.Code.Delete'),
                 description: t('Redux.Personelshifts.Messages.Delete'),

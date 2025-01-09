@@ -6,7 +6,6 @@ import { Popup } from "semantic-ui-react"
 import config from '../../Config';
 import { Link } from 'react-router-dom';
 import Pagedivider from '../Pagedivider';
-import Literals from '../../Utils/Literalregistrar';
 import { Tb3DRotate, TbActivity, TbGauge, TbCalendar, TbReportMoney } from "react-icons/tb"
 import { MdSettings } from "react-icons/md"
 
@@ -194,8 +193,8 @@ export const getSidebarroutes = (Profile) => {
             icon: <TbCalendar className=' text-[#2355a0]' />,
             items: [
                 { id: 1, subtitle: t('Pages.Personelshifts.Page.Header'), url: "/Personelshifts", permission: checkAuth('personelshiftview') },
-                { id: 2, subtitle: Literals.Personelpresettings.Page.Pageheader[Profile.Language], url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
-                { id: 3, subtitle: Literals.Professionpresettings.Page.Pageheader[Profile.Language], url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
+                { id: 2, subtitle: t('Pages.Personelpresettings.Page.Header'), url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
+                { id: 3, subtitle: t('Pages.Professionpresettings.Page.Header'), url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
                 { id: 4, subtitle: t('Pages.Shiftdefines.Page.Header'), url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },
             ]
         },

@@ -16,6 +16,26 @@ async function UpdatePersonelpresetting(req, res, next) {
     PermissionHandler(req, next, 'personelpresettingupdate')
 }
 
+async function SavepreviewPersonelpresetting(req, res, next) {
+    PermissionHandler(req, next, 'personelpresettingupdate')
+}
+
+async function ApprovePersonelpresetting(req, res, next) {
+    PermissionHandler(req, next, 'personelpresettingupdate')
+}
+
+async function CompletePersonelpresetting(req, res, next) {
+    PermissionHandler(req, next, 'personelpresettingupdate')
+}
+
+async function ActivatePersonelpresetting(req, res, next) {
+    PermissionHandler(req, next, 'personelpresettingupdate')
+}
+
+async function DeactivatePersonelpresetting(req, res, next) {
+    PermissionHandler(req, next, 'personelpresettingupdate')
+}
+
 async function DeletePersonelpresetting(req, res, next) {
     PermissionHandler(req, next, 'personelpresettingdelete')
 }
@@ -25,5 +45,10 @@ module.exports = {
     GetPersonelpresetting,
     AddPersonelpresetting,
     UpdatePersonelpresetting,
+    SavepreviewPersonelpresetting,
+    ApprovePersonelpresetting,
+    CompletePersonelpresetting,
+    ActivatePersonelpresetting,
+    DeactivatePersonelpresetting,
     DeletePersonelpresetting,
 }

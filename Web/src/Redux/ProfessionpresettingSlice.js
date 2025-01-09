@@ -4,33 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Professionpresetting added successfully',
-        tr: 'Meslek Ön Ayarı Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Professionpresetting updated successfully',
-        tr: 'Meslek Ön Ayarı Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Professionpresetting Deleted successfully',
-        tr: 'Meslek Ön Ayarı Başarı ile Silindi'
-    },
-}
-
 export const GetProfessionpresettings = createAsyncThunk(
     'Professionpresettings/GetProfessionpresettings',
     async (_, { dispatch }) => {
@@ -64,12 +37,12 @@ export const AddProfessionpresettings = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Business, ROUTES.PROFESSIONPRESETTING, data);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Add'),
+                description: t('Redux.Professionpresettings.Messages.Add'),
             }));
             clearForm && clearForm('ProfessionpresettingsCreate')
             closeModal && closeModal()
@@ -88,12 +61,12 @@ export const EditProfessionpresettings = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PROFESSIONPRESETTING, data);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Update'),
             }));
             closeModal && closeModal()
             clearForm && clearForm('ProfessionpresettingsUpdate')
@@ -107,19 +80,135 @@ export const EditProfessionpresettings = createAsyncThunk(
     }
 );
 
-export const DeleteProfessionpresettings = createAsyncThunk(
-    'Professionpresettings/DeleteProfessionpresettings',
-    async (data, { dispatch, getState }) => {
+export const SavepreviewProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/SavepreviewProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/${data.Uuid}`);
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/Savepreview/${uuid}`);
             dispatch(fillProfessionpresettingnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Savepreview'),
             }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillProfessionpresettingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ApproveProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/ApproveProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/Approve/${uuid}`);
+            dispatch(fillProfessionpresettingnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Approve'),
+            }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillProfessionpresettingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const CompleteProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/CompleteProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/Complete/${uuid}`);
+            dispatch(fillProfessionpresettingnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Complete'),
+            }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillProfessionpresettingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const ActivateProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/ActivateProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/Activate/${uuid}`);
+            dispatch(fillProfessionpresettingnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Activated'),
+            }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillProfessionpresettingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeactivateProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/DeactivateProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/Deactivate/${uuid}`);
+            dispatch(fillProfessionpresettingnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Professionpresettings.Messages.Deactivated'),
+            }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillProfessionpresettingnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const DeleteProfessionpresettings = createAsyncThunk(
+    'Professionpresettings/DeleteProfessionpresettings',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PROFESSIONPRESETTING}/${uuid}`);
+            dispatch(fillProfessionpresettingnotification({
+                type: 'Success',
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Professionpresettings.Messages.Delete'),
+            }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -137,12 +226,8 @@ export const ProfessionpresettingsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedProfessionpresetting: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillProfessionpresettingnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -151,16 +236,12 @@ export const ProfessionpresettingsSlice = createSlice({
         removeProfessionpresettingnotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(GetProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetProfessionpresettings.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -169,6 +250,7 @@ export const ProfessionpresettingsSlice = createSlice({
             .addCase(GetProfessionpresettings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
+                state.list = [];
             })
             .addCase(GetProfessionpresetting.pending, (state) => {
                 state.isLoading = true;
@@ -205,6 +287,61 @@ export const ProfessionpresettingsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(SavepreviewProfessionpresettings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewProfessionpresettings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(SavepreviewProfessionpresettings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ApproveProfessionpresettings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ApproveProfessionpresettings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(ApproveProfessionpresettings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(CompleteProfessionpresettings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(CompleteProfessionpresettings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(CompleteProfessionpresettings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(ActivateProfessionpresettings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(ActivateProfessionpresettings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(ActivateProfessionpresettings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeactivateProfessionpresettings.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeactivateProfessionpresettings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(DeactivateProfessionpresettings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(DeleteProfessionpresettings.pending, (state) => {
                 state.isLoading = true;
             })
@@ -220,10 +357,8 @@ export const ProfessionpresettingsSlice = createSlice({
 });
 
 export const {
-    handleSelectedProfessionpresetting,
     fillProfessionpresettingnotification,
     removeProfessionpresettingnotification,
-    handleDeletemodal
 } = ProfessionpresettingsSlice.actions;
 
 export default ProfessionpresettingsSlice.reducer;

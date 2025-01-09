@@ -31,15 +31,28 @@ module.exports = sequelize.define('professionpresettingModel', {
     Isinfinite: {
         type: Sequelize.BOOLEAN
     },
-    Isdeactive: {
-        type: Sequelize.BOOLEAN
-    },
+
     Ispersonelstay: {
         type: Sequelize.BOOLEAN
     },
     Minpersonelcount: {
         type: Sequelize.INTEGER
     },
+
+    Isonpreview: {
+        type: Sequelize.BOOLEAN
+    },
+    Isapproved: {
+        type: Sequelize.BOOLEAN
+    },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
+
+    Isplanactive: {
+        type: Sequelize.BOOLEAN
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },

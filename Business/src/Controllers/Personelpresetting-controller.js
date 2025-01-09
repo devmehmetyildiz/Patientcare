@@ -80,10 +80,11 @@ async function AddPersonelpresetting(req, res, next) {
     try {
         await db.personelpresettingModel.create({
             ...req.body,
+            Uuid: personelpresettinguuid,
+            Isonpreview: true,
             Isapproved: false,
             Iscompleted: false,
-            Isdeactive: false,
-            Uuid: personelpresettinguuid,
+            Isplanactive: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -161,9 +162,22 @@ async function UpdatePersonelpresetting(req, res, next) {
         if (personelpresetting.Isactive === false) {
             return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
         }
+        if (personelpresetting.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotOnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Approved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Completed'), req.t('Personelpresettings'), req.language))
+        }
 
         await db.personelpresettingModel.update({
             ...req.body,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
+            Isplanactive: false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -175,6 +189,317 @@ async function UpdatePersonelpresetting(req, res, next) {
             message: {
                 tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından Güncellendi.`,
                 en: `${Uuid} Id Personel Pre Setting Updated By ${username}`
+            }[req.language],
+            pushurl: '/Personelpresettings'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelpresettings(req, res, next)
+}
+
+async function SavepreviewPersonelpresetting(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelpresettingId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelpresettings.Error.PersonelpresettingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelpresettings.Error.UnsupportedPersonelpresettingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelpresettings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelpresetting) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotOnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Approved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Completed'), req.t('Personelpresettings'), req.language))
+        }
+
+        await db.personelpresettingModel.update({
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelpresettings'),
+            role: 'personelpresettingnotification',
+            message: {
+                tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından Kayıt Edildi.`,
+                en: `${Uuid} Id Personel Pre Setting Saved By ${username}`
+            }[req.language],
+            pushurl: '/Personelpresettings'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelpresettings(req, res, next)
+}
+
+async function ApprovePersonelpresetting(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelpresettingId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelpresettings.Error.PersonelpresettingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelpresettings.Error.UnsupportedPersonelpresettingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelpresettings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelpresetting) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.OnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Approved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Completed'), req.t('Personelpresettings'), req.language))
+        }
+
+        await db.personelpresettingModel.update({
+            Isapproved: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelpresettings'),
+            role: 'personelpresettingnotification',
+            message: {
+                tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından Onaylandı.`,
+                en: `${Uuid} Id Personel Pre Setting Approved By ${username}`
+            }[req.language],
+            pushurl: '/Personelpresettings'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelpresettings(req, res, next)
+}
+
+async function CompletePersonelpresetting(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelpresettingId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelpresettings.Error.PersonelpresettingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelpresettings.Error.UnsupportedPersonelpresettingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelpresettings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelpresetting) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.OnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotApproved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.Completed'), req.t('Personelpresettings'), req.language))
+        }
+
+        await db.personelpresettingModel.update({
+            Iscompleted: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelpresettings'),
+            role: 'personelpresettingnotification',
+            message: {
+                tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından Tamamlandı.`,
+                en: `${Uuid} Id Personel Pre Setting Completed By ${username}`
+            }[req.language],
+            pushurl: '/Personelpresettings'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelpresettings(req, res, next)
+}
+
+async function ActivatePersonelpresetting(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelpresettingId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelpresettings.Error.PersonelpresettingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelpresettings.Error.UnsupportedPersonelpresettingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelpresettings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelpresetting) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.OnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotApproved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotCompleted'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isplanactive === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.PlanActive'), req.t('Personelpresettings'), req.language))
+        }
+
+        await db.personelpresettingModel.update({
+            Isplanactive: true,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelpresettings'),
+            role: 'personelpresettingnotification',
+            message: {
+                tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından Aktif Edildi.`,
+                en: `${Uuid} Id Personel Pre Setting Activated By ${username}`
+            }[req.language],
+            pushurl: '/Personelpresettings'
+        })
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelpresettings(req, res, next)
+}
+
+async function DeactivatePersonelpresetting(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelpresettingId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelpresettings.Error.PersonelpresettingIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelpresettings.Error.UnsupportedPersonelpresettingID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelpresettings'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelpresetting) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotActive'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.OnPreview'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotApproved'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Iscompleted === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.NotCompleted'), req.t('Personelpresettings'), req.language))
+        }
+        if (personelpresetting.Isplanactive === false) {
+            return next(createNotFoundError(req.t('Personelpresettings.Error.PlanNotActive'), req.t('Personelpresettings'), req.language))
+        }
+
+        await db.personelpresettingModel.update({
+            Isplanactive: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelpresettings'),
+            role: 'personelpresettingnotification',
+            message: {
+                tr: `${Uuid} Id'li Personel Ön Ayarı ${username} tarafından İnaktif Edildi.`,
+                en: `${Uuid} Id Personel Pre Setting Deactivated By ${username}`
             }[req.language],
             pushurl: '/Personelpresettings'
         })
@@ -205,7 +530,7 @@ async function DeletePersonelpresetting(req, res, next) {
     const username = req?.identity?.user?.Username || 'System'
 
     try {
-        const personelpresetting = db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
+        const personelpresetting = await db.personelpresettingModel.findOne({ where: { Uuid: Uuid } })
         if (!personelpresetting) {
             return next(createNotFoundError(req.t('Personelpresettings.Error.NotFound'), req.t('Personelpresettings'), req.language))
         }
@@ -220,7 +545,7 @@ async function DeletePersonelpresetting(req, res, next) {
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
-            type: types.Delete,
+            type: types.Update,
             service: req.t('Personelpresettings'),
             role: 'personelpresettingnotification',
             message: {
@@ -243,5 +568,10 @@ module.exports = {
     GetPersonelpresetting,
     AddPersonelpresetting,
     UpdatePersonelpresetting,
+    SavepreviewPersonelpresetting,
+    ApprovePersonelpresetting,
+    CompletePersonelpresetting,
+    ActivatePersonelpresetting,
+    DeactivatePersonelpresetting,
     DeletePersonelpresetting,
 }

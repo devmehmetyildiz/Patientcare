@@ -182,13 +182,13 @@ async function UpdatePersonelshift(req, res, next) {
         if (personelshift.Isactive === false) {
             return next(createNotfounderror(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
         }
-        if (patientvisit.Isonpreview === false) {
+        if (personelshift.Isonpreview === false) {
             return next(createNotFoundError(req.t('Personelshifts.Error.NotOnPreview'), req.t('Personelshifts'), req.language))
         }
-        if (patientvisit.Isapproved === true) {
+        if (personelshift.Isapproved === true) {
             return next(createNotFoundError(req.t('Personelshifts.Error.Approved'), req.t('Personelshifts'), req.language))
         }
-        if (patientvisit.Iscompleted === true) {
+        if (personelshift.Iscompleted === true) {
             return next(createNotFoundError(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
         }
 

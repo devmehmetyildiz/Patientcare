@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default function PersonelpresettingsDelete(props) {
+export default function ProfessionpresettingsActivate(props) {
 
-  const { open, setOpen, record, setRecord, Personelpresettings, Profile, DeletePersonelpresettings } = props
+  const { open, setOpen, record, setRecord, Professionpresettings, Profile, ActivateProfessionpresettings } = props
 
   const t = Profile?.i18n?.t
 
@@ -14,15 +14,14 @@ export default function PersonelpresettingsDelete(props) {
         onOpen={() => setOpen(true)}
         open={open}
       >
-        <Modal.Header >{t('Pages.Personelpresettings.Page.DeleteHeader')}</Modal.Header>
+        <Modal.Header >{t('Pages.Professionpresettings.Page.ActivateHeader')}</Modal.Header>
         <Modal.Content image>
-          <Dimmer inverted active={Personelpresettings.isLoading}>
+          <Dimmer inverted active={Professionpresettings.isLoading}>
             <Loader inverted active />
           </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{record?.Startdate} </span>
-              {t('Pages.Personelpresettings.Delete.Label.Check')}
+              {t('Pages.Professionpresettings.Activate.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -34,12 +33,12 @@ export default function PersonelpresettingsDelete(props) {
             {t('Common.Button.Giveup')}
           </Button>
           <Button
-            loading={Personelpresettings.isLoading}
-            content={t('Common.Button.Delete')}
+            loading={Professionpresettings.isLoading}
+            content={t('Common.Button.Activate')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeletePersonelpresettings({
+              ActivateProfessionpresettings({
                 uuid: record?.Uuid || '',
                 onSuccess: () => {
                   setOpen(false)
