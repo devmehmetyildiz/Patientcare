@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PersonelshiftsDelete from "../../Pages/Personelshifts/PersonelshiftsDelete"
-import { DeletePersonelshifts, handleDeletemodal, handleSelectedPersonelshift } from "../../Redux/PersonelshiftSlice"
+import { DeletePersonelshifts,  } from "../../Redux/PersonelshiftSlice"
 
 const mapStateToProps = (state) => ({
     Personelshifts: state.Personelshifts,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeletePersonelshifts, handleDeletemodal, handleSelectedPersonelshift
+    DeletePersonelshifts, 
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonelshiftsDelete)

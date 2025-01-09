@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
-import { Breadcrumb, Button, Confirm, Dropdown, Form, Label, Modal, Popup } from "semantic-ui-react";
+import { Breadcrumb, Button, Confirm, Form, Label, Modal, Popup } from "semantic-ui-react";
 import { Contentwrapper, Footerwrapper, FormInput, Headerbredcrump, Headerwrapper } from '../../Components'
-import Literals from './Literals'
 import validator from "../../Utils/Validator";
 
 export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, Startdate, startDay, lastDay, Shiftdefines, professionFloors, personelshifts, setPersonelshifts, fillPersonelshiftnotification }) {
@@ -13,6 +12,8 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
     const [userfloor, setUserfloor] = useState('')
     const [dropresult, setDropresult] = useState(null)
     const [dropuser, setDropuser] = useState(null)
+
+    const t = Profile?.i18n?.t
 
     const [{ isDragging }, drag] = useDrag({
         type: 'label',
@@ -110,10 +111,10 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                     onClick={() => {
                         let errors = []
                         if (!validator.isUUID(usershift)) {
-                            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Shiftrequired[Profile.Language] })
+                            errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.ShiftRequired') })
                         }
                         if (Floorsoptions.length > 0 && !validator.isUUID(userfloor)) {
-                            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Floorrequired[Profile.Language] })
+                            errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.FloorRequired') })
                         }
                         if (errors.length > 0) {
                             errors.forEach(error => {
@@ -134,7 +135,6 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                                     Isstartday: index === startDay ? true : false
                                 })
                             }
-
                             setPersonelshifts([...personelshifts, ...data])
                             setDropresult(null)
                             setDropuser(null)
@@ -147,7 +147,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                     type='submit'
                     className='!bg-[#2355a0] !text-white'
                 >
-                    Onayla
+                    {t('Common.Button.Approve')}
                 </Button>
             </Footerwrapper>
         </Popup>
@@ -161,7 +161,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
             </Modal.Content>
             <Modal.Actions>
                 <Button color='black' onClick={() => setPersonelhistory(false)}>
-                    {Literals.Button.Close[Profile.Language]}
+                    {t('Common.Button.Close')}
                 </Button>
             </Modal.Actions>
         </Modal>
@@ -187,7 +187,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                             <Form.Group widths={'equal'}>
                                 <FormInput
                                     required
-                                    placeholder="Vardiya Seçiniz"
+                                    placeholder={t('Pages.Personelshifts.Messages.SelectShift')}
                                     name="Patientstatus"
                                     options={Shiftoptions}
                                     value={usershift}
@@ -204,10 +204,10 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
             onConfirm={() => {
                 let errors = []
                 if (!validator.isUUID(dropuser?.Uuid)) {
-                    errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Userrequired[Profile.Language] })
+                    errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.UserRequired') })
                 }
                 if (!validator.isUUID(usershift)) {
-                    errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Shiftrequired[Profile.Language] })
+                    errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.ShiftRequired') })
                 }
                 if (errors.length > 0) {
                     console.log('errors: ', errors);
@@ -229,7 +229,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                             Isstartday: index === startDay ? true : false
                         })
                     }
-
+                    
                     setPersonelshifts([...personelshifts, ...data])
                     setDropresult(null)
                     setDropuser(null)

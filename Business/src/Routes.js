@@ -123,9 +123,11 @@ const Routes = [
     { method: 'get', path: '/Personelshifts', controller: 'Personelshift', action: 'GetPersonelshifts' },
     { method: 'post', path: '/Personelshifts/Getpeparedpersonelshift', controller: 'Personelshift', action: 'Getpeparedpersonelshift' },
     { method: 'post', path: '/Personelshifts', controller: 'Personelshift', action: 'AddPersonelshift' },
+    { method: 'put', path: '/Personelshifts/Savepreview/:personelshiftId', controller: 'Personelshift', action: 'SavepreviewPersonelshift' },
     { method: 'put', path: '/Personelshifts/Approve/:personelshiftId', controller: 'Personelshift', action: 'ApprovePersonelshift' },
     { method: 'put', path: '/Personelshifts/Complete/:personelshiftId', controller: 'Personelshift', action: 'CompletePersonelshift' },
-    { method: 'put', path: '/Personelshifts/Deactive/:personelshiftId', controller: 'Personelshift', action: 'DeactivePersonelshift' },
+    { method: 'put', path: '/Personelshifts/Activate/:personelshiftId', controller: 'Personelshift', action: 'ActivatePersonelshift' },
+    { method: 'put', path: '/Personelshifts/Deactivate/:personelshiftId', controller: 'Personelshift', action: 'DeactivatePersonelshift' },
     { method: 'put', path: '/Personelshifts', controller: 'Personelshift', action: 'UpdatePersonelshift' },
     { method: 'delete', path: '/Personelshifts/:personelshiftId', controller: 'Personelshift', action: 'DeletePersonelshift' },
 

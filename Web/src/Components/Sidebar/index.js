@@ -193,7 +193,7 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbCalendar className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: Literals.Personelshifts.Page.Pageheader[Profile.Language], url: "/Personelshifts", permission: checkAuth('personelshiftview') },
+                { id: 1, subtitle: t('Pages.Personelshifts.Page.Header'), url: "/Personelshifts", permission: checkAuth('personelshiftview') },
                 { id: 2, subtitle: Literals.Personelpresettings.Page.Pageheader[Profile.Language], url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
                 { id: 3, subtitle: Literals.Professionpresettings.Page.Pageheader[Profile.Language], url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
                 { id: 4, subtitle: t('Pages.Shiftdefines.Page.Header'), url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },

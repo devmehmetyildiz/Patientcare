@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Professions from '../../Pages/Professions/Professions'
-import { GetProfessions, handleDeletemodal, handleSelectedProfession } from "../../Redux/ProfessionSlice"
+import { GetProfessions } from "../../Redux/ProfessionSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetProfessions, handleDeletemodal, handleSelectedProfession, GetFloors
+    GetProfessions, GetFloors
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Professions)

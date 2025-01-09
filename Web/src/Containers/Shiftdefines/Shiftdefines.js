@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Shiftdefines from "../../Pages/Shiftdefines/Shiftdefines"
-import { GetShiftdefines, DeleteShiftdefines, fillShiftdefinenotification, handleDeletemodal, handleSelectedShiftdefine } from "../../Redux/ShiftdefineSlice"
+import { GetShiftdefines } from "../../Redux/ShiftdefineSlice"
 
 const mapStateToProps = (state) => ({
   Shiftdefines: state.Shiftdefines,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  GetShiftdefines, DeleteShiftdefines, fillShiftdefinenotification, handleDeletemodal, handleSelectedShiftdefine
+  GetShiftdefines,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Shiftdefines)

@@ -1,46 +1,56 @@
-import React, { Component } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
+import React from 'react'
+import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default class PersonelshiftsApprove extends Component {
-  render() {
-    const { Profile, Personelshifts, ApprovePersonelshifts, handleApprovemodal, handleSelectedPersonelshift } = this.props
-    const { isApprovemodalopen, selected_record } = Personelshifts
-    return (
+export default function PersonelshiftsApprove(props) {
+
+  const { open, setOpen, record, setRecord, Personelshifts, Profile, ApprovePersonelshifts } = props
+
+  const t = Profile?.i18n?.t
+
+  return (
+    <DimmerDimmable blurring >
       <Modal
-        onClose={() => handleApprovemodal(false)}
-        onOpen={() => handleApprovemodal(true)}
-        open={isApprovemodalopen}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        open={open}
       >
-        <Modal.Header>{Literals.Page.Pageapproveheader[Profile.Language]}</Modal.Header>
+        <Modal.Header >{t('Pages.Personelshifts.Page.ApproveHeader')}</Modal.Header>
         <Modal.Content image>
+          <Dimmer inverted active={Personelshifts.isLoading}>
+            <Loader inverted active />
+          </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{selected_record?.Name} </span>
-              {Literals.Messages.Approvecheck[Profile.Language]}
+              <span className='font-bold'>{record?.Startdate} </span>
+              {t('Pages.Personelshifts.Approve.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button color='black' onClick={() => {
-            handleApprovemodal(false)
-            handleSelectedPersonelshift({})
+            setOpen(false)
+            setRecord(null)
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Approve[Profile.Language]}
+            loading={Personelshifts.isLoading}
+            content={t('Common.Button.Approve')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              ApprovePersonelshifts(selected_record)
-              handleApprovemodal(false)
-              handleSelectedPersonelshift({})
+              ApprovePersonelshifts({
+                uuid: record?.Uuid || '',
+                onSuccess: () => {
+                  setOpen(false)
+                  setRecord(null)
+                }
+              })
             }}
             positive
           />
         </Modal.Actions>
       </Modal>
-    )
-  }
+    </DimmerDimmable>
+  )
 }

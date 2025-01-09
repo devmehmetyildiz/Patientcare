@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
@@ -7,7 +7,7 @@ import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump
 
 export default function ProfessionsEdit(props) {
   const PAGE_NAME = "ProfessionsEdit"
-  const { EditProfessions, history, fillRatingnotification, Professions, Profile, GetProfession, match, ProfessionID, GetFloors } = props
+  const { EditProfessions, history, fillRatingnotification, Professions, Profile, GetProfession, match, ProfessionID, GetFloors, Floors } = props
 
   const context = useContext(FormContext)
 

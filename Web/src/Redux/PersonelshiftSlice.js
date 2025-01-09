@@ -4,41 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    fastcreatecode: {
-        en: 'Fast Create',
-        tr: 'Hızlı Oluşturma'
-    },
-    adddescription: {
-        en: 'Personelshift added successfully',
-        tr: 'Personel Vardiyası Başarı ile eklendi'
-    },
-    fastcreatedescription: {
-        en: 'Fast create completed',
-        tr: 'Hızlı oluşturma tamamlandı'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Personelshift updated successfully',
-        tr: 'Personel Vardiyası Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Personelshift Deleted successfully',
-        tr: 'Personel Vardiyası Başarı ile Silindi'
-    },
-}
-
 export const GetPersonelshifts = createAsyncThunk(
     'Personelshifts/GetPersonelshifts',
     async (_, { dispatch }) => {
@@ -69,18 +34,19 @@ export const GetPersonelshift = createAsyncThunk(
 
 export const AddPersonelshifts = createAsyncThunk(
     'Personelshifts/AddPersonelshifts',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Business, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
+                code: t('Common.Code.Add'),
+                description: t('Redux.Personelshifts.Messages.Add'),
             }));
             clearForm && clearForm('PersonelshiftsCreate')
             closeModal && closeModal()
+            onSuccess && onSuccess()
             history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
             return response.data;
         } catch (error) {
@@ -93,19 +59,43 @@ export const AddPersonelshifts = createAsyncThunk(
 
 export const EditPersonelshifts = createAsyncThunk(
     'Personelshifts/EditPersonelshifts',
-    async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Business, ROUTES.PERSONELSHIFT, data);
-            dispatch(fillPersonelshiftnotification({
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Update'),
             }));
-            closeModal && closeModal()
             clearForm && clearForm('PersonelshiftsUpdate')
+            closeModal && closeModal()
+            onSuccess && onSuccess()
             history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPersonelshiftnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
+export const SavepreviewPersonelshifts = createAsyncThunk(
+    'Personelshifts/SavepreviewPersonelshifts',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Savepreview/${uuid}`);
+            dispatch(fillPatientvisitnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Savepreview'),
+            }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -117,16 +107,18 @@ export const EditPersonelshifts = createAsyncThunk(
 
 export const ApprovePersonelshifts = createAsyncThunk(
     'Personelshifts/ApprovePersonelshifts',
-    async (data, { dispatch, getState }) => {
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
         try {
+
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Approve/${data?.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Approve/${uuid}`);
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Approve'),
             }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -138,16 +130,18 @@ export const ApprovePersonelshifts = createAsyncThunk(
 
 export const CompletePersonelshifts = createAsyncThunk(
     'Personelshifts/CompletePersonelshifts',
-    async (data, { dispatch, getState }) => {
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
         try {
+
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Complete/${data?.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Complete/${uuid}`);
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Complete'),
             }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -157,18 +151,20 @@ export const CompletePersonelshifts = createAsyncThunk(
     }
 );
 
-export const DeactivePersonelshifts = createAsyncThunk(
-    'Personelshifts/DeactivePersonelshifts',
-    async (data, { dispatch, getState }) => {
+export const ActivatePersonelshifts = createAsyncThunk(
+    'Personelshifts/ActivatePersonelshifts',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
         try {
+
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Deactive/${data?.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Activate/${uuid}`);
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Activated'),
             }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -178,40 +174,42 @@ export const DeactivePersonelshifts = createAsyncThunk(
     }
 );
 
+export const DeactivatePersonelshifts = createAsyncThunk(
+    'Personelshifts/DeactivatePersonelshifts',
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
+        try {
+
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.put(config.services.Business, `${ROUTES.PERSONELSHIFT}/Deactivate/${uuid}`);
+            dispatch(fillPatientvisitnotification({
+                type: 'Success',
+                code: t('Common.Code.Update'),
+                description: t('Redux.Personelshifts.Messages.Deactivated'),
+            }));
+            onSuccess && onSuccess()
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPersonelshiftnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
 export const DeletePersonelshifts = createAsyncThunk(
     'Personelshifts/DeletePersonelshifts',
-    async (data, { dispatch, getState }) => {
+    async ({ uuid, onSuccess }, { dispatch, getState }) => {
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.delete(config.services.Business, `${ROUTES.PERSONELSHIFT}/${data.Uuid}`);
-            dispatch(fillPersonelshiftnotification({
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.delete(config.services.Business, `${ROUTES.PERSONELSHIFT}/${uuid}`);
+            dispatch(fillPatientvisitnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Personelshifts.Messages.Delete'),
             }));
-            return response.data;
-        } catch (error) {
-            const errorPayload = AxiosErrorHelper(error);
-            dispatch(fillPersonelshiftnotification(errorPayload));
-            throw errorPayload;
-        }
-    }
-);
-
-export const GetfastcreatedPersonelshifts = createAsyncThunk(
-    'Personelshifts/GetfastcreatedPersonelshifts',
-    async ({ data }, { dispatch, getState }) => {
-        try {
-            const state = getState()
-            const Language = state.Profile.Language || 'en'
-            const response = await instanse.post(config.services.Business, ROUTES.PERSONELSHIFT + "/Getpeparedpersonelshift", data);
-            dispatch(fillPersonelshiftnotification({
-                type: 'Success',
-                code: Literals.fastcreatecode[Language],
-                description: Literals.fastcreatedescription[Language],
-            }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -225,21 +223,12 @@ export const PersonelshiftsSlice = createSlice({
     name: 'Personelshifts',
     initialState: {
         list: [],
-        fastcreatedlist: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isFastcreatesuccess: false,
-        isDeletemodalopen: false,
-        isApprovemodalopen: false,
-        isCompletemodalopen: false,
-        isDeactivemodalopen: false,
     },
     reducers: {
-        handleSelectedPersonelshift: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillPersonelshiftnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -248,48 +237,20 @@ export const PersonelshiftsSlice = createSlice({
         removePersonelshiftnotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleCompletemodal: (state, action) => {
-            state.isCompletemodalopen = action.payload
-        },
-        handleDeactivemodal: (state, action) => {
-            state.isDeactivemodalopen = action.payload
-        },
-        handleApprovemodal: (state, action) => {
-            state.isApprovemodalopen = action.payload
-        },
     },
     extraReducers: (builder) => {
         builder
             .addCase(GetPersonelshifts.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetPersonelshifts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetPersonelshifts.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
-                state.errMsg = action.error.message;
-            })
-            .addCase(GetfastcreatedPersonelshifts.pending, (state) => {
-                state.isLoading = true;
-                state.isFastcreatesuccess = false;
-                state.errMsg = null;
-                state.fastcreatedlist = [];
-            })
-            .addCase(GetfastcreatedPersonelshifts.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isFastcreatesuccess = true;
-                state.fastcreatedlist = action.payload;
-            })
-            .addCase(GetfastcreatedPersonelshifts.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isFastcreatesuccess = false;
                 state.errMsg = action.error.message;
             })
             .addCase(GetPersonelshift.pending, (state) => {
@@ -327,6 +288,17 @@ export const PersonelshiftsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
+            .addCase(SavepreviewPersonelshifts.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(SavepreviewPersonelshifts.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(SavepreviewPersonelshifts.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(ApprovePersonelshifts.pending, (state) => {
                 state.isLoading = true;
             })
@@ -349,14 +321,25 @@ export const PersonelshiftsSlice = createSlice({
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
-            .addCase(DeactivePersonelshifts.pending, (state) => {
+            .addCase(ActivatePersonelshifts.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(DeactivePersonelshifts.fulfilled, (state, action) => {
+            .addCase(ActivatePersonelshifts.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
-            .addCase(DeactivePersonelshifts.rejected, (state, action) => {
+            .addCase(ActivatePersonelshifts.rejected, (state, action) => {
+                state.isLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(DeactivatePersonelshifts.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(DeactivatePersonelshifts.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.list = action.payload;
+            })
+            .addCase(DeactivatePersonelshifts.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -375,13 +358,8 @@ export const PersonelshiftsSlice = createSlice({
 });
 
 export const {
-    handleSelectedPersonelshift,
     fillPersonelshiftnotification,
     removePersonelshiftnotification,
-    handleDeletemodal,
-    handleApprovemodal,
-    handleCompletemodal,
-    handleDeactivemodal,
 } = PersonelshiftsSlice.actions;
 
 export default PersonelshiftsSlice.reducer;

@@ -2,11 +2,13 @@ import React, { useState } from "react"
 import { Button, Card, Form, Icon, Image, Label, Popup, Table } from "semantic-ui-react"
 import { ANNUALTYPES } from "../../Utils/Constants";
 import { FormInput, Profilephoto } from "../../Components";
-import Literals from "./Literals";
 import validator from "../../Utils/Validator";
 
 
-export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift, personelshifts, setPersonelshifts, Users,  Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
+export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift, personelshifts, setPersonelshifts, Users, Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
+
+    const t = Profile?.i18n?.t
+
     const dayValue = personelshift[shiftkey]
 
     const [open, setOpen] = useState(false)
@@ -26,10 +28,10 @@ export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift
         let selectedDay = personelshifts.find(u => u.Day === Number(shiftkey) && u.ShiftID === personelshift?.ShiftID && u?.PersonelID === personelshift?.PersonelID);
         let errors = []
         if (!validator.isNumber(annualtype)) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Annualtyperequired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.AnnualtypeRequired') })
         }
         if (!selectedDay) {
-            errors.push({ type: 'Error', code: Literals.Page.Pageheader[Profile.Language], description: Literals.Messages.Dayrequired[Profile.Language] })
+            errors.push({ type: 'Error', code: t('Pages.Personelshifts.Page.Header'), description: t('Pages.Personelshifts.Messages.DayRequired') })
         }
         if (errors.length > 0) {
             errors.forEach(error => {
@@ -80,14 +82,14 @@ export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift
                             />
                         }
                         <Card.Header>{`${user?.Name} ${user?.Surname}`}</Card.Header>
-                        <Card.Meta>{`${Literals.Columns.Day[Profile.Language]} ${shiftkey}`}</Card.Meta>
+                        <Card.Meta>{`${t('Pages.Personelshifts.Column.Day')} ${shiftkey}`}</Card.Meta>
                         <Card.Meta><Label color={ANNUALTYPES.find(u => u?.value === dayValue?.Annualtype)?.color}>{ANNUALTYPES.find(u => u?.value === dayValue?.Annualtype)?.Name}</Label></Card.Meta>
                         <Card.Description>
                             <Form>
                                 <FormInput
                                     search={false}
                                     required
-                                    placeholder={Literals.Columns.Annualtype[Profile.Language]}
+                                    placeholder={t('Pages.Personelshifts.Messages.AnnualtypeSelect')}
                                     name="annualtype"
                                     options={Annualoptions}
                                     value={annualtype}
@@ -101,7 +103,7 @@ export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift
                     </Card.Content>
                     <Card.Content extra>
                         <div className='ui two buttons'>
-                            <Button content={Literals.Button.Approve[Profile.Language]} className='!bg-[#2355a0] !text-white' onClick={() => { handleChange() }} />
+                            <Button content={t('Common.Button.Approve')} className='!bg-[#2355a0] !text-white' onClick={() => { handleChange() }} />
                         </div>
                     </Card.Content>
                 </Card>

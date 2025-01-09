@@ -1,46 +1,56 @@
-import React, { Component } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
+import React from 'react'
+import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default class PersonelshiftsDelete extends Component {
-  render() {
-    const { Profile, Personelshifts, DeletePersonelshifts, handleDeletemodal, handleSelectedPersonelshift } = this.props
-    const { isDeletemodalopen, selected_record } = Personelshifts
-    return (
+export default function PersonelshiftsDelete(props) {
+
+  const { open, setOpen, record, setRecord, Personelshifts, Profile, DeletePersonelshifts } = props
+
+  const t = Profile?.i18n?.t
+
+  return (
+    <DimmerDimmable blurring >
       <Modal
-        onClose={() => handleDeletemodal(false)}
-        onOpen={() => handleDeletemodal(true)}
-        open={isDeletemodalopen}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        open={open}
       >
-        <Modal.Header>{Literals.Page.Pagedeleteheader[Profile.Language]}</Modal.Header>
+        <Modal.Header >{t('Pages.Personelshifts.Page.DeleteHeader')}</Modal.Header>
         <Modal.Content image>
+          <Dimmer inverted active={Personelshifts.isLoading}>
+            <Loader inverted active />
+          </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{selected_record?.Name} </span>
-              {Literals.Messages.Deletecheck[Profile.Language]}
+              <span className='font-bold'>{record?.Startdate} </span>
+              {t('Pages.Personelshifts.Delete.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
           <Button color='black' onClick={() => {
-            handleDeletemodal(false)
-            handleSelectedPersonelshift({})
+            setOpen(false)
+            setRecord(null)
           }}>
-            {Literals.Button.Giveup[Profile.Language]}
+            {t('Common.Button.Giveup')}
           </Button>
           <Button
-            content={Literals.Button.Delete[Profile.Language]}
+            loading={Personelshifts.isLoading}
+            content={t('Common.Button.Delete')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              DeletePersonelshifts(selected_record)
-              handleDeletemodal(false)
-              handleSelectedPersonelshift({})
+              DeletePersonelshifts({
+                uuid: record?.Uuid || '',
+                onSuccess: () => {
+                  setOpen(false)
+                  setRecord(null)
+                }
+              })
             }}
             positive
           />
         </Modal.Actions>
       </Modal>
-    )
-  }
+    </DimmerDimmable>
+  )
 }

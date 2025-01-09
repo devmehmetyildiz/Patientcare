@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
 
-export default function PersonelshiftsComplete(props) {
+export default function PersonelshiftsActivate(props) {
 
-  const { open, setOpen, record, setRecord, Personelshifts, Profile, CompletePersonelshifts } = props
+  const { open, setOpen, record, setRecord, Personelshifts, Profile, ActivatePersonelshifts } = props
 
   const t = Profile?.i18n?.t
 
@@ -14,7 +14,7 @@ export default function PersonelshiftsComplete(props) {
         onOpen={() => setOpen(true)}
         open={open}
       >
-        <Modal.Header >{t('Pages.Personelshifts.Page.CompleteHeader')}</Modal.Header>
+        <Modal.Header >{t('Pages.Personelshifts.Page.ActivateHeader')}</Modal.Header>
         <Modal.Content image>
           <Dimmer inverted active={Personelshifts.isLoading}>
             <Loader inverted active />
@@ -22,7 +22,7 @@ export default function PersonelshiftsComplete(props) {
           <Modal.Description>
             <p>
               <span className='font-bold'>{record?.Startdate} </span>
-              {t('Pages.Personelshifts.Complete.Label.Check')}
+              {t('Pages.Personelshifts.Activate.Label.Check')}
             </p>
           </Modal.Description>
         </Modal.Content>
@@ -35,11 +35,11 @@ export default function PersonelshiftsComplete(props) {
           </Button>
           <Button
             loading={Personelshifts.isLoading}
-            content={t('Common.Button.Complete')}
+            content={t('Common.Button.Activate')}
             labelPosition='right'
             icon='checkmark'
             onClick={() => {
-              CompletePersonelshifts({
+              ActivatePersonelshifts({
                 uuid: record?.Uuid || '',
                 onSuccess: () => {
                   setOpen(false)

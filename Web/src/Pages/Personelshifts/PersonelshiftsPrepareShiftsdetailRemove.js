@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Icon, Modal } from 'semantic-ui-react'
-import Literals from './Literals'
 
 export default function PersonelshiftsPrepareShiftsdetailRemove(props) {
 
     const { Profile, Users, personelshift, personelshifts, setPersonelshifts } = props
     const [open, setOpen] = useState(false)
+
+    const t = Profile?.i18n?.t
 
     const user = (Users.list || []).find(u => u?.Uuid === personelshift?.PersonelID)
 
@@ -17,12 +18,12 @@ export default function PersonelshiftsPrepareShiftsdetailRemove(props) {
                 onOpen={() => setOpen(true)}
                 open={open}
             >
-                <Modal.Header>{Literals.Page.Pageprepareshiftdetailremovedeleteheader[Profile.Language]}</Modal.Header>
+                <Modal.Header>{t('Pages.Personelshifts.Page.PreparePersonelRemoveHeader')}</Modal.Header>
                 <Modal.Content image>
                     <Modal.Description>
                         <p>
                             <span className='font-bold'>{`${user?.Name} ${user?.Surname} `}</span>
-                            {Literals.Messages.Deletepersonel[Profile.Language]}
+                            {t('Pages.Personelshifts.Messages.DeletePersonel')}
                         </p>
                     </Modal.Description>
                 </Modal.Content>
@@ -30,10 +31,10 @@ export default function PersonelshiftsPrepareShiftsdetailRemove(props) {
                     <Button color='black' onClick={() => {
                         setOpen(false)
                     }}>
-                        {Literals.Button.Giveup[Profile.Language]}
+                        {t('Common.Button.Giveup')}
                     </Button>
                     <Button
-                        content={Literals.Button.Delete[Profile.Language]}
+                        content={t('Common.Button.Delete')}
                         labelPosition='right'
                         icon='checkmark'
                         onClick={() => {

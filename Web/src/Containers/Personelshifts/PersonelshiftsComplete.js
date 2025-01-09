@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import PersonelshiftsComplete from "../../Pages/Personelshifts/PersonelshiftsComplete"
-import { CompletePersonelshifts, handleCompletemodal, handleSelectedPersonelshift } from "../../Redux/PersonelshiftSlice"
+import { CompletePersonelshifts } from "../../Redux/PersonelshiftSlice"
 
 const mapStateToProps = (state) => ({
     Personelshifts: state.Personelshifts,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    CompletePersonelshifts, handleCompletemodal, handleSelectedPersonelshift
+    CompletePersonelshifts
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonelshiftsComplete)

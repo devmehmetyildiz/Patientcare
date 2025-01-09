@@ -1,71 +1,24 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
-export default class ShiftdefinesCreate extends Component {
 
-  PAGE_NAME = "ShiftdefinesCreate"
+export default function ShiftdefinesCreate(props) {
+  const PAGE_NAME = "ShiftdefinesCreate"
+  const { AddShiftdefines, fillShiftdefinenotification, Shiftdefines, Profile, history, closeModal } = props
 
-  render() {
-    const { Shiftdefines, Profile, history, closeModal } = this.props
+  const context = useContext(FormContext)
 
-    const t = Profile?.i18n?.t
+  const t = Profile?.i18n?.t
 
-    return (
-      Shiftdefines.isLoading ? <LoadingPage /> :
-        <Pagewrapper>
-          <Headerwrapper>
-            <Headerbredcrump>
-              <Link to={"/Shiftdefines"}>
-                <Breadcrumb.Section >{t('Pages.Shiftdefines.Page.Header')}</Breadcrumb.Section>
-              </Link>
-              <Breadcrumb.Divider icon='right chevron' />
-              <Breadcrumb.Section>{t('Pages.Shiftdefines.Page.CreateHeader')}</Breadcrumb.Section>
-            </Headerbredcrump>
-            {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Form>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Name')} name="Name" />
-                <FormInput page={this.PAGE_NAME} placeholder={t('Pages.Shiftdefines.Column.Priority')} name="Priority" type='number' />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Starttime')} name="Starttime" type='time' />
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Endtime')} name="Endtime" type='time' />
-              </Form.Group>
-              <Form.Group widths={'equal'}>
-                <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Isjoker')} name="Isjoker" formtype="checkbox" />
-              </Form.Group>
-            </Form>
-          </Contentwrapper>
-          <Footerwrapper>
-            <Gobackbutton
-              history={history}
-              redirectUrl={"/Shiftdefines"}
-              buttonText={t('Common.Button.Goback')}
-            />
-            <Submitbutton
-              isLoading={Shiftdefines.isLoading}
-              buttonText={t('Common.Button.Create')}
-              submitFunction={this.handleSubmit}
-            />
-          </Footerwrapper>
-        </Pagewrapper >
-    )
-  }
-
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { AddShiftdefines, history, fillShiftdefinenotification, Profile, closeModal } = this.props
 
     const t = Profile?.i18n?.t
 
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
 
     !validator.isBoolean(data?.Isjoker) && (data.Isjoker = false)
 
@@ -87,5 +40,47 @@ export default class ShiftdefinesCreate extends Component {
       AddShiftdefines({ data, history, closeModal })
     }
   }
+
+  return (
+    <Pagewrapper dimmer isLoading={Shiftdefines.isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Shiftdefines"}>
+            <Breadcrumb.Section >{t('Pages.Shiftdefines.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Shiftdefines.Page.CreateHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+        {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <Form>
+          <Form.Group widths={'equal'}>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Name')} name="Name" />
+            <FormInput page={PAGE_NAME} placeholder={t('Pages.Shiftdefines.Column.Priority')} name="Priority" type='number' min="0" max="10" />
+          </Form.Group>
+          <Form.Group widths={'equal'}>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Starttime')} name="Starttime" type='time' />
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Endtime')} name="Endtime" type='time' />
+          </Form.Group>
+          <Form.Group widths={'equal'}>
+            <FormInput page={PAGE_NAME} required placeholder={t('Pages.Shiftdefines.Column.Isjoker')} name="Isjoker" formtype="checkbox" />
+          </Form.Group>
+        </Form>
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Shiftdefines"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={Shiftdefines.isLoading}
+          buttonText={t('Common.Button.Create')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper >
+  )
 }
-ShiftdefinesCreate.contextType = FormContext

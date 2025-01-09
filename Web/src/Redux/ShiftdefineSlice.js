@@ -137,12 +137,8 @@ export const ShiftdefinesSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
     },
     reducers: {
-        handleSelectedShiftdefine: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillShiftdefinenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -151,9 +147,6 @@ export const ShiftdefinesSlice = createSlice({
         removeShiftdefinenotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -220,10 +213,8 @@ export const ShiftdefinesSlice = createSlice({
 });
 
 export const {
-    handleSelectedShiftdefine,
     fillShiftdefinenotification,
     removeShiftdefinenotification,
-    handleDeletemodal
 } = ShiftdefinesSlice.actions;
 
 export default ShiftdefinesSlice.reducer;

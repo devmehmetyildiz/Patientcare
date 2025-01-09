@@ -45,10 +45,6 @@ async function AddPersonelshift(req, res, next) {
     const {
         Startdate,
         ProfessionID,
-        Isworking,
-        Isdeactive,
-        Iscompleted,
-        Isapproved,
         Personelshiftdetails
     } = req.body
 
@@ -57,18 +53,6 @@ async function AddPersonelshift(req, res, next) {
     }
     if (!validator.isUUID(ProfessionID)) {
         validationErrors.push(req.t('Personelshifts.Error.ProfessionIDRequired'))
-    }
-    if (!validator.isBoolean(Isworking)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsworkingRequired'))
-    }
-    if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsdeactivatedRequired'))
-    }
-    if (!validator.isBoolean(Iscompleted)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsCompletedRequired'))
-    }
-    if (!validator.isBoolean(Isapproved)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsapprovedRequired'))
     }
     if (!validator.isArray(Personelshiftdetails)) {
         validationErrors.push(req.t('Personelshifts.Error.PersonelshiftdetailsRequired'))
@@ -92,6 +76,10 @@ async function AddPersonelshift(req, res, next) {
         await db.personelshiftModel.create({
             ...req.body,
             Uuid: personelshiftuuid,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
+            Isplanactive: false,
             Createduser: username,
             Createtime: new Date(),
             Isactive: true
@@ -160,10 +148,6 @@ async function UpdatePersonelshift(req, res, next) {
     const {
         Startdate,
         ProfessionID,
-        Isworking,
-        Isdeactive,
-        Iscompleted,
-        Isapproved,
         Personelshiftdetails,
         Uuid,
     } = req.body
@@ -173,18 +157,6 @@ async function UpdatePersonelshift(req, res, next) {
     }
     if (!validator.isUUID(ProfessionID)) {
         validationErrors.push(req.t('Personelshifts.Error.ProfessionIDRequired'))
-    }
-    if (!validator.isBoolean(Isworking)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsworkingRequired'))
-    }
-    if (!validator.isBoolean(Isdeactive)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsdeactivatedRequired'))
-    }
-    if (!validator.isBoolean(Iscompleted)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsCompletedRequired'))
-    }
-    if (!validator.isBoolean(Isapproved)) {
-        validationErrors.push(req.t('Personelshifts.Error.IsapprovedRequired'))
     }
     if (!validator.isArray(Personelshiftdetails)) {
         validationErrors.push(req.t('Personelshifts.Error.PersonelshiftdetailsRequired'))
@@ -210,18 +182,28 @@ async function UpdatePersonelshift(req, res, next) {
         if (personelshift.Isactive === false) {
             return next(createNotfounderror(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
         }
+        if (patientvisit.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotOnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (patientvisit.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Approved'), req.t('Personelshifts'), req.language))
+        }
+        if (patientvisit.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
+        }
 
         await db.personelshiftModel.update({
             ...req.body,
+            Isonpreview: true,
+            Isapproved: false,
+            Iscompleted: false,
+            Isplanactive: false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-        await db.personelshiftdetailModel.update({
-            Deleteduser: username,
-            Deletetime: new Date(),
-            Isactive: false
-        }, { where: { PersonelshiftID: Uuid }, transaction: t })
+
+        await db.personelshiftdetailModel.destroy({ where: { PersonelshiftID: Uuid }, transaction: t });
 
         for (const personelshiftdetail of Personelshiftdetails) {
 
@@ -258,7 +240,6 @@ async function UpdatePersonelshift(req, res, next) {
                 Createtime: new Date(),
                 Isactive: true
             }, { transaction: t })
-
         }
 
         await CreateNotification({
@@ -279,6 +260,68 @@ async function UpdatePersonelshift(req, res, next) {
     GetPersonelshifts(req, res, next)
 }
 
+async function SavepreviewPersonelshift(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelshiftId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelshifts.Error.PersonelshiftIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelshifts.Error.UnsupportedPersonelshiftID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelshifts'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelshift) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isonpreview === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotOnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Approved'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
+        }
+
+        await db.personelshiftModel.update({
+            Isonpreview: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelshifts'),
+            role: 'personelshiftnotification',
+            message: {
+                tr: `${personelshift?.Startdate} Tarihli Personel Vardiyası ${username} tarafından Kayıt Edildi.`,
+                en: `${personelshift?.Startdate} Dated Personel Shift Saved By ${username}`
+            }[req.language],
+            pushurl: '/Personelshifts'
+        })
+
+
+        await t.commit()
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelshifts(req, res, next)
+}
+
 async function ApprovePersonelshift(req, res, next) {
 
     let validationErrors = []
@@ -290,27 +333,36 @@ async function ApprovePersonelshift(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(req.t('Personelshifts.Error.UnsupportedPersonelshiftID'))
     }
-
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.t('Personelshifts'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
         const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
         if (!personelshift) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.OnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isapproved === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Approved'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
         }
 
         await db.personelshiftModel.update({
-            ...personelshift,
             Isapproved: true,
             Updateduser: username,
             Updatetime: new Date(),
+            Isactive: true
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
@@ -324,9 +376,9 @@ async function ApprovePersonelshift(req, res, next) {
             pushurl: '/Personelshifts'
         })
 
+
         await t.commit()
     } catch (error) {
-        await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
     GetPersonelshifts(req, res, next)
@@ -343,30 +395,36 @@ async function CompletePersonelshift(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(req.t('Personelshifts.Error.UnsupportedPersonelshiftID'))
     }
-
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.t('Personelshifts'), req.language))
     }
+
     const t = await db.sequelize.transaction();
     const username = req?.identity?.user?.Username || 'System'
 
     try {
         const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
         if (!personelshift) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
         }
-        if (personelshift.Isdeactive === true) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.Deactivated'), req.t('Personelshifts'), req.language))
+        if (personelshift.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.OnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotApproved'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Iscompleted === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
         }
 
         await db.personelshiftModel.update({
-            ...personelshift,
             Iscompleted: true,
             Updateduser: username,
             Updatetime: new Date(),
+            Isactive: true
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
@@ -380,15 +438,15 @@ async function CompletePersonelshift(req, res, next) {
             pushurl: '/Personelshifts'
         })
 
+
         await t.commit()
     } catch (error) {
-        await t.rollback()
         return next(sequelizeErrorCatcher(error))
     }
     GetPersonelshifts(req, res, next)
 }
 
-async function DeactivePersonelshift(req, res, next) {
+async function ActivatePersonelshift(req, res, next) {
 
     let validationErrors = []
     const Uuid = req.params.personelshiftId
@@ -399,7 +457,6 @@ async function DeactivePersonelshift(req, res, next) {
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(req.t('Personelshifts.Error.UnsupportedPersonelshiftID'))
     }
-
     if (validationErrors.length > 0) {
         return next(createValidationError(validationErrors, req.t('Personelshifts'), req.language))
     }
@@ -410,21 +467,29 @@ async function DeactivePersonelshift(req, res, next) {
     try {
         const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
         if (!personelshift) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
         }
         if (personelshift.Isactive === false) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
         }
-        if (personelshift.Iscompleted === true) {
-            return next(createNotfounderror(req.t('Personelshifts.Error.Completed'), req.t('Personelshifts'), req.language))
+        if (personelshift.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.OnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotApproved'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Iscompleted === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotCompleted'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isplanactive === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.PlanActive'), req.t('Personelshifts'), req.language))
         }
 
         await db.personelshiftModel.update({
-            ...personelshift,
-            Isdeactive: true,
-            Isworking: false,
+            Isplanactive: true,
             Updateduser: username,
             Updatetime: new Date(),
+            Isactive: true
         }, { where: { Uuid: Uuid }, transaction: t })
 
         await CreateNotification({
@@ -432,15 +497,80 @@ async function DeactivePersonelshift(req, res, next) {
             service: req.t('Personelshifts'),
             role: 'personelshiftnotification',
             message: {
-                tr: `${personelshift?.Startdate} Tarihli Personel Vardiyası ${username} tarafından İnaktif Edildi.`,
-                en: `${personelshift?.Startdate} Dated Personel Shift Deactivated By ${username}`
+                tr: `${personelshift?.Startdate} Tarihli Personel Vardiyası ${username} tarafından Tamamlandı.`,
+                en: `${personelshift?.Startdate} Dated Personel Shift Completed By ${username}`
             }[req.language],
             pushurl: '/Personelshifts'
         })
 
+
         await t.commit()
     } catch (error) {
-        await t.rollback()
+        return next(sequelizeErrorCatcher(error))
+    }
+    GetPersonelshifts(req, res, next)
+}
+
+async function DeactivatePersonelshift(req, res, next) {
+
+    let validationErrors = []
+    const Uuid = req.params.personelshiftId
+
+    if (!Uuid) {
+        validationErrors.push(req.t('Personelshifts.Error.PersonelshiftIDRequired'))
+    }
+    if (!validator.isUUID(Uuid)) {
+        validationErrors.push(req.t('Personelshifts.Error.UnsupportedPersonelshiftID'))
+    }
+    if (validationErrors.length > 0) {
+        return next(createValidationError(validationErrors, req.t('Personelshifts'), req.language))
+    }
+
+    const t = await db.sequelize.transaction();
+    const username = req?.identity?.user?.Username || 'System'
+
+    try {
+        const personelshift = await db.personelshiftModel.findOne({ where: { Uuid: Uuid } })
+        if (!personelshift) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotFound'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isactive === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotActive'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isonpreview === true) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.OnPreview'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isapproved === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotApproved'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Iscompleted === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.NotCompleted'), req.t('Personelshifts'), req.language))
+        }
+        if (personelshift.Isplanactive === false) {
+            return next(createNotFoundError(req.t('Personelshifts.Error.PlanNotActive'), req.t('Personelshifts'), req.language))
+        }
+
+        await db.personelshiftModel.update({
+            Isplanactive: false,
+            Updateduser: username,
+            Updatetime: new Date(),
+            Isactive: true
+        }, { where: { Uuid: Uuid }, transaction: t })
+
+        await CreateNotification({
+            type: types.Update,
+            service: req.t('Personelshifts'),
+            role: 'personelshiftnotification',
+            message: {
+                tr: `${personelshift?.Startdate} Tarihli Personel Vardiyası ${username} tarafından Tamamlandı.`,
+                en: `${personelshift?.Startdate} Dated Personel Shift Completed By ${username}`
+            }[req.language],
+            pushurl: '/Personelshifts'
+        })
+
+
+        await t.commit()
+    } catch (error) {
         return next(sequelizeErrorCatcher(error))
     }
     GetPersonelshifts(req, res, next)
@@ -745,8 +875,10 @@ module.exports = {
     AddPersonelshift,
     UpdatePersonelshift,
     DeletePersonelshift,
+    SavepreviewPersonelshift,
     ApprovePersonelshift,
     CompletePersonelshift,
-    DeactivePersonelshift,
+    ActivatePersonelshift,
+    DeactivatePersonelshift,
     Getpeparedpersonelshift
 }

@@ -26,7 +26,6 @@ import FloorSlice from "./FloorSlice";
 import ShiftdefineSlice from "./ShiftdefineSlice";
 import EquipmentSlice from "./EquipmentSlice";
 import EquipmentgroupSlice from "./EquipmentgroupSlice";
-import PersonelSlice from "./PersonelSlice";
 import BreakdownSlice from "./BreakdownSlice";
 import MainteanceSlice from "./MainteanceSlice";
 import CompanycashmovementSlice from "./CompanycashmovementSlice";
@@ -89,7 +88,6 @@ const Slices = combineReducers({
     Rules: RuleSlice,
     Equipments: EquipmentSlice,
     Equipmentgroups: EquipmentgroupSlice,
-    Personels: PersonelSlice,
     Breakdowns: BreakdownSlice,
     Mainteancies: MainteanceSlice,
     Companycashmovements: CompanycashmovementSlice,

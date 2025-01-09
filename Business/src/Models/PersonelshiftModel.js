@@ -7,27 +7,32 @@ module.exports = sequelize.define('personelshiftModel', {
     Uuid: {
         type: Sequelize.STRING
     },
+
     Startdate: {
         type: Sequelize.DATE
     },
     Enddate: {
         type: Sequelize.DATE
     },
+
     ProfessionID: {
         type: Sequelize.STRING
     },
-    Isworking: {
-        type: Sequelize.BOOLEAN
-    },
-    Isdeactive: {
-        type: Sequelize.BOOLEAN
-    },
-    Iscompleted: {
+
+    Isonpreview: {
         type: Sequelize.BOOLEAN
     },
     Isapproved: {
         type: Sequelize.BOOLEAN
     },
+    Iscompleted: {
+        type: Sequelize.BOOLEAN
+    },
+
+    Isplanactive: {
+        type: Sequelize.BOOLEAN
+    },
+
     Createduser: {
         type: Sequelize.STRING
     },
