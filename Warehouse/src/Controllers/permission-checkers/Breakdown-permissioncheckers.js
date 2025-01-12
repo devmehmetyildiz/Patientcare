@@ -4,6 +4,14 @@ async function GetBreakdowns(req, res, next) {
     PermissionHandler(req, next, 'breakdownscreen')
 }
 
+async function GetOpenedBreakdownCount(req, res, next) {
+    PermissionHandler(req, next, 'breakdownscreen')
+}
+
+async function GetBreakdowns(req, res, next) {
+    PermissionHandler(req, next, 'breakdownscreen')
+}
+
 async function GetBreakdown(req, res, next) {
     PermissionHandler(req, next, 'breakdownscreen')
 }
@@ -30,5 +38,6 @@ module.exports = {
     AddBreakdown,
     UpdateBreakdown,
     DeleteBreakdown,
-    CompleteBreakdown
+    CompleteBreakdown,
+    GetOpenedBreakdownCount
 }

@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom'
 
 export default function UsernotificationSidebar(props) {
 
-    const { GetLastUsernotificationsbyUserid, GetLastUsernotificationsbyUseridFreezed, closeSidebar, Usernotifications, Profile, EditRecordUsernotifications, DeleteByUserID, DeleteReadByUserID } = props
+    const { GetLastUsernotificationsbyUserid, GetLastUsernotificationsbyUseridFreezed, closeSidebar, Usernotifications, Profile, DeleteByUserID, DeleteReadByUserID, ShowAllNotificationByUser } = props
 
     const { open, isModalListLoading, modalList } = Usernotifications
 
@@ -31,13 +31,12 @@ export default function UsernotificationSidebar(props) {
 
 
     useEffect(() => {
-        const unShowedRecords = (modalList || []).filter(u => u.Isactive && !u.Isshowed)
-        if (unShowedRecords.length > 0 && EditRecordUsernotifications)
-            EditRecordUsernotifications({
-                data: unShowedRecords,
-                dontShownotification: true
+        if (open && (modalList || []).filter(u => !u.Isshowed && u.Isactive).length > 0 && !isModalListLoading && validator.isUUID(meta?.Uuid)) {
+            ShowAllNotificationByUser({
+                guid: meta?.Uuid
             })
-    }, [modalList, EditRecordUsernotifications])
+        }
+    }, [isModalListLoading, modalList, open, meta, ShowAllNotificationByUser])
 
     return (
         <Sidebar

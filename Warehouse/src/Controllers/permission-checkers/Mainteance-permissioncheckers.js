@@ -4,6 +4,10 @@ async function GetMainteancies(req, res, next) {
     PermissionHandler(req, next, 'mainteancescreen')
 }
 
+async function GetOpenedMainteanceCount(req, res, next) {
+    PermissionHandler(req, next, 'mainteancescreen')
+}
+
 async function GetMainteance(req, res, next) {
     PermissionHandler(req, next, 'mainteancescreen')
 }
@@ -30,5 +34,6 @@ module.exports = {
     AddMainteance,
     UpdateMainteance,
     DeleteMainteance,
-    CompleteMainteance
+    CompleteMainteance,
+    GetOpenedMainteanceCount
 }

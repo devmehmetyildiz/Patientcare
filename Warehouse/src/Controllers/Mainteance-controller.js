@@ -19,6 +19,15 @@ async function GetMainteancies(req, res, next) {
     }
 }
 
+async function GetOpenedMainteanceCount(req, res, next) {
+    try {
+        const openedMainteanceCount = await db.mainteanceModel.count({ where: { Isactive: true, Iscompleted: false } })
+        res.status(200).json(openedMainteanceCount)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetMainteance(req, res, next) {
 
     let validationErrors = []
@@ -290,5 +299,6 @@ module.exports = {
     AddMainteance,
     UpdateMainteance,
     DeleteMainteance,
-    CompleteMainteance
+    CompleteMainteance,
+    GetOpenedMainteanceCount
 }

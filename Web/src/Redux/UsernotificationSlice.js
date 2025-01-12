@@ -280,14 +280,11 @@ export const UsernotificationsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(ShowAllNotificationByUser.pending, (state) => {
-                state.isLoading = true;
                 state.errMsg = null;
             })
             .addCase(ShowAllNotificationByUser.fulfilled, (state) => {
-                state.isLoading = false;
             })
             .addCase(ShowAllNotificationByUser.rejected, (state, action) => {
-                state.isLoading = false;
                 state.errMsg = action.error.message;
             })
             .addCase(ReadAllNotificationByUser.pending, (state) => {

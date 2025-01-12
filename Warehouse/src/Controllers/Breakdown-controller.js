@@ -19,6 +19,15 @@ async function GetBreakdowns(req, res, next) {
     }
 }
 
+async function GetOpenedBreakdownCount(req, res, next) {
+    try {
+        const openedBreakdownCount = await db.breakdownModel.count({ where: { Isactive: true, Iscompleted: false } })
+        res.status(200).json(openedBreakdownCount)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
+
 async function GetBreakdown(req, res, next) {
 
     let validationErrors = []
@@ -291,5 +300,6 @@ module.exports = {
     AddBreakdown,
     UpdateBreakdown,
     DeleteBreakdown,
-    CompleteBreakdown
+    CompleteBreakdown,
+    GetOpenedBreakdownCount
 }

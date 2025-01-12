@@ -10,11 +10,13 @@ import UsernotificationsNotificationView from '../../Containers/Usernotification
 
 const Usernotifications = (props) => {
 
-    const { Usernotifications, Profile, GetUsernotifications, DeleteUsernotifications, DeleteByUserID, DeleteReadByUserID } = props
+    const { Usernotifications, Profile, GetUsernotifications, DeleteUsernotifications, DeleteByUserID, DeleteReadByUserID, ShowAllNotificationByUser } = props
 
     const t = Profile?.i18n?.t
     const meta = Profile?.meta
-    
+
+    const { isLoading } = Usernotifications
+
     const [record, setRecord] = useState(null)
     const [viewOpen, setViewOpen] = useState(false)
     const [deleteOpen, setDeleteOpen] = useState(false)
@@ -69,107 +71,113 @@ const Usernotifications = (props) => {
         }
     }, [])
 
+    useEffect(() => {
+        if ((list || []).filter(u => !u.Isshowed && u.Isactive).length > 0 && !isLoading && validator.isUUID(meta?.Uuid)) {
+            ShowAllNotificationByUser({
+                guid: meta?.Uuid
+            })
+        }
+    }, [isLoading, list, meta, ShowAllNotificationByUser])
+
     const buttons = [
         <Button onClick={() => setDeleteAllOpen(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Usernotifications.Column.DeleteAllNotification')}</Button>,
         <Button onClick={() => setDeleteReadOpen(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Usernotifications.Column.DeleteReadedNotification')}</Button>
     ]
 
-    return (Usernotifications.isLoading ? <LoadingPage />
-        : <React.Fragment>
-            <Pagewrapper>
-                <Headerwrapper>
-                    <Grid columns='2' >
-                        <GridColumn width={8}>
-                            <Breadcrumb size='big'>
-                                <Link to={"/Usernotifications"}>
-                                    <Breadcrumb.Section>{t('Pages.Usernotifications.Page.Header')}</Breadcrumb.Section>
-                                </Link>
-                            </Breadcrumb>
-                        </GridColumn>
-                        <Settings
-                            Profile={Profile}
-                            ExtendedButtons={buttons}
-                        />
-                    </Grid>
-                </Headerwrapper>
-                <Pagedivider />
-                {list.length > 0 ?
-                    <div className='w-full mx-auto '>
-                        {Profile.Ismobile ?
-                            <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                            <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-                    </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-                }
-            </Pagewrapper>
-            <UsernotificationsNotificationView
-                willFetchFullLayout
-                open={viewOpen}
-                setOpen={setViewOpen}
-                record={record}
-                setRecord={setRecord}
-            />
-            <Confirm
-                open={deleteOpen}
-                content={t('Pages.Usernotifications.Column.DeleteNotificationContent')}
-                header={t('Pages.Usernotifications.Column.DeleteNotificationHeader')}
-                cancelButton={t('Common.Button.Cancel')}
-                confirmButton={t('Common.Button.Delete')}
-                onCancel={() => { setConfirmopen(false) }}
-                onConfirm={() => {
-                    DeleteUsernotifications({
-                        data: record,
+    return <React.Fragment>
+        <Pagewrapper dimmer isLoading={isLoading}>
+            <Headerwrapper>
+                <Grid columns='2' >
+                    <GridColumn width={8}>
+                        <Breadcrumb size='big'>
+                            <Link to={"/Usernotifications"}>
+                                <Breadcrumb.Section>{t('Pages.Usernotifications.Page.Header')}</Breadcrumb.Section>
+                            </Link>
+                        </Breadcrumb>
+                    </GridColumn>
+                    <Settings
+                        Profile={Profile}
+                        ExtendedButtons={buttons}
+                    />
+                </Grid>
+            </Headerwrapper>
+            <Pagedivider />
+            {list.length > 0 ?
+                <div className='w-full mx-auto '>
+                    {Profile.Ismobile ?
+                        <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+                        <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+                </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+            }
+        </Pagewrapper>
+        <UsernotificationsNotificationView
+            willFetchFullLayout
+            open={viewOpen}
+            setOpen={setViewOpen}
+            record={record}
+            setRecord={setRecord}
+        />
+        <Confirm
+            open={deleteOpen}
+            content={t('Pages.Usernotifications.Column.DeleteNotificationContent')}
+            header={t('Pages.Usernotifications.Column.DeleteNotificationHeader')}
+            cancelButton={t('Common.Button.Cancel')}
+            confirmButton={t('Common.Button.Delete')}
+            onCancel={() => { setConfirmopen(false) }}
+            onConfirm={() => {
+                DeleteUsernotifications({
+                    data: record,
+                })
+                setDeleteOpen(false)
+            }}
+        />
+        <Confirm
+            open={deleteAllOpen}
+            content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteAllContent')}
+            header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
+            cancelButton={t('Common.Button.Cancel')}
+            confirmButton={t('Common.Button.Delete')}
+            onCancel={() => { setDeleteAllOpen(false) }}
+            onConfirm={() => {
+                if (validator.isUUID(meta?.Uuid)) {
+                    DeleteByUserID({
+                        data: meta?.Uuid,
+                        onSuccess: () => {
+                            if (validator.isUUID(meta?.Uuid)) {
+                                GetUsernotifications({
+                                    guid: meta?.Uuid
+                                })
+                            }
+                            setDeleteAllOpen(false)
+                        }
                     })
-                    setDeleteOpen(false)
-                }}
-            />
-            <Confirm
-                open={deleteAllOpen}
-                content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteAllContent')}
-                header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
-                cancelButton={t('Common.Button.Cancel')}
-                confirmButton={t('Common.Button.Delete')}
-                onCancel={() => { setDeleteAllOpen(false) }}
-                onConfirm={() => {
-                    if (validator.isUUID(meta?.Uuid)) {
-                        DeleteByUserID({
-                            data: meta?.Uuid,
-                            onSuccess: () => {
-                                if (validator.isUUID(meta?.Uuid)) {
-                                    GetUsernotifications({
-                                        guid: meta?.Uuid
-                                    })
-                                }
-                                setDeleteAllOpen(false)
+                }
+            }}
+        />
+        <Confirm
+            open={deleteReadOpen}
+            content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteReadedContent')}
+            header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
+            cancelButton={t('Common.Button.Cancel')}
+            confirmButton={t('Common.Button.Delete')}
+            onCancel={() => { setDeleteReadOpen(false) }}
+            onConfirm={() => {
+                if (validator.isUUID(meta?.Uuid)) {
+                    DeleteReadByUserID({
+                        data: meta?.Uuid,
+                        onSuccess: () => {
+                            if (validator.isUUID(meta?.Uuid)) {
+                                GetUsernotifications({
+                                    guid: meta?.Uuid
+                                })
                             }
-                        })
-                    }
-                }}
-            />
-            <Confirm
-                open={deleteReadOpen}
-                content={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteReadedContent')}
-                header={t('Pages.Usernotifications.UsernotificationsNotificationView.DeleteHeader')}
-                cancelButton={t('Common.Button.Cancel')}
-                confirmButton={t('Common.Button.Delete')}
-                onCancel={() => { setDeleteReadOpen(false) }}
-                onConfirm={() => {
-                    if (validator.isUUID(meta?.Uuid)) {
-                        DeleteReadByUserID({
-                            data: meta?.Uuid,
-                            onSuccess: () => {
-                                if (validator.isUUID(meta?.Uuid)) {
-                                    GetUsernotifications({
-                                        guid: meta?.Uuid
-                                    })
-                                }
-                                setDeleteReadOpen(false)
-                            }
-                        })
-                    }
-                }}
-            />
-        </React.Fragment>
-    )
+                            setDeleteReadOpen(false)
+                        }
+                    })
+                }
+            }}
+        />
+    </React.Fragment>
 }
 
 export default Usernotifications

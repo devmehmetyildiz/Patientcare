@@ -284,9 +284,10 @@ async function ShowAllNotificationByUser(req, res, next) {
         }
         await db.usernotificationModel.update({
             Isshowed: true,
+            Showedtime: new Date(),
             Updateduser: "System",
             Updatetime: new Date(),
-        }, { where: { UserID: req.params.userId, }, transaction: t })
+        }, { where: { UserID: req.params.userId, Isshowed: false, Isactive: true } })
 
         res.status(200).json({ message: 'success' })
     } catch (error) {

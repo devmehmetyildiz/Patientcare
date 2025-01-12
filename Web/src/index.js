@@ -11,7 +11,7 @@ import FormProvider from "./Provider/FormProvider";
 import DataProvider from "./Provider/DataProvider";
 
 import { handleauth } from "./Redux/ProfileSlice";
-import { tokenMiddleware, notificationMiddleware } from './Utils/Middlewares'
+import { tokenMiddleware, notificationMiddleware, breakdownMainteanceMiddleware, StartMiddleWares } from './Utils/Middlewares'
 import { configureStore } from "@reduxjs/toolkit";
 
 import config from "./Config";
@@ -30,14 +30,13 @@ const store = configureStore({
     }).concat(
       thunk,
       tokenMiddleware,
-      notificationMiddleware
+      notificationMiddleware,
+      breakdownMainteanceMiddleware
     ),
   devTools: config.env !== 'production',
 });
 
-store.dispatch({
-  type: 'START_MIDDLEWARES'
-})
+StartMiddleWares(store)
 
 let token = localStorage.getItem(STORAGE_KEY_PATIENTCARE_ACCESSTOKEN)
 if (token) {
