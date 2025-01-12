@@ -76,18 +76,20 @@ const Getdateoptions = (limit = 4) => {
         const isStart = lastday > firstShift.getDate()
 
         firstShift.setDate(1)
+        firstShift.setHours(0, 0, 0, 0)
         options.push({
             key: Math.random(),
             text: `${getMonthName(firstShift.getMonth())} ${firstShift.getFullYear()}- 1 ${(isCurrentmonth && isStart) ? '(Aktif)' : ''}`,
-            value: firstShift.toDateString()
+            value: firstShift
         })
 
         const secondShift = new Date(firstShift)
         secondShift.setDate(lastday)
+        secondShift.setHours(0, 0, 0, 0)
         options.push({
             key: Math.random(),
             text: `${getMonthName(secondShift.getMonth())} ${secondShift.getFullYear()}- 2 ${(isCurrentmonth && !isStart) ? '(Aktif)' : ''}`,
-            value: secondShift.toDateString()
+            value: secondShift
         })
     }
     return options

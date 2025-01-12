@@ -121,7 +121,7 @@ const Routes = [
 
     { method: 'get', path: '/Personelshifts/:personelshiftId', controller: 'Personelshift', action: 'GetPersonelshift' },
     { method: 'get', path: '/Personelshifts', controller: 'Personelshift', action: 'GetPersonelshifts' },
-    { method: 'post', path: '/Personelshifts/Getpeparedpersonelshift', controller: 'Personelshift', action: 'Getpeparedpersonelshift' },
+    { method: 'post', path: '/Personelshifts/GetFastCreatedPersonelshift', controller: 'Personelshift', action: 'GetFastCreatedPersonelshift' },
     { method: 'post', path: '/Personelshifts', controller: 'Personelshift', action: 'AddPersonelshift' },
     { method: 'put', path: '/Personelshifts/Savepreview/:personelshiftId', controller: 'Personelshift', action: 'SavepreviewPersonelshift' },
     { method: 'put', path: '/Personelshifts/Approve/:personelshiftId', controller: 'Personelshift', action: 'ApprovePersonelshift' },

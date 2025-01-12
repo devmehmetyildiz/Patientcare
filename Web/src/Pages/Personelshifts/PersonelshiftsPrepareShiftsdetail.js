@@ -56,12 +56,12 @@ export default function PersonelshiftsPrepareShiftsdetail({ columns, personelshi
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {decoratedPersonels.map(personelshift => {
+                {decoratedPersonels.map((personelshift, index) => {
                     const personel = (professionUsers || []).find(u => u?.Uuid === personelshift?.PersonelID)
                     const shift = (Shiftdefines.list || []).find(u => u?.Uuid === personelshift?.ShiftID)
                     return <Table.Row key={personelshift?.PersonelID}>
                         <Table.Cell className="text-sm">
-                            <Label basic size="mini">{`${personel?.Name} ${personel?.Surname}`}</Label>
+                            <Label basic size="mini">{`${index + 1} - ${personel?.Name} ${personel?.Surname}`}</Label>
                         </Table.Cell>
                         <Table.Cell className="text-sm">
                             <Label basic size="mini">{`${shift?.Name} (${shift?.Starttime}-${shift?.Endtime})`}</Label>

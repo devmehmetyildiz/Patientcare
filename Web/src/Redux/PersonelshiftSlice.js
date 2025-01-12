@@ -32,6 +32,31 @@ export const GetPersonelshift = createAsyncThunk(
     }
 );
 
+export const GetFastCreatedPersonelshift = createAsyncThunk(
+    'Personelshifts/GetFastCreatedPersonelshift',
+    async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
+        try {
+            const state = getState()
+            const t = state?.Profile?.i18n?.t || null
+            const response = await instanse.post(config.services.Business, `${ROUTES.PERSONELSHIFT}/GetFastCreatedPersonelshift`, data);
+            dispatch(fillPersonelshiftnotification({
+                type: 'Success',
+                code: t('Common.Code.Add'),
+                description: t('Redux.Personelshifts.Messages.Fastcreated'),
+            }));
+            clearForm && clearForm('PersonelshiftsCreate')
+            closeModal && closeModal()
+            onSuccess && onSuccess()
+            history && history.push(redirectUrl ? redirectUrl : '/Personelshifts');
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillPersonelshiftnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const AddPersonelshifts = createAsyncThunk(
     'Personelshifts/AddPersonelshifts',
     async ({ data, history, redirectUrl, closeModal, clearForm, onSuccess }, { dispatch, getState }) => {
@@ -224,10 +249,13 @@ export const PersonelshiftsSlice = createSlice({
     name: 'Personelshifts',
     initialState: {
         list: [],
+        fastCreatedList: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
+        isFastCreatedListLoading: false,
+        isFastCreatedListSuccess: false,
     },
     reducers: {
         fillPersonelshiftnotification: (state, action) => {
@@ -237,6 +265,9 @@ export const PersonelshiftsSlice = createSlice({
         },
         removePersonelshiftnotification: (state) => {
             state.notifications.splice(0, 1);
+        },
+        removeFastCreatedList: (state) => {
+            state.fastCreatedList = [];
         },
     },
     extraReducers: (builder) => {
@@ -266,6 +297,21 @@ export const PersonelshiftsSlice = createSlice({
             .addCase(GetPersonelshift.rejected, (state, action) => {
                 state.isLoading = false;
                 state.errMsg = action.error.message;
+            })
+            .addCase(GetFastCreatedPersonelshift.pending, (state) => {
+                state.isFastCreatedListLoading = true;
+                state.isFastCreatedListSuccess = false;
+                state.fastCreatedList = [];
+            })
+            .addCase(GetFastCreatedPersonelshift.fulfilled, (state, action) => {
+                state.isFastCreatedListLoading = false;
+                state.isFastCreatedListSuccess = true;
+                state.fastCreatedList = action.payload;
+            })
+            .addCase(GetFastCreatedPersonelshift.rejected, (state, action) => {
+                state.isFastCreatedListLoading = false;
+                state.errMsg = action.error.message;
+                state.fastCreatedList = [];
             })
             .addCase(AddPersonelshifts.pending, (state) => {
                 state.isLoading = true;
@@ -361,6 +407,7 @@ export const PersonelshiftsSlice = createSlice({
 export const {
     fillPersonelshiftnotification,
     removePersonelshiftnotification,
+    removeFastCreatedList
 } = PersonelshiftsSlice.actions;
 
 export default PersonelshiftsSlice.reducer;

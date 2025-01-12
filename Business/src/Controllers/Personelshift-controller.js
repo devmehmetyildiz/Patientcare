@@ -2,11 +2,15 @@ const config = require("../Config")
 const { types } = require("../Constants/Defines")
 const CreateNotification = require("../Utilities/CreateNotification")
 const DoPost = require("../Utilities/DoPost")
+const DoGet = require("../Utilities/DoGet")
 const { sequelizeErrorCatcher } = require("../Utilities/Error")
 const createValidationError = require("../Utilities/Error").createValidationError
 const createNotfounderror = require("../Utilities/Error").createNotFoundError
 const validator = require("../Utilities/Validator")
 const uuid = require('uuid').v4
+
+const GENDER_OPTION_MEN = "0"
+const GENDER_OPTION_WOMEN = "1"
 
 async function GetPersonelshifts(req, res, next) {
     try {
@@ -635,7 +639,7 @@ async function DeletePersonelshift(req, res, next) {
     GetPersonelshifts(req, res, next)
 }
 
-async function Getpeparedpersonelshift(req, res, next) {
+async function GetFastCreatedPersonelshift(req, res, next) {
 
     try {
         const {
@@ -643,157 +647,243 @@ async function Getpeparedpersonelshift(req, res, next) {
             Startdate,
         } = req.body
 
-        const userConfig = {
-            ProfessionID: ProfessionID
-        }
-
-        // const Dateoptions = Getdateoptions(1000)
         const startDate = new Date(Startdate)
-
         const startDay = startDate.getDate()
         const lastDay = Getshiftlastdate(startDate)
 
-        const allshiftdefines = await db.shiftdefineModel.findAll()
-        //  const allFloors = await DoGet(config.services.Setting, `Floors`)
-        const profession = await db.professionModel.findOne({ where: { Uuid: ProfessionID } });
+        const floors = await GetFloors()
+        const shiftdefines = await GetShiftdefines()
+        const profession = await GetProfession(ProfessionID)
+
+
         const professionFloors = profession?.Floors ? (profession?.Floors || '').split(',') : []
-        const shiftdefines = allshiftdefines.filter(u => u.Isactive && !u.Isjoker).sort((a, b) => a.Priority - b.Priority)
-        // const jokershifts = allshiftdefines.find(u => u.Isactive && u.Isjoker)
-        // vardiyalar ve joker vardiya ayrı ayrı seçildi
-        const users = await DoPost(config.services.Userrole, `Users/GetUsersforshift`, userConfig)
-        //meslek grubuna ait personeller bulundu
 
-        // calculation ---------------------------------------------------
+        const standartShifts = shiftdefines.filter(u => !u.Isjoker).sort((a, b) => a.Priority - b.Priority)
+        const jokershift = shiftdefines.find(u => u.Isjoker)
 
-        //  const previousPersonelshifts = await Getpreviouspersonelshifts(ProfessionID, startDate)
-        //bu vardiyadan önceki 4 vardiya bulundu
+        const users = await GetUsers(ProfessionID)
 
-        /*  const previouspersonelshiftdetails = await db.personelshiftdetailModel.findAll({
-             where: {
-                 PersonelshiftID: {
-                     [Op.in]: previousPersonelshifts.map(personelshift => {
-                         return personelshift?.Uuid
-                     })
-                 },
-                 Isstartday: true
-             }
-         }) */
+        const isGeneralFloor = professionFloors.length <= 0
 
-        let userShifts = []
+        let assignedShifts = []; // Atanan vardiyalar
+        let maleUsers = []; // Erkek kullanıcılar
+        let femaleUsers = []; // Kadın kullanıcılar
+        let personelshifts = []
 
-        if (professionFloors.length > 0) {
-
-            /*   let filledPersonels = shiftdefines.map(shiftdefine => {
-                  return {
-                      Uuid: shiftdefine.Uuid,
-                      Floor: '',
-                      Priority: shiftdefine.Priority,
-                      Users: []
-                  }
-              }) */
-
-            for (const floorID of professionFloors) {
-                // const floor = allFloors.find(u => u.Uuid === floorID)
-                //    const floorGender = floor?.Gender;
-
-                for (const shiftdefine of shiftdefines) {
-                    let user = users.find(u => Checkuserforlist(userShifts, u?.Uuid))
-                    for (let index = startDay; index <= lastDay; index++) {
-                        userShifts.push({
-                            ShiftID: shiftdefine?.Uuid,
-                            PersonelID: user?.Uuid,
-                            FloorID: floorID,
-                            Day: index,
-                            Isworking: true,
-                            Isonannual: false,
-                            Annualtype: 0,
-                            Isstartday: index === startDay ? true : false
-                        })
-                    }
-                }
+        ShuffleArray(users).forEach(user => {
+            if (user.Gender === GENDER_OPTION_MEN) {
+                maleUsers.push(user); // Erkek kullanıcılar
+            } else {
+                femaleUsers.push(user); // Kadın kullanıcılar
             }
+        });
+
+        if (isGeneralFloor) {
+            assignedShifts = assignToGeneralFloors(maleUsers, femaleUsers, standartShifts, jokershift);
         } else {
-
-            let filledPersonels = shiftdefines.map(shiftdefine => {
-                return {
-                    Uuid: shiftdefine.Uuid,
-                    Priority: shiftdefine.Priority,
-                    Users: []
-                }
-            })
-
-            for (const user of users) {
-                const shiftdefine = GetShiftforfill(shiftdefines, filledPersonels)
-                const selectedShift = filledPersonels.find(u => u.Uuid === shiftdefine?.Uuid)
-                if (selectedShift) {
-                    selectedShift.Users.push(user)
-                }
-                for (let index = startDay; index <= lastDay; index++) {
-                    userShifts.push({
-                        ShiftID: shiftdefine?.Uuid,
-                        PersonelID: user?.Uuid,
-                        FloorID: "",
-                        Day: index,
-                        Isworking: true,
-                        Isonannual: false,
-                        Annualtype: 0,
-                        Isstartday: index === startDay ? true : false
-                    })
-                }
-            }
+            assignedShifts = assignToSpecificFloors(maleUsers, femaleUsers, professionFloors, floors, standartShifts, jokershift);
         }
 
-        // bu meslek ile alakalı personeller bulundu
-        // ilgili personellere göre önceki vardiyalar bulundu
-        // bu meslek ile alakalı katları bul, yoksa tek shiftdönecek ++
-        // elde katlar var katlara göre for yap 
-        // response u let ile ayarla, eklenecek her personeli oraya tanımla 
-        // for döngüsü 
+        assignedShifts.forEach(assignedShift => {
+            for (let index = startDay; index <= lastDay; index++) {
+                personelshifts.push({
+                    ShiftID: assignedShift.ShiftID,
+                    PersonelID: assignedShift.PersonelID,
+                    FloorID: assignedShift.FloorID,
+                    Day: index,
+                    Isworking: true,
+                    Isonannual: false,
+                    Annualtype: 0,
+                    Isstartday: index === startDay ? true : false
+                })
+            }
+        });
 
-        // vardiya hazırlanacak personelleri bul +
-        // personelleri A,B,C ve Joker olarak grupla, gruplarken önceki vardiyalarda nasıl çalıştıklarını bul 
-        // hangi vardiyada çalıştığını sadece ilk gün için bul 
-
-
-        res.status(200).json(userShifts)
-
-
+        res.status(200).json(personelshifts)
     } catch (error) {
         next(sequelizeErrorCatcher(error))
     }
 }
 
-/* async function Getpreviouspersonelshifts(ProfessionID, startDate) {
-    const Dateoptions = Getdateoptions(1000)
-    const startDateorder = Dateoptions.find(u => new Date(u.value).getTime() === startDate.getTime())?.order
+function assignToGeneralFloors(maleUsers, femaleUsers, standartShifts, jokershift) {
+    let assignedShifts = [];
 
-    const previousStartdates = [
-        startDateorder - 1,
-        startDateorder - 2,
-        startDateorder - 3,
-        startDateorder - 4
-    ];
+    femaleUsers.forEach(user => {
+        assignedShifts.push(assignShiftToUser(startDate, user, null, standartShifts, jokershift));
+    });
 
-    const previousPersonelshifts = await db.personelshiftModel.findAll({
-        where: {
-            Startdate: {
-                [Op.in]: previousStartdates.map(order => {
-                    return new Date(Dateoptions.find(date => date.order === order).value)
-                })
-            },
-            ProfessionID: ProfessionID,
-            Isactive: true,
-        },
-        order: [['Startdate', 'DESC']]
-    })
+    maleUsers.forEach(user => {
+        assignedShifts.push(assignShiftToUser(startDate, user, null, standartShifts, jokershift));
+    });
 
-    return previousPersonelshifts
-} */
+    return assignedShifts;
+}
 
-function Checkuserforlist(userShifts, UserID) {
-    return (userShifts || []).find(usershift =>
-        usershift.PersonelID !== UserID
-    ) ? true : false
+function assignToSpecificFloors(maleUsers, femaleUsers, professionFloors, floors, standartShifts, jokershift) {
+    let assignedShifts = [];
+
+    femaleUsers.forEach(user => {
+        let assigned = false;
+        for (let floor of floors) {
+
+            let canAssigFloor = false
+
+            const floorCounts = GetFloorCounts(assignedShifts, floors.filter(floor => floor.Gender === GENDER_OPTION_WOMEN && professionFloors.includes(floor.Uuid)))
+            const currentFloorCount = floorCounts.find(u => u.key === floor?.Uuid)?.value || 0
+            const lowestFloorCount = floorCounts.reduce((min, obj) => obj.value <= min ? obj.value : min, Infinity)
+
+            if (currentFloorCount <= lowestFloorCount) {
+                canAssigFloor = true
+            }
+
+            if (floor.Gender === GENDER_OPTION_WOMEN && professionFloors.includes(floor.Uuid) && !assigned && canAssigFloor) {
+                assignedShifts.push(assignShiftToUser(user, floor, standartShifts, jokershift, assignedShifts));
+                assigned = true;
+            }
+
+            if (assigned) {
+                break;
+            }
+        }
+
+        if (!assigned) {
+            for (let floor of floors) {
+
+                let canAssigFloor = false
+
+                const floorCounts = GetFloorCounts(assignedShifts, floors.filter(floor => floor.Gender === GENDER_OPTION_MEN && professionFloors.includes(floor.Uuid)))
+                const currentFloorCount = floorCounts.find(u => u.key === floor?.Uuid)?.value || 0
+                const lowestFloorCount = floorCounts.reduce((min, obj) => obj.value <= min ? obj.value : min, Infinity)
+
+                if (currentFloorCount <= lowestFloorCount) {
+                    canAssigFloor = true
+                }
+
+                if (floor.Gender === GENDER_OPTION_MEN && professionFloors.includes(floor.Uuid) && !assigned && canAssigFloor) {
+                    assignedShifts.push(assignShiftToUser(user, floor, standartShifts, jokershift, assignedShifts));
+                    assigned = true;
+                }
+
+                if (assigned) {
+                    break;
+                }
+            }
+        }
+    });
+
+    maleUsers.forEach(user => {
+        let assigned = false;
+
+        for (let floor of floors) {
+
+            let canAssigFloor = false
+
+            const floorCounts = GetFloorCounts(assignedShifts, floors.filter(floor => floor.Gender === GENDER_OPTION_MEN && professionFloors.includes(floor.Uuid)))
+            const currentFloorCount = floorCounts.find(u => u.key === floor?.Uuid)?.value || 0
+            const lowestFloorCount = floorCounts.reduce((min, obj) => obj.value <= min ? obj.value : min, Infinity)
+
+            if (currentFloorCount <= lowestFloorCount) {
+                canAssigFloor = true
+            }
+
+            if (floor.Gender === GENDER_OPTION_MEN && professionFloors.includes(floor.Uuid) && !assigned && canAssigFloor) {
+                assignedShifts.push(assignShiftToUser(user, floor, standartShifts, jokershift, assignedShifts));
+                break;
+            }
+
+            if (assigned) {
+                break;
+            }
+        }
+    });
+
+    return assignedShifts;
+}
+
+function assignShiftToUser(user, floor, standartShifts, jokershift, assignedShifts) {
+
+    let shift = null;
+    let totalAssignedShiftUsers = floor ? assignedShifts.filter(u => u.FloorID === floor?.Uuid) : assignedShifts
+
+    for (const standartShift of standartShifts) {
+        const lowestPriorityShift = getFirstElement([...standartShifts].sort((a, b) => b.Priority - a.Priority))
+        const shiftCounts = GetShiftCounts(totalAssignedShiftUsers)
+        const currentPriorityShiftCount = shiftCounts.find(u => u.key === standartShift?.Uuid)?.value || 0
+        const lowestPriorityShiftCount = shiftCounts.find(u => u.key === lowestPriorityShift?.Uuid)?.value || 0
+        if (lowestPriorityShiftCount === currentPriorityShiftCount) {
+            shift = standartShift
+        }
+
+        if (shift) {
+            break;
+        }
+    }
+
+    return {
+        ShiftID: shift ? shift.Uuid : null,
+        PersonelID: user.Uuid,
+        FloorID: floor ? floor.Uuid : null,
+    }
+}
+
+function GetShiftCounts(totalAssignedShiftUsers) {
+    const shiftArray = totalAssignedShiftUsers.map(u => u.ShiftID)
+    const decoratedArray = {};
+
+    shiftArray.forEach(shiftId => {
+        decoratedArray[shiftId] = (decoratedArray[shiftId] || 0) + 1;
+    });
+
+    return Object.entries(decoratedArray).map(([key, value]) => ({ key, value }));
+}
+
+function GetFloorCounts(floorAssignedUserCount, floors) {
+    const floorArray = floorAssignedUserCount.map(u => u.FloorID)
+    const finalArray = {};
+    const decoratedArray = {};
+
+    floorArray.forEach(floorId => {
+        decoratedArray[floorId] = (decoratedArray[floorId] || 0) + 1;
+    });
+
+    floors.forEach((floor) => {
+        finalArray[floor?.Uuid] = decoratedArray[floor?.Uuid] || 0;
+    });
+
+    return Object.entries(finalArray).map(([key, value]) => ({ key, value }));
+}
+
+function getFirstElement(array) {
+    return array.length > 0 ? array[0] : null;
+}
+
+async function GetFloors() {
+    const allFloors = await DoGet(config.services.Setting, `Floors`)
+
+    return (allFloors || []).filter(u => u.Isactive)
+}
+
+function ShuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+    return array;
+}
+
+async function GetShiftdefines() {
+    return await db.shiftdefineModel.findAll({ where: { Isactive: true } })
+}
+
+async function GetProfession(Uuid) {
+    return await db.professionModel.findOne({ where: { Uuid: Uuid } });
+}
+
+async function GetUsers(Uuid) {
+    const userConfig = {
+        ProfessionID: Uuid
+    }
+    return await DoPost(config.services.Userrole, `Users/GetUsersforshift`, userConfig)
 }
 
 function Getshiftlastdate(inputdate) {
@@ -829,46 +919,6 @@ function Getshiftstartdate(inputdate) {
     }
 }
 
-/* function GetFloorforfill(floors, Filledusers) {
-    let selectedFloor = null
-    for (const floor of floors) {
-        const thisfloorpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === shiftdefine?.Uuid)?.Users || []).length;
-        const otherfloors = floors?.filter(u => u.Uuid !== shiftdefine?.Uuid && u?.Priority > shiftdefine?.Priority)
-        const minpersonelcountedfloors = otherfloors.map(otherfloor => {
-            const othershiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === otherfloor?.Uuid)?.Users || []).length
-            if (othershiftpersonelcount < thisshiftpersonelcount) {
-                return otherfloor
-            }
-        }).filter(u => u)
-
-        if (minpersonelcountedshifts.length <= 0) {
-            selectedShift = shiftdefine;
-            break;
-        }
-    }
-    return selectedShift
-} */
-
-function GetShiftforfill(shiftdefines, Filledusers) {
-    let selectedShift = null
-    for (const shiftdefine of shiftdefines) {
-        const thisshiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === shiftdefine?.Uuid)?.Users || []).length;
-        const othershift = shiftdefines?.filter(u => u.Uuid !== shiftdefine?.Uuid && u?.Priority > shiftdefine?.Priority)
-        const minpersonelcountedshifts = othershift.map(othershift => {
-            const othershiftpersonelcount = (Filledusers.find(filledUser => filledUser?.Uuid === othershift?.Uuid)?.Users || []).length
-            if (othershiftpersonelcount < thisshiftpersonelcount) {
-                return othershift
-            }
-        }).filter(u => u)
-
-        if (minpersonelcountedshifts.length <= 0) {
-            selectedShift = shiftdefine;
-            break;
-        }
-    }
-    return selectedShift
-}
-
 module.exports = {
     GetPersonelshifts,
     GetPersonelshift,
@@ -880,5 +930,5 @@ module.exports = {
     CompletePersonelshift,
     ActivatePersonelshift,
     DeactivatePersonelshift,
-    Getpeparedpersonelshift
+    GetFastCreatedPersonelshift
 }

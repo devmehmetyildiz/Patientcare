@@ -668,6 +668,8 @@ async function GetUsersforshift(req, res, next) {
         const users = await db.userModel.findAll({
             where: {
                 Isactive: true,
+                Isworking: true,
+                Isworker: true,
                 Includeshift: true,
                 ProfessionID: ProfessionID,
                 Workendtime: null

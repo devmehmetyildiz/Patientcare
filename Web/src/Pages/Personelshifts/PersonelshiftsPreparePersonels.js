@@ -1,6 +1,5 @@
 import React from "react"
 import PersonelshiftsPreparePersonelsdetail from "../../Containers/Personelshifts/PersonelshiftsPreparePersonelsdetail"
-import { Card } from "semantic-ui-react";
 import { NoDataScreen, Pagedivider } from "../../Components";
 
 export default function PersonelshiftsPreparePersonels({ professionUsers, Startdate, startDay, lastDay, professionFloors, personelshifts, setPersonelshifts, Profile }) {

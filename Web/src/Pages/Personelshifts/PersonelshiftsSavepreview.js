@@ -1,11 +1,14 @@
 import React from 'react'
 import { Button, Dimmer, DimmerDimmable, Loader, Modal } from 'semantic-ui-react'
+import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
 
 export default function PersonelshiftsSavepreview(props) {
 
   const { open, setOpen, record, setRecord, Personelshifts, Profile, SavepreviewPersonelshifts } = props
 
   const t = Profile?.i18n?.t
+
+  const name = Getdateoptions().find(u => Formatdate(u.value) === Formatdate(Personelshifts.selected_record?.Startdate))?.text
 
   return (
     <DimmerDimmable blurring >
@@ -21,7 +24,7 @@ export default function PersonelshiftsSavepreview(props) {
           </Dimmer>
           <Modal.Description>
             <p>
-              <span className='font-bold'>{record?.Startdate} </span>
+              <span className='font-bold'>{name} </span>
               {t('Pages.Personelshifts.Savepreview.Label.Check')}
             </p>
           </Modal.Description>

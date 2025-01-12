@@ -124,7 +124,7 @@ export default function PersonelshiftsCreate(props) {
   }, [])
 
   return (
-    <Pagewrapper dimmer isLoading={Personelshifts.isLoading}>
+    <Pagewrapper dimmer isLoading={Personelshifts.isLoading || Personelshifts.isFastCreatedListLoading}>
       <Headerwrapper>
         <Headerbredcrump>
           <Link to={"/Personelshifts"}>

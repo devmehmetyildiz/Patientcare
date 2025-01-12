@@ -717,6 +717,7 @@
         "Redux.Patientvisits.Messages.Approve": "Hasta Ziyareti Başarı ile Onaylandı",
         "Redux.Patientvisits.Messages.Savepreview": "Hasta Ziyareti Başarı ile Kayıt Edildi",
         "Redux.Patientvisits.Messages.Complete": "Hasta Ziyareti Başarı ile Tamamlandı",
+        "Redux.Personelshifts.Messages.Fastcreated": "Personel Vardiyası Başarı ile Dolduruldu",
         "Redux.Personelshifts.Messages.Add": "Personel Vardiyası Başarı ile Taslak Olarak Kayıt Edildi",
         "Redux.Personelshifts.Messages.Update": "Personel Vardiyası Başarı ile Güncellendi",
         "Redux.Personelshifts.Messages.Delete": "Personel Vardiyası Başarı ile Silindi",

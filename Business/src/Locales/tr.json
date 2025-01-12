@@ -186,6 +186,7 @@
     "Personelshifts.Error.DayRequired": "Gün Gerekli",
     "Personelshifts.Error.IsonannualRequired": "İzindemi Bilgisi Gerekli",
     "Personelshifts.Error.AnnualtypeRequired": "İzin Türü Gerekli",
+    "Personelshifts.Error.ThereAreSameDateFunction": "Bu Tarihte Oluşturulmuş Aktif Vardiya Bulunmaktadır.",
     "Personelshiftdetails": "Personel Vardiya Detayları",
     "Personelshiftdetails.Error.NotFound": "Personel Vardiya Detayı Bulunamadı",
     "Personelshiftdetails.Error.NotActive": "Personel Vardiya Detayı Aktif Değil",

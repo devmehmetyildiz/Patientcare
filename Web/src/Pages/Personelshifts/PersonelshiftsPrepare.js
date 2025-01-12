@@ -10,7 +10,7 @@ export default function PersonelshiftsPrepare(props) {
 
     const t = Profile?.i18n?.t
 
-    const professionUsers = (Users.list || []).filter(u => u.Includeshift && u.Isactive && u.ProfessionID === selectedProfessionID)
+    const professionUsers = (Users.list || []).filter(u => u.Includeshift && u.Isactive && u.ProfessionID === selectedProfessionID && u.Isworker && u.Isworking)
 
     const selectedProfession = (Professions.list || []).find(u => u.Uuid === selectedProfessionID)
 

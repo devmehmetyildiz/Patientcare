@@ -94,7 +94,7 @@ export default function Personelshifts(props) {
     { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
     { Header: t('Pages.Personelshifts.Column.Startdate'), accessor: row => dateCellhandler(row?.Startdate), Title: true },
     { Header: t('Pages.Personelshifts.Column.ProfessionID'), accessor: row => professionCellhandler(row?.ProfessionID), },
-    { Header: t('Pages.Personelshifts.Column.Isworking'), accessor: row => boolCellhandler(row?.Isplanactive), disableProps: true, Cell: (col, row) => booliconCellhandler(col, row), },
+    { Header: t('Pages.Personelshifts.Column.Isworking'), accessor: row => boolCellhandler(row?.Isplanactive), disableProps: true, Cell: (col, row) => booliconCellhandler(col, row), keys: ['completed'] },
     { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },

@@ -14,14 +14,15 @@ import usePreviousUrl from '../../Hooks/usePreviousUrl'
 export default function PersonelshiftsEdit(props) {
   const PAGE_NAME = "PersonelshiftsEdit"
 
-  const { GetProfessions, GetProfessionpresettings, GetPersonelpresettings, GetFloors, AddPersonelshifts, fillPersonelshiftnotification, GetShiftdefines, GetUsers, GetUsagetypes } = props
-  const { Personelshifts, Professions, Professionpresettings, Personelpresettings, Profile, history, closeModal } = props
+  const { GetProfessions, GetPersonelshift, GetProfessionpresettings, GetPersonelpresettings, GetFloors, EditPersonelshifts, fillPersonelshiftnotification, GetShiftdefines, GetUsers, GetUsagetypes, } = props
+  const { Personelshifts, Professions, Professionpresettings, Shiftdefines, Floors, Usagetypes, Users, Personelpresettings, PersonelshiftID, Profile, history, match, closeModal } = props
 
 
   const [calculatedShifts, setCalculatedShifts] = useState([])
   const { calculateRedirectUrl } = usePreviousUrl()
   const context = useContext(FormContext)
 
+  const Id = PersonelshiftID || match?.params?.PersonelshiftID
   const t = Profile?.i18n?.t
 
   const handleCalculatedShifts = (prev) => {
@@ -84,7 +85,7 @@ export default function PersonelshiftsEdit(props) {
       })
     } else {
 
-      AddPersonelshifts({
+      EditPersonelshifts({
         data: {
           ...Personelshifts.selected_record,
           ...data
@@ -93,7 +94,6 @@ export default function PersonelshiftsEdit(props) {
       })
     }
   }
-
 
   const dateOptions = Getdateoptions(2)
 
@@ -117,7 +117,11 @@ export default function PersonelshiftsEdit(props) {
 
   useEffect(() => {
     if (Personelshifts.selected_record && validator.isObject(Personelshifts.selected_record)) {
-      context.setForm(PAGE_NAME, Personelshifts.selected_record)
+      const startDate = new Date(Personelshifts.selected_record?.Startdate)
+      context.setForm(PAGE_NAME, {
+        ...Personelshifts.selected_record,
+        Startdate: startDate
+      })
       setCalculatedShifts((Personelshifts?.selected_record?.Personelshiftdetails || []).map(detail => {
         return {
           Annualtype: detail?.Annualtype,
@@ -133,17 +137,31 @@ export default function PersonelshiftsEdit(props) {
   }, [Personelshifts.selected_record, setCalculatedShifts])
 
   useEffect(() => {
-    GetProfessions()
-    GetProfessionpresettings()
-    GetPersonelpresettings()
-    GetFloors()
-    GetShiftdefines()
-    GetUsers()
-    GetUsagetypes()
+    if (validator.isUUID(Id)) {
+      GetPersonelshift(Id)
+      GetProfessions()
+      GetProfessionpresettings()
+      GetPersonelpresettings()
+      GetFloors()
+      GetShiftdefines()
+      GetUsers()
+      GetUsagetypes()
+    } else {
+      history && history.push("/Personelshifts")
+    }
   }, [])
 
+  const pageLoading = Personelshifts.isLoading ||
+    Professions.isLoading ||
+    Professionpresettings.isLoading ||
+    Personelpresettings.isLoading ||
+    Floors.isLoading ||
+    Shiftdefines.isLoading ||
+    Users.isLoading ||
+    Usagetypes.isLoading
+
   return (
-    <Pagewrapper dimmer isLoading={Personelshifts.isLoading}>
+    <Pagewrapper dimmer isLoading={pageLoading}>
       <Headerwrapper>
         <Headerbredcrump>
           <Link to={"/Personelshifts"}>

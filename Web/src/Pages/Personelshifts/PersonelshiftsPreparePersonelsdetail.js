@@ -3,6 +3,7 @@ import { useDrag } from "react-dnd";
 import { Breadcrumb, Button, Confirm, Form, Label, Modal, Popup } from "semantic-ui-react";
 import { Contentwrapper, Footerwrapper, FormInput, Headerbredcrump, Headerwrapper } from '../../Components'
 import validator from "../../Utils/Validator";
+import { GENDER_OPTION_MEN, GENDER_OPTION_WOMEN } from "../../Utils/Constants";
 
 export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, Startdate, startDay, lastDay, Shiftdefines, professionFloors, personelshifts, setPersonelshifts, fillPersonelshiftnotification }) {
 
@@ -48,6 +49,17 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
         return { key: floor.Uuid, text: floor.Name, value: floor.Uuid }
     })
 
+    const getLabelColorByGender = (gender) => {
+        switch (gender) {
+            case GENDER_OPTION_MEN:
+                return '#2355a0'
+            case GENDER_OPTION_WOMEN:
+                return '#b91c1c'
+            default:
+                return '#bababa'
+        }
+    }
+
     return <React.Fragment>
         <Popup
             on='click'
@@ -67,7 +79,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                 onClick={handleClick}
                 onContextMenu={handleClick}
                 className='p-[2px]' key={user?.Uuid}>
-                <Label size='tiny' as='a' className={`${isDragging && 'opacity-40'} !bg-[#2355a0] !text-white !w-full select-none`} image >
+                <Label style={{ backgroundColor: getLabelColorByGender(user?.Gender) }} size='tiny' as='a' className={`${isDragging && 'opacity-40'} !text-white !w-full select-none`} image >
                     {`${user?.Name} ${user?.Surname}`}
                 </Label>
             </div>
@@ -229,7 +241,7 @@ export default function PersonelshiftsPreparePersonelsdetail({ user, Profile, St
                             Isstartday: index === startDay ? true : false
                         })
                     }
-                    
+
                     setPersonelshifts([...personelshifts, ...data])
                     setDropresult(null)
                     setDropuser(null)

@@ -5,34 +5,37 @@ export default function PersonelshiftsFastcreate(props) {
     const {
         Profile,
         Personelshifts,
-        GetfastcreatedPersonelshifts,
+        GetFastCreatedPersonelshift,
         selectedProfession,
         selectedStartdate,
-        setPersonelshifts
+        setPersonelshifts,
+        removeFastCreatedList
     } = props
 
     const t = Profile?.i18n?.t
 
     const {
-        fastcreatedlist,
-        isLoading,
+        fastCreatedList,
+        isFastCreatedListLoading,
+        isFastCreatedListSuccess
     } = Personelshifts
 
-   /*  useEffect(() => {
-        if (isFastcreatesuccess) {
-            setPersonelshifts(fastcreatedlist)
+    useEffect(() => {
+        if (isFastCreatedListSuccess) {
+            setPersonelshifts(fastCreatedList)
+            removeFastCreatedList()
         }
-    }, [isFastcreatesuccess]) */
+    }, [isFastCreatedListSuccess, removeFastCreatedList])
 
     return (
-        <Button className='!bg-[#2355a0] !text-white' floated='right' disabled={isLoading} onClick={(e) => {
+        <Button className='!bg-[#2355a0] !text-white' floated='right' loading={isFastCreatedListLoading} disabled={isFastCreatedListLoading} onClick={(e) => {
             e.preventDefault()
-           /*  GetfastcreatedPersonelshifts({
+            GetFastCreatedPersonelshift({
                 data: {
                     ProfessionID: selectedProfession,
                     Startdate: selectedStartdate
                 }
-            }) */
+            })
         }} >{t('Common.Button.Fill')}</Button>
     )
 }
