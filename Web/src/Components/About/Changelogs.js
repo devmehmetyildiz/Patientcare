@@ -404,8 +404,33 @@ const version1_0_1_16 = {
     ],
 }
 
+const version1_0_1_17 = {
+    version: "1.0.1.17",
+    changes: [
+        {
+            title: "Vardiya Yönetimi", commits: [
+                "Vardiya yönetim sayfasında güncellemeler yapıldı, taslak vardiya oluşturmalar eklendi",
+                "Vardiya Oluşturma ve Ön ayarlar bekleyen onaylar tabına eklendi",
+            ],
+        },
+        {
+            title: "Bildirimler", commits: [
+                "Okunmamış, görülmemiş bildirimleri belirten ayarlar güncellendi",
+                "Açık arıza veya bakım taleplerini gösteren bildirimler eklendi",
+            ],
+        },
+        {
+            title: "Kurallar", commits: [
+                "Kuralların çalışabilirlik durumları ayrı bir şekilde gösteren kural eklendi",
+                "Yeni kural taslakları eklendi",
+            ],
+        },
+    ],
+}
+
 export default
     [
+        version1_0_1_17,
         version1_0_1_16,
         version1_0_1_15,
         version1_0_1_14,
