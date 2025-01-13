@@ -1,7 +1,6 @@
-import React, { Component, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Breadcrumb, Dropdown, Form, Grid, GridColumn } from 'semantic-ui-react'
-import { FormContext } from '../../Provider/FormProvider'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import config from '../../Config'

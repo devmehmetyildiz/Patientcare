@@ -19,8 +19,8 @@ import PreregistrationsApprove from '../../Containers/Preregistrations/Preregist
 import ClaimpaymentsApprove from '../../Containers/Claimpayments/ClaimpaymentsApprove'
 import ClaimpaymentparametersApprove from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersApprove'
 import PersonelshiftsApprove from '../../Containers/Personelshifts/PersonelshiftsApprove'
-import PersonelshiftsPersonelpresettings from '../../Containers/Personelshifts/PersonelshiftsPersonelpresettings'
 import ProfessionpresettingsApprove from '../../Containers/Professionpresettings/ProfessionpresettingsApprove'
+import PersonelpresettingsApprove from '../../Containers/Personelpresettings/PersonelpresettingsApprove'
 
 export default function Approve(props) {
 
@@ -687,7 +687,7 @@ export default function Approve(props) {
                     record={personelshiftRecord}
                     setRecord={setPersonelshiftRecord}
                 />
-                <PersonelshiftsPersonelpresettings
+                <PersonelpresettingsApprove
                     open={personelpresettingOpen}
                     setOpen={setPersonelpresettingOpen}
                     record={personelpresettingRecord}
