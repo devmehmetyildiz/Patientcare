@@ -15,7 +15,7 @@ export default function VersionTracker({ Profile }) {
     useEffect(() => {
         setTimeout(() => {
             const showedVersion = localStorage.getItem(STORAGE_KEY_PATIENTCARE_SHOWEDVERSION);
-            if (!showedVersion && appverion !== showedVersion) {
+            if (appverion !== showedVersion) {
                 setOpen(true);
             }
         }, 5000);
