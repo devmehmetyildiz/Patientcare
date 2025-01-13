@@ -6,11 +6,16 @@ const { sequelizeErrorCatcher, requestErrorCatcher } = require("./Utilities/Erro
 
 async function CroneJobs() {
     const rules = await db.ruleModel.findAll({ where: { Isactive: true, Status: true } })
-    rules.forEach((rule) => {
 
+    for (const rule of rules) {
         if (!childProcesses[rule.Uuid]) {
-            console.log('rule.Uuid: ', `${rule.Uuid} calısmaya basladı`);
             const process = spawn('node', ['-e', rule.Rule]);
+
+            await db.ruleModel.update({
+                Isworking: 1,
+                Updateduser: "System",
+                Updatetime: new Date(),
+            }, { where: { Uuid: rule.Uuid } })
 
             process.stdout.on('data', async (data) => {
                 try {
@@ -22,13 +27,13 @@ async function CroneJobs() {
                         Date: new Date()
                     })
                     await db.ruleModel.update({
-                        Status: 1,
+                        Isworking: 1,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: rule.Uuid } })
                 } catch (err) {
                     await db.ruleModel.update({
-                        Status: 0,
+                        Isworking: 0,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: rule.Uuid } })
@@ -46,13 +51,13 @@ async function CroneJobs() {
                         Date: new Date()
                     })
                     await db.ruleModel.update({
-                        Status: 1,
+                        Isworking: 1,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: rule.Uuid } })
                 } catch (err) {
                     await db.ruleModel.update({
-                        Status: 0,
+                        Isworking: 0,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: rule.Uuid } })
@@ -70,7 +75,7 @@ async function CroneJobs() {
                         Date: new Date()
                     })
                     await db.ruleModel.update({
-                        Status: 0,
+                        Isworking: 0,
                         Updateduser: "System",
                         Updatetime: new Date(),
                     }, { where: { Uuid: rule.Uuid } })
@@ -81,7 +86,7 @@ async function CroneJobs() {
             });
             childProcesses[rule.Uuid] = process
         }
-    })
+    }
 }
 
 async function stopChildProcess(ruleId) {

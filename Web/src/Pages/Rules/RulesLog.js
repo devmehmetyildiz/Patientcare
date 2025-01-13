@@ -15,6 +15,7 @@ export default class RulesLog extends Component {
                 onClose={() => handleLogmodal(false)}
                 onOpen={() => handleLogmodal(true)}
                 open={isLogmodalopen}
+                size='fullscreen'
             >
                 <Modal.Header>
                     <Footerwrapper>
@@ -31,7 +32,7 @@ export default class RulesLog extends Component {
                         loglist.length > 0 ?
                             loglist.map((log, index) => {
                                 return <div key={index} className='flex flex-row '>
-                                    <p className='mr-2'>{this.getLocalDate(log.Date)}</p>
+                                    <p className='mr-2 whitespace-nowrap'>{this.getLocalDate(log.Date)}</p>
                                     <p>{log.Log}</p>
                                 </div>
                             })
@@ -44,7 +45,7 @@ export default class RulesLog extends Component {
                         <Button color='black' onClick={() => {
                             ClearRulelogs(selected_record)
                         }}>
-                            {t('Common.Button.Goback')}
+                            {t('Common.Button.Clear')}
                         </Button>
                         <Button
                             content={t('Common.Button.Close')}
@@ -62,6 +63,6 @@ export default class RulesLog extends Component {
     }
     getLocalDate = (date) => {
         var datestr = new Date(date);
-        return datestr.toLocaleString('tr-TR', { timeZone: 'UTC' })
+        return `${datestr.toLocaleDateString('tr')} ${datestr.toLocaleTimeString('tr')}`
     }
 }

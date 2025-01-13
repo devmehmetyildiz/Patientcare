@@ -16,6 +16,10 @@ module.exports = sequelize.define('ruleModel', {
     Status: {
         type: Sequelize.BOOLEAN
     },
+    Isworking: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
     Info: {
         type: Sequelize.STRING
     },

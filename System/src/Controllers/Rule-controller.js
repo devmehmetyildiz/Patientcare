@@ -31,8 +31,12 @@ async function GetRulelogs(req, res, next) {
 
     try {
         const rulelogs = await db.rulelogModel.findAll({
-            where: { RuleID: req.params.ruleId }, order: [
-                ['Id', 'DESC']],
+            where: {
+                RuleID: req.params.ruleId
+            },
+            order: [
+                ['Id', 'DESC']
+            ],
         });
         if (!rulelogs) {
             return next(createNotFoundError(req.t('Rules.Error.RulelogNotFound'), req.t('Rules'), req.language))

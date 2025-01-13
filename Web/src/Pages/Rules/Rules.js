@@ -30,6 +30,7 @@ export class Rules extends Component {
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
       { Header: t('Pages.Rules.Column.Name'), accessor: 'Name', Title: true },
       { Header: t('Pages.Rules.Column.Info'), accessor: 'Info' },
+      { Header: t('Pages.Rules.Column.Working'), accessor: row => this.statusCellhandler(row?.Isworking), disableProps: true },
       { Header: t('Pages.Rules.Column.Status'), accessor: row => this.statusCellhandler(row?.Status), disableProps: true },
       { Header: t('Common.Column.Createduser'), accessor: 'Createduser' },
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },

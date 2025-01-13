@@ -5,7 +5,7 @@ import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import Editor from '@monaco-editor/react'
-import { breakdownmainteanciesrule, patienttodoccreaterule, personelshifteditorrule, usercreaterule } from './Templates'
+import { breakdownmainteanciesrule, mainteancecreaterule, patienttodoccreaterule, personelshifteditorrule, usercreaterule } from './Templates'
 
 export default class RulesEdit extends Component {
 
@@ -52,6 +52,7 @@ export default class RulesEdit extends Component {
             { key: 2, text: "Patient Todo Create Rule", value: patienttodoccreaterule },
             { key: 3, text: "Personel Shift Editor Rule", value: personelshifteditorrule },
             { key: 4, text: "User Create Rule", value: usercreaterule },
+            { key: 5, text: "Mainteance Creater Rule", value: mainteancecreaterule },
         ]
 
         return (
