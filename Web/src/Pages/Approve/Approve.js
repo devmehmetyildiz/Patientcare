@@ -16,16 +16,21 @@ import MainteanceplansApprove from '../../Containers/Mainteanceplans/Mainteancep
 import CareplansApprove from '../../Containers/Careplans/CareplansApprove'
 import PurchaseordersApprove from '../../Containers/Purchaseorders/PurchaseordersApprove'
 import PreregistrationsApprove from '../../Containers/Preregistrations/PreregistrationsApprove'
+import ClaimpaymentsApprove from '../../Containers/Claimpayments/ClaimpaymentsApprove'
+import ClaimpaymentparametersApprove from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersApprove'
+import PersonelshiftsApprove from '../../Containers/Personelshifts/PersonelshiftsApprove'
+import PersonelshiftsPersonelpresettings from '../../Containers/Personelshifts/PersonelshiftsPersonelpresettings'
+import ProfessionpresettingsApprove from '../../Containers/Professionpresettings/ProfessionpresettingsApprove'
 
 export default function Approve(props) {
 
     const { GetStocks, GetUsers, GetStockmovements, GetPurchaseorders, GetWarehouses, GetPatients, GetStockdefines, GetPatientvisits, GetPatientactivities, GetUserincidents,
         GetStocktypes, GetUnits, GetPatientdefines, GetClaimpayments, GetClaimpaymentparameters, GetCostumertypes, GetSurveys, GetTrainings, GetMainteanceplans, GetCareplans,
-        GetEquipments } = props
+        GetEquipments, GetPersonelpresettings, GetPersonelshifts, GetProfessionpresettings, GetProfessions } = props
 
     const { Stocks, Stockmovements, Warehouses, Purchaseorders, Stockdefines, Stocktypes, Patientvisits, Surveys, Mainteanceplans,
         Units, Users, Patients, Patientdefines, Claimpayments, Claimpaymentparameters, Patientactivities, Trainings, Equipments,
-        Costumertypes, Userincidents, Careplans, Profile } = props
+        Costumertypes, Userincidents, Careplans, Personelshifts, Personelpresettings, Professionpresettings, Professions, Profile } = props
 
     const t = Profile?.i18n?.t
 
@@ -59,6 +64,21 @@ export default function Approve(props) {
     const [preregistrationOpen, setPreregistrationOpen] = useState(false)
     const [preregistrationRecord, setPreregistrationRecord] = useState(null)
 
+    const [personelshiftOpen, setPersonelshiftOpen] = useState(false)
+    const [personelshiftRecord, setPersonelshiftRecord] = useState(null)
+
+    const [personelpresettingOpen, setPersonelpresettingOpen] = useState(false)
+    const [personelpresettingRecord, setPersonelpresettingRecord] = useState(null)
+
+    const [professionpresettingOpen, setProfessionpresettingOpen] = useState(false)
+    const [professionpresettingRecord, setProfessionpresettingRecord] = useState(null)
+
+    const [claimpaymentOpen, setClaimpaymentOpen] = useState(false)
+    const [claimpaymentRecord, setClaimpaymentRecord] = useState(null)
+
+    const [claimpaymentparameterOpen, setClaimpaymentparameterOpen] = useState(false)
+    const [claimpaymentparameterRecord, setClaimpaymentparameterRecord] = useState(null)
+
     useEffect(() => {
         GetStocks()
         GetStockmovements()
@@ -81,6 +101,10 @@ export default function Approve(props) {
         GetMainteanceplans()
         GetEquipments()
         GetCareplans()
+        GetPersonelpresettings()
+        GetPersonelshifts()
+        GetProfessions()
+        GetProfessionpresettings()
     }, [])
 
     const isLoading =
@@ -103,6 +127,12 @@ export default function Approve(props) {
         Trainings.isLoading ||
         Mainteanceplans.isLoading ||
         Careplans.isLoading ||
+        Personelshifts.isLoading ||
+        Careplans.isLoading ||
+        Personelshifts.isLoading ||
+        Personelpresettings.isLoading ||
+        Professionpresettings.isLoading ||
+        Professions.isLoading ||
         Costumertypes.isLoading
 
     const createStockmovement = () => {
@@ -403,7 +433,8 @@ export default function Approve(props) {
                 Createdate: createDate,
                 Createuser: createduser?.Username || t('Common.NoDataFound'),
                 Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
-
+                    setClaimpaymentparameterOpen(true)
+                    setClaimpaymentparameterRecord(paymentparameter)
                 }} />,
                 Detail: <Link to={`/Claimpaymentparameters`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
             })
@@ -432,8 +463,92 @@ export default function Approve(props) {
                 Createdate: createDate,
                 Createuser: createduser?.Username || t('Common.NoDataFound'),
                 Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setClaimpaymentOpen(true)
+                    setClaimpaymentRecord(payment)
                 }} />,
                 Detail: <Link to={`/Claimpayments`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+            })
+        })
+    }
+
+    const createPersonelshiftlist = () => {
+        return (Personelshifts.list || []).filter(u => u.Isactive && !u.Isonpreview && !u.Isapproved).map(shift => {
+
+            const createduser = (Users.list || []).find(u => u.Uuid === validator.isUUID(shift?.Updateduser) ? shift?.Updateduser : shift?.Createduser)
+            const createDate = validator.isISODate(shift?.Updatetime)
+                ? Formatfulldate(shift?.Updatetime, true)
+                : Formatfulldate(shift?.Createtime, true)
+
+            const dates = Getdateoptions()
+            const date = `${dates.find(u => Formatdate(u.value) === Formatdate(shift?.Startdate))?.text}`
+
+            const professionName = (Professions.list || []).find(u => u.Uuid === shift?.ProfessionID)
+            const name = `${professionName} - ${date}`
+
+            return ({
+                Name: name ? name : t('Common.NoDataFound'),
+                Parent: t('Pages.Personelshifts.Page.Header'),
+                Createdate: createDate,
+                Createuser: createduser?.Username || t('Common.NoDataFound'),
+                Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setPersonelshiftOpen(true)
+                    setPersonelshiftRecord(shift)
+                }} />,
+                Detail: <Link to={`/Personelshifts`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+            })
+        })
+    }
+
+    const createPersonelpresettinglist = () => {
+        return (Personelpresettings.list || []).filter(u => u.Isactive && !u.Isonpreview && !u.Isapproved).map(presetting => {
+
+            const createduser = (Users.list || []).find(u => u.Uuid === validator.isUUID(presetting?.Updateduser) ? presetting?.Updateduser : presetting?.Createduser)
+            const createDate = validator.isISODate(presetting?.Updatetime)
+                ? Formatfulldate(presetting?.Updatetime, true)
+                : Formatfulldate(presetting?.Createtime, true)
+
+            const dates = Getdateoptions()
+            const date = `${dates.find(u => Formatdate(u.value) === Formatdate(presetting?.Startdate))?.text}`
+
+            const name = `${presetting?.Isinfinite ? 'Sınırsız Kural' : `${date}`} - ${date}`
+
+            return ({
+                Name: name ? name : t('Common.NoDataFound'),
+                Parent: t('Pages.Personelpresettings.Page.Header'),
+                Createdate: createDate,
+                Createuser: createduser?.Username || t('Common.NoDataFound'),
+                Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setPersonelpresettingOpen(true)
+                    setPersonelpresettingRecord(presetting)
+                }} />,
+                Detail: <Link to={`/Personelpresettings`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
+            })
+        })
+    }
+
+    const createProfessionpresettinglist = () => {
+        return (Professionpresettings.list || []).filter(u => u.Isactive && !u.Isonpreview && !u.Isapproved).map(presetting => {
+
+            const createduser = (Users.list || []).find(u => u.Uuid === validator.isUUID(presetting?.Updateduser) ? presetting?.Updateduser : presetting?.Createduser)
+            const createDate = validator.isISODate(presetting?.Updatetime)
+                ? Formatfulldate(presetting?.Updatetime, true)
+                : Formatfulldate(presetting?.Createtime, true)
+
+            const dates = Getdateoptions()
+            const date = `${dates.find(u => Formatdate(u.value) === Formatdate(presetting?.Startdate))?.text}`
+
+            const name = `${presetting?.Isinfinite ? 'Sınırsız Kural' : `${date}`} - ${date}`
+
+            return ({
+                Name: name ? name : t('Common.NoDataFound'),
+                Parent: t('Pages.Professionpresettings.Page.Header'),
+                Createdate: createDate,
+                Createuser: createduser?.Username || t('Common.NoDataFound'),
+                Approve: <Icon link size='large' color='red' name='hand pointer' onClick={() => {
+                    setProfessionpresettingOpen(true)
+                    setProfessionpresettingRecord(presetting)
+                }} />,
+                Detail: <Link to={`/Professionpresettings`} ><Icon size='large' color='red' className='row-edit' name='address book' /> </Link>,
             })
         })
     }
@@ -452,6 +567,9 @@ export default function Approve(props) {
         list = list.concat(createMainteanceplans())
         list = list.concat(createCareplan())
         list = list.concat(createPurchaseorder())
+        list = list.concat(createPersonelshiftlist())
+        list = list.concat(createPersonelpresettinglist())
+        list = list.concat(createProfessionpresettinglist())
         return list.sort((a, b) => new Date(b?.Createdate).getTime() - new Date(a?.Createdate).getTime())
     }
 
@@ -550,6 +668,36 @@ export default function Approve(props) {
                     setOpen={setPreregistrationOpen}
                     record={preregistrationRecord}
                     setRecord={setPreregistrationRecord}
+                />
+                <ClaimpaymentsApprove
+                    open={claimpaymentOpen}
+                    setOpen={setClaimpaymentOpen}
+                    record={claimpaymentRecord}
+                    setRecord={setClaimpaymentRecord}
+                />
+                <ClaimpaymentparametersApprove
+                    open={claimpaymentparameterOpen}
+                    setOpen={setClaimpaymentparameterOpen}
+                    record={claimpaymentparameterRecord}
+                    setRecord={setClaimpaymentparameterRecord}
+                />
+                <PersonelshiftsApprove
+                    open={personelshiftOpen}
+                    setOpen={setPersonelshiftOpen}
+                    record={personelshiftRecord}
+                    setRecord={setPersonelshiftRecord}
+                />
+                <PersonelshiftsPersonelpresettings
+                    open={personelpresettingOpen}
+                    setOpen={setPersonelpresettingOpen}
+                    record={personelpresettingRecord}
+                    setRecord={setPersonelpresettingRecord}
+                />
+                <ProfessionpresettingsApprove
+                    open={professionpresettingOpen}
+                    setOpen={setProfessionpresettingOpen}
+                    record={professionpresettingRecord}
+                    setRecord={setProfessionpresettingRecord}
                 />
             </Pagewrapper>
         </React.Fragment>

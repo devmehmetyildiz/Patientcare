@@ -21,6 +21,10 @@ import { GetTrainings } from '../../Redux/TrainingSlice'
 import { GetMainteanceplans } from '../../Redux/MainteanceplanSlice'
 import { GetEquipments } from '../../Redux/EquipmentSlice'
 import { GetCareplans } from '../../Redux/CareplanSlice'
+import { GetPersonelshifts } from '../../Redux/PersonelshiftSlice'
+import { GetPersonelpresettings } from '../../Redux/PersonelpresettingSlice'
+import { GetProfessionpresettings } from '../../Redux/ProfessionpresettingSlice'
+import { GetProfessions } from '../../Redux/ProfessionSlice'
 
 const mapStateToProps = (state) => ({
     Claimpayments: state.Claimpayments,
@@ -44,6 +48,10 @@ const mapStateToProps = (state) => ({
     Mainteanceplans: state.Mainteanceplans,
     Equipments: state.Equipments,
     Careplans: state.Careplans,
+    Personelshifts: state.Personelshifts,
+    Personelpresettings: state.Personelpresettings,
+    Professionpresettings: state.Professionpresettings,
+    Professions: state.Professions,
     Profile: state.Profile
 })
 
@@ -51,7 +59,7 @@ const mapDispatchToProps = {
     GetStocks, GetStockmovements, GetPatients, GetStockdefines, GetPurchaseorders, GetClaimpaymentparameters,
     GetUsers, GetStocktypes, GetUnits, GetPatientdefines, GetWarehouses, GetClaimpayments, GetMainteanceplans,
     GetCostumertypes, GetPatientvisits, GetPatientactivities, GetUserincidents, GetSurveys, GetTrainings,
-    GetEquipments, GetCareplans
+    GetEquipments, GetCareplans, GetPersonelpresettings, GetPersonelshifts, GetProfessionpresettings, GetProfessions
 
 }
 
