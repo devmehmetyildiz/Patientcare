@@ -719,4 +719,37 @@ setInterval(() => {
 
 `
 
-export { breakdownmainteanciesrule, patienttodoccreaterule, personelshifteditorrule, usercreaterule, mainteancecreaterule }
+const maintestrule = `
+const nodemailer = require("nodemailer");
+
+const email = ''
+const password = ''
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: email,
+        pass: password,
+    },
+});
+
+const mailOptions = {
+    from: email,
+    to: email,
+    subject: "Hello from Nodemailer",
+    text: "This is a test email sent using Nodemailer.",
+};
+
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.error("Error sending email: ", error);
+    } else {
+        console.log("Email sent: ", info.response);
+    }
+});
+`
+
+export { breakdownmainteanciesrule, patienttodoccreaterule, personelshifteditorrule, usercreaterule, mainteancecreaterule, maintestrule }
