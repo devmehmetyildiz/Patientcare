@@ -5,10 +5,11 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import config from '../../Config'
 import { Contentwrapper, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper } from '../../Components'
+import Formatdate from '../../Utils/Formatdate'
 
 export default function Appreports(props) {
 
-    const { GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers } = props
+    const { GetLogByUser, GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers } = props
     const { Profile, Reports, Users } = props
 
     const [startDate, setStartDate] = useState(null)
@@ -29,7 +30,9 @@ export default function Appreports(props) {
         isServiceUsageCountDailyLoading,
         isUsagecountbyUserMontlyLoading,
         isProcessCountLoading,
-        isLoading
+        isLoading,
+        isLogByUserLoading,
+        logByUser
     } = Reports
 
     const isLoadingStatus = isLoading || isProcessCountLoading || isServiceUsageCountDailyLoading || isServiceUsageCountLoading || isUsagecountbyUserMontlyLoading || Users.isLoading
@@ -150,6 +153,74 @@ export default function Appreports(props) {
         ],
     };
 
+    const generateDateArray = (Startdate, Enddate) => {
+        const start = new Date(Startdate)
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(Enddate)
+        end.setHours(0, 0, 0, 0);
+        const now = new Date()
+        now.setHours(23, 59, 59, 999)
+
+        const days = [];
+
+        while (start.getTime() <= end.getTime() && start.getTime() <= now.getTime()) {
+            const day = new Date(start)
+            days.push(day);
+            start.setDate(start.getDate() + 1);
+        }
+
+        return days;
+    }
+
+    let maxData = 0
+    let minData = 0
+
+    const LogByUserData = (Users.list || []).filter(u => u.Isactive).map((user) => {
+        const dayStart = new Date(startDate)
+        const dayEnd = new Date(endDate)
+
+        const dayArray = generateDateArray(dayStart, dayEnd)
+        return {
+            name: `${user?.Username}`,
+            data: dayArray.map(dayKey => {
+                const dayData = logByUser.find(u => u.key === new Date(dayKey).toLocaleDateString('tr'))
+                const value = (dayData?.value || []).find(u => u.UserID === user?.Username)?.Count
+                if (value > maxData) {
+                    maxData = value
+                }
+                if (value < minData) {
+                    minData = value
+                }
+                return value || 0
+            })
+        }
+    }).filter(u => (u.data || []).some(u => u > 0))
+
+
+    const LogByUserOption = {
+        chart: {
+            type: 'line',
+        },
+        title: {
+            text: null,
+        },
+        xAxis: {
+            categories: generateDateArray(startDate, endDate).map(u => `${new Date(u).getDate()}.${String(new Date(u).getMonth() + 1).padStart(2, '0')}`),
+            title: {
+                text: "Günler",
+            },
+        },
+        yAxis: {
+            min: minData,
+            max: maxData,
+            title: {
+                text: "test",
+            },
+        },
+        series: LogByUserData,
+    }
+
+
     const getDateOption = useCallback((props) => {
         const isEndDate = props?.isEndDate
 
@@ -229,9 +300,15 @@ export default function Appreports(props) {
                     Enddate: new Date(endDate),
                 }
             })
+            GetLogByUser({
+                data: {
+                    Startdate: new Date(startDate),
+                    Enddate: new Date(endDate),
+                }
+            })
             GetUsers()
         }
-    }, [startDate, endDate, GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers])
+    }, [startDate, endDate, GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers, GetLogByUser])
 
     return (
         isLoadingStatus ? <LoadingPage /> :
@@ -285,9 +362,12 @@ export default function Appreports(props) {
                         <div className='w-full'>
                             <HighchartsReact highcharts={Highcharts} options={ServiceUsageoptions} />
                         </div>
+                        <div className='w-full'>
+                            <HighchartsReact highcharts={Highcharts} options={UserUsageoptions} />
+                        </div>
                     </div>
                     <Pagedivider />
-                    <HighchartsReact highcharts={Highcharts} options={UserUsageoptions} />
+                    <HighchartsReact highcharts={Highcharts} options={LogByUserOption} />
                 </Pagewrapper >
             </React.Fragment >
     )

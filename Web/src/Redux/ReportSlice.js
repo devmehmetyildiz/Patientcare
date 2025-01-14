@@ -89,6 +89,20 @@ export const GetServiceUsageCountDaily = createAsyncThunk(
 );
 
 
+export const GetLogByUser = createAsyncThunk(
+    'ReportsSlice/GetLogByUser',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.Log, `${ROUTES.LOG}/GetLogByUser`, data);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillReportnotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 
 
 export const ReportsSlice = createSlice({
@@ -101,10 +115,12 @@ export const ReportsSlice = createSlice({
         serviceUsageCountDaily: [],
         usagecountbyUserMontly: [],
         processCount: [],
+        logByUser: [],
         isServiceUsageCountLoading: false,
         isServiceUsageCountDailyLoading: false,
         isUsagecountbyUserMontlyLoading: false,
         isProcessCountLoading: false,
+        isLogByUserLoading: false,
         isLoading: false,
     },
     reducers: {
@@ -187,7 +203,6 @@ export const ReportsSlice = createSlice({
                 state.isServiceUsageCountLoading = false;
                 state.errMsg = action.error.message;
             })
-
             .addCase(GetServiceUsageCountDaily.pending, (state) => {
                 state.isServiceUsageCountDailyLoading = true;
                 state.errMsg = null;
@@ -198,7 +213,20 @@ export const ReportsSlice = createSlice({
                 state.serviceUsageCountDaily = action.payload;
             })
             .addCase(GetServiceUsageCountDaily.rejected, (state, action) => {
-                state.isLoading = false;
+                state.isServiceUsageCountDailyLoading = false;
+                state.errMsg = action.error.message;
+            })
+            .addCase(GetLogByUser.pending, (state) => {
+                state.isLogByUserLoading = true;
+                state.errMsg = null;
+                state.logByUser = [];
+            })
+            .addCase(GetLogByUser.fulfilled, (state, action) => {
+                state.isLogByUserLoading = false;
+                state.logByUser = action.payload;
+            })
+            .addCase(GetLogByUser.rejected, (state, action) => {
+                state.isLogByUserLoading = false;
                 state.errMsg = action.error.message;
             })
     }

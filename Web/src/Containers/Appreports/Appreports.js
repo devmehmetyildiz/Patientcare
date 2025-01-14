@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Appreports from "../../Pages/Appreports/Appreports"
-import { GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily } from "../../Redux/ReportSlice"
+import { GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily ,GetLogByUser} from "../../Redux/ReportSlice"
 import { GetUsers } from "../../Redux/UserSlice"
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers
+    GetUsagecountbyUserMontly, GetProcessCount, GetServiceUsageCount, GetServiceUsageCountDaily, GetUsers,GetLogByUser
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appreports)

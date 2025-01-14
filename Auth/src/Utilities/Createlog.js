@@ -48,6 +48,7 @@ module.exports = async (req, res) => {
         };
     } catch (error) {
         console.log("error on create req", req)
+        console.log("error on create res", res)
         console.log("error on create log", error)
     }
 }

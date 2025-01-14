@@ -1,4 +1,4 @@
-const { sequelizeErrorCatcher } = require("../Utilities/Error")
+const { sequelizeErrorCatcher, createValidationError } = require("../Utilities/Error")
 const uuid = require('uuid').v4
 const validator = require("../Utilities/Validator")
 
@@ -249,7 +249,61 @@ async function GetServiceUsageCountDaily(req, res, next) {
     }
 }
 
+async function GetLogByUser(req, res, next) {
+    try {
+        let validationErrors = []
+        const {
+            Startdate,
+            Enddate,
+        } = req.query
 
+        if (!validator.isISODate(Startdate)) {
+            validationErrors.push(req.t('Logs.Error.StartdateRequired'))
+        }
+        if (!validator.isISODate(Enddate)) {
+            validationErrors.push(req.t('Logs.Error.EnddateRequired'))
+        }
+
+        if (validationErrors.length > 0) {
+            return next(createValidationError(validationErrors, req.t('Logs'), req.language))
+        }
+
+        const logs = await db.logModel.findAll({
+            attributes: [
+                'UserID',
+                [Sequelize.fn('DATE', Sequelize.col('Createtime')), 'LogDate'],
+                [Sequelize.fn('COUNT', Sequelize.col('UserID')), 'Count']
+            ],
+            group: ['LogDate', 'UserID'],
+            where: {
+                Createtime: {
+                    [Sequelize.Op.between]: [new Date(Startdate), new Date(Enddate)],
+                },
+            },
+        });
+
+        const groupedLogs = logs.reduce((acc, log) => {
+            const dateKey = new Date(log.LogDate).toLocaleDateString('tr');
+            if (!acc[dateKey]) {
+                acc[dateKey] = [];
+            }
+            acc[dateKey].push({
+                UserID: log.UserID,
+                Count: log.Count,
+            });
+            return acc;
+        }, {});
+
+        const resArr = Object.keys(groupedLogs).map(date => ({
+            key: date,
+            value: groupedLogs[date],
+        }));
+
+        res.status(200).json(resArr)
+    } catch (error) {
+        return next(sequelizeErrorCatcher(error))
+    }
+}
 
 module.exports = {
     GetLogsByQuerry,
@@ -258,5 +312,6 @@ module.exports = {
     GetUsagecountbyUserMontly,
     GetProcessCount,
     GetServiceUsageCount,
-    GetServiceUsageCountDaily
+    GetServiceUsageCountDaily,
+    GetLogByUser
 }
