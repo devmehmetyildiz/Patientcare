@@ -11,7 +11,7 @@ const Literals = {
     },
     adddescription: {
         en: 'Equipment group added successfully',
-        tr: 'Ekipman Grubu Başarı ile eklendi'
+        tr: 'Malzeme Grubu Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
@@ -19,7 +19,7 @@ const Literals = {
     },
     updatedescription: {
         en: 'Equipment group updated successfully',
-        tr: 'Ekipman Grubu Başarı ile güncellendi'
+        tr: 'Malzeme Grubu Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
@@ -27,7 +27,7 @@ const Literals = {
     },
     deletedescription: {
         en: 'Equipment group Deleted successfully',
-        tr: 'Ekipman Grubu Başarı ile Silindi'
+        tr: 'Malzeme Grubu Başarı ile Silindi'
     },
 }
 

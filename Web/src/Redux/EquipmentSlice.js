@@ -11,7 +11,7 @@ const Literals = {
     },
     adddescription: {
         en: 'Equipment added successfully',
-        tr: 'Ekipman Başarı ile eklendi'
+        tr: 'Malzeme Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
@@ -19,7 +19,7 @@ const Literals = {
     },
     updatedescription: {
         en: 'Equipment updated successfully',
-        tr: 'Ekipman Başarı ile güncellendi'
+        tr: 'Malzeme Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
@@ -27,7 +27,7 @@ const Literals = {
     },
     deletedescription: {
         en: 'Equipment Deleted successfully',
-        tr: 'Ekipman Başarı ile Silindi'
+        tr: 'Malzeme Başarı ile Silindi'
     },
 }
 

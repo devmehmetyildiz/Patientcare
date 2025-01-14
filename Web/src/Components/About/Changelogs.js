@@ -428,8 +428,27 @@ const version1_0_1_17 = {
     ],
 }
 
+const version1_0_1_18 = {
+    version: "1.0.1.18",
+    changes: [
+        {
+            title: "Genel", commits: [
+                "Uygulamadi isimlendirmeler değiştirildi (ekipman => malzeme vb...)",
+                "Hamburger Menüde konum değişiklikleri yapıldı",
+            ],
+        },
+        {
+            title: "Sistem", commits: [
+                "Yazdırma Taslaklarında arka plan düzenlemeleri yapıldı",
+                "Uygulama Kullanım raporlarında kullanıcı işlem grafiği eklendi",
+            ],
+        },
+    ],
+}
+
 export default
     [
+        version1_0_1_18,
         version1_0_1_17,
         version1_0_1_16,
         version1_0_1_15,

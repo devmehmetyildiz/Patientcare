@@ -202,19 +202,19 @@ export default function Appreports(props) {
             type: 'line',
         },
         title: {
-            text: null,
+            text: t('Pages.Appreports.LogByUser.Label.Title'),
         },
         xAxis: {
             categories: generateDateArray(startDate, endDate).map(u => `${new Date(u).getDate()}.${String(new Date(u).getMonth() + 1).padStart(2, '0')}`),
             title: {
-                text: "Günler",
+                text: t('Pages.Appreports.LogByUser.Label.Days'),
             },
         },
         yAxis: {
             min: minData,
             max: maxData,
             title: {
-                text: "test",
+                text: t('Pages.Appreports.LogByUser.Label.Count'),
             },
         },
         series: LogByUserData,

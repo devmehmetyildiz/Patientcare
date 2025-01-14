@@ -12,7 +12,7 @@ const Literals = {
     },
     adddescription: {
         en: 'Mainteance added successfully',
-        tr: 'Bakım Talebi Başarı ile eklendi'
+        tr: 'Malzeme Bakım Talebi Başarı ile eklendi'
     },
     updatecode: {
         en: 'Data Update',
@@ -20,7 +20,7 @@ const Literals = {
     },
     updatedescription: {
         en: 'Mainteance updated successfully',
-        tr: 'Bakım Talebi Başarı ile güncellendi'
+        tr: 'Malzeme Bakım Talebi Başarı ile güncellendi'
     },
     deletecode: {
         en: 'Data Delete',
@@ -28,7 +28,7 @@ const Literals = {
     },
     deletedescription: {
         en: 'Mainteance Deleted successfully',
-        tr: 'Bakım Talebi Başarı ile Silindi'
+        tr: 'Malzeme Bakım Talebi Başarı ile Silindi'
     },
 }
 
