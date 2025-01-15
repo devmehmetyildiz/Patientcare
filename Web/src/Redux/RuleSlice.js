@@ -4,36 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Rule added successfully',
-        tr: 'Kural Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Rule updated successfully',
-        tr: 'Kural Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Rule Deleted successfully',
-        tr: 'Kural Başarı ile Silindi'
-    },
-    cleardescription: {
-        en: 'Rule Logs Deleted succesfully',
-        tr: 'Kural kayıtları başarı ile temizlendi'
-    },
-}
 
 export const GetRules = createAsyncThunk(
     'Rules/GetRules',
@@ -96,12 +66,12 @@ export const AddRules = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.System, ROUTES.RULE, data);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Rules.Messages.Add'),
             }));
             clearForm && clearForm('RulesCreate')
             closeModal && closeModal()
@@ -120,12 +90,12 @@ export const EditRules = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.System, ROUTES.RULE, data);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Update'),
+                description: t('Redux.Rules.Messages.Update'),
             }));
             clearForm && clearForm('RulesUpdate')
             closeModal && closeModal()
@@ -144,12 +114,12 @@ export const StopRules = createAsyncThunk(
     async (guid, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/StopRule/${guid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
+                code: t('Common.Code.Update'),
+                description: t('Redux.Rules.Messages.Stop'),
             }));
             return response.data;
         } catch (error) {
@@ -166,12 +136,12 @@ export const DeleteRules = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/${data.Uuid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Rules.Messages.Delete'),
             }));
             return response.data;
         } catch (error) {
@@ -187,12 +157,12 @@ export const ClearRulelogs = createAsyncThunk(
     async (data, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.System, `${ROUTES.RULE}/Clearrulelogs/${data.Uuid}`);
             dispatch(fillRulenotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.cleardescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Update'),
+                description: t('Redux.Rules.Messages.Clear'),
             }));
             return response.data;
         } catch (error) {
@@ -209,19 +179,11 @@ export const RulesSlice = createSlice({
         list: [],
         loglist: [],
         selected_record: {},
-        privileges: [],
-        privilegegroups: [],
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false,
-        isLogmodalopen: false,
     },
     reducers: {
-
-        handleSelectedRule: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillRulenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -229,12 +191,6 @@ export const RulesSlice = createSlice({
         },
         removeRulenotification: (state) => {
             state.notifications.splice(0, 1);
-        },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        },
-        handleLogmodal: (state, action) => {
-            state.isLogmodalopen = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -347,11 +303,8 @@ export const RulesSlice = createSlice({
 });
 
 export const {
-    handleSelectedRule,
     fillRulenotification,
     removeRulenotification,
-    handleDeletemodal,
-    handleLogmodal
 } = RulesSlice.actions;
 
 export default RulesSlice.reducer;

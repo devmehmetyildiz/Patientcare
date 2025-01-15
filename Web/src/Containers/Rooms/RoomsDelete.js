@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import RoomsDelete from "../../Pages/Rooms/RoomsDelete"
-import { DeleteRooms, handleDeletemodal, handleSelectedRoom } from "../../Redux/RoomSlice"
+import { DeleteRooms, } from "../../Redux/RoomSlice"
 
 const mapStateToProps = (state) => ({
     Rooms: state.Rooms,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteRooms, handleDeletemodal, handleSelectedRoom
+    DeleteRooms,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomsDelete)

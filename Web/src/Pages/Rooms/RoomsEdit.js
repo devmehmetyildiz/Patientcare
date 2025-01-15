@@ -1,98 +1,22 @@
-import React, { Component } from 'react'
+import React, { Component, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import { FormInput, Contentwrapper, Footerwrapper, Gobackbutton, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper, Submitbutton } from '../../Components'
 import FloorsCreate from '../../Containers/Floors/FloorsCreate'
+export default function RoomsEdit(props) {
+  const PAGE_NAME = "RoomsEdit"
+  const { RoomID, GetRoom, GetFloors, match, history } = props
+  const { Profile, Floors, Rooms } = props
+  const { EditRooms, fillRoomnotification, } = props
 
-export default class RoomsEdit extends Component {
+  const Id = RoomID || match?.params?.RoomID
 
-  PAGE_NAME = "RoomsEdit"
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      isDatafetched: false,
-      modelOpened: false
-    }
-  }
-
-  componentDidMount() {
-    const { RoomID, GetRoom, GetFloors, match, history } = this.props
-    let Id = RoomID || match?.params?.RoomID
-    if (validator.isUUID(Id)) {
-      GetRoom(Id)
-      GetFloors()
-    } else {
-      history.push("/Rooms")
-    }
-  }
-
-  componentDidUpdate() {
-    const { Floors, Rooms } = this.props
-    const { selected_record, isLoading } = Rooms
-    if (selected_record && Object.keys(selected_record).length > 0 && selected_record.Id !== 0
-      && Floors.list.length > 0 && !Floors.isLoading
-      && !isLoading && !this.state.isDatafetched) {
-      this.setState({
-        isDatafetched: true
-      })
-      this.context.setForm(this.PAGE_NAME, selected_record)
-    }
-  }
-
-  render() {
-    const { Rooms, Floors, Profile, history } = this.props
-
-    const t = Profile?.i18n?.t
-
-    const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
-      return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
-    })
-
-    return (
-      <Pagewrapper dimmer isLoading={Rooms.isLoading}>
-        <Headerwrapper>
-          <Headerbredcrump>
-            <Link to={"/Rooms"}>
-              <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
-            </Link>
-            <Breadcrumb.Divider icon='right chevron' />
-            <Breadcrumb.Section>{t('Pages.Rooms.Page.EditHeader')}</Breadcrumb.Section>
-          </Headerbredcrump>
-        </Headerwrapper>
-        <Pagedivider />
-        <Contentwrapper>
-          <Form>
-            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
-            <FormInput page={this.PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
-          </Form>
-        </Contentwrapper>
-        <Footerwrapper>
-          <Gobackbutton
-            history={history}
-            redirectUrl={"/Rooms"}
-            buttonText={t('Common.Button.Goback')}
-          />
-          <Submitbutton
-            isLoading={Rooms.isLoading}
-            buttonText={t('Common.Button.Update')}
-            submitFunction={this.handleSubmit}
-          />
-        </Footerwrapper>
-      </Pagewrapper >
-    )
-  }
-
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { EditRooms, history, fillRoomnotification, Profile, Rooms } = this.props
 
-    const t = Profile?.i18n?.t
-
-    const data = this.context.getForm(this.PAGE_NAME)
+    const data = context.getForm(PAGE_NAME)
     let errors = []
     if (!validator.isUUID(data.FloorID)) {
       errors.push({ type: 'Error', code: t('Pages.Rooms.Page.Header'), description: t('Pages.Rooms.Messages.FloorRequired') })
@@ -108,5 +32,64 @@ export default class RoomsEdit extends Component {
       EditRooms({ data: { ...Rooms.selected_record, ...data }, history })
     }
   }
+
+  const { selected_record, isLoading } = Rooms
+
+  const t = Profile?.i18n?.t
+
+  const Floorsoptions = (Floors.list || []).filter(u => u.Isactive).map(Floor => {
+    return { key: Floor.Uuid, text: Floor.Name, value: Floor.Uuid }
+  })
+
+  const context = useContext(FormContext)
+
+  useEffect(() => {
+    if (selected_record && validator.isObject(selected_record)) {
+      context.setForm(PAGE_NAME, selected_record)
+    }
+  }, [selected_record])
+
+  useEffect(() => {
+    if (validator.isUUID(Id)) {
+      GetRoom(Id)
+      GetFloors()
+    } else {
+      history.push("/Rooms")
+    }
+  }, [])
+
+
+
+  return (
+    <Pagewrapper dimmer isLoading={isLoading}>
+      <Headerwrapper>
+        <Headerbredcrump>
+          <Link to={"/Rooms"}>
+            <Breadcrumb.Section >{t('Pages.Rooms.Page.Header')}</Breadcrumb.Section>
+          </Link>
+          <Breadcrumb.Divider icon='right chevron' />
+          <Breadcrumb.Section>{t('Pages.Rooms.Page.EditHeader')}</Breadcrumb.Section>
+        </Headerbredcrump>
+      </Headerwrapper>
+      <Pagedivider />
+      <Contentwrapper>
+        <Form>
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Name')} name="Name" />
+          <FormInput page={PAGE_NAME} required placeholder={t('Pages.Rooms.Column.Floor')} name="FloorID" options={Floorsoptions} formtype='dropdown' modal={FloorsCreate} />
+        </Form>
+      </Contentwrapper>
+      <Footerwrapper>
+        <Gobackbutton
+          history={history}
+          redirectUrl={"/Rooms"}
+          buttonText={t('Common.Button.Goback')}
+        />
+        <Submitbutton
+          isLoading={Rooms.isLoading}
+          buttonText={t('Common.Button.Update')}
+          submitFunction={handleSubmit}
+        />
+      </Footerwrapper>
+    </Pagewrapper >
+  )
 }
-RoomsEdit.contextType = FormContext

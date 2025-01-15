@@ -1,49 +1,46 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
-export default class RoomsDelete extends Component {
-  render() {
-    const { Profile, Rooms, DeleteRooms, handleDeletemodal, handleSelectedRoom } = this.props
+export default function RoomsDelete(props) {
+  const { Profile, Rooms, DeleteRooms, open, setOpen, record, setRecord } = props
 
-    const t = Profile?.i18n?.t
+  const t = Profile?.i18n?.t
 
-    const { isDeletemodalopen, selected_record } = Rooms
-    return (
-      <Modal
-        onClose={() => handleDeletemodal(false)}
-        onOpen={() => handleDeletemodal(true)}
-        open={isDeletemodalopen}
-      >
-        <Modal.Header>{t('Pages.Rooms.Page.Header')}</Modal.Header>
-        <Modal.Content image>
-          <Modal.Description>
-            <p>
-              <span className='font-bold'>{selected_record?.Name} </span>
-              {t('Pages.Rooms.Delete.Label.Check')}
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='black' onClick={() => {
-            handleDeletemodal(false)
-            handleSelectedRoom({})
-          }}>
-            {t('Common.Button.Giveup')}
-          </Button>
-          <Button
-            loading={Rooms.isLoading}
-            content={t('Common.Button.Delete')}
-            labelPosition='right'
-            icon='checkmark'
-            onClick={() => {
-              DeleteRooms(selected_record)
-              handleDeletemodal(false)
-              handleSelectedRoom({})
-            }}
-            positive
-          />
-        </Modal.Actions>
-      </Modal>
-    )
-  }
+  return (
+    <Modal
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
+    >
+      <Modal.Header>{t('Pages.Rooms.Page.Header')}</Modal.Header>
+      <Modal.Content image>
+        <Modal.Description>
+          <p>
+            <span className='font-bold'>{record?.Name} </span>
+            {t('Pages.Rooms.Delete.Label.Check')}
+          </p>
+        </Modal.Description>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color='black' onClick={() => {
+          setOpen(false)
+          setRecord(null)
+        }}>
+          {t('Common.Button.Giveup')}
+        </Button>
+        <Button
+          loading={Rooms.isLoading}
+          content={t('Common.Button.Delete')}
+          labelPosition='right'
+          icon='checkmark'
+          onClick={() => {
+            DeleteRooms(record)
+            setOpen(false)
+            setRecord(null)
+          }}
+          positive
+        />
+      </Modal.Actions>
+    </Modal>
+  )
 }

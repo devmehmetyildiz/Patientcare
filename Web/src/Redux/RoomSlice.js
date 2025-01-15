@@ -4,33 +4,6 @@ import AxiosErrorHelper from "../Utils/AxiosErrorHelper"
 import instanse from "./axios";
 import config from "../Config";
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'Room added successfully',
-        tr: 'Oda Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'Room updated successfully',
-        tr: 'Oda Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'Room Deleted successfully',
-        tr: 'Oda Başarı ile Silindi'
-    },
-}
-
 export const GetRooms = createAsyncThunk(
     'Rooms/GetRooms',
     async (_, { dispatch }) => {
@@ -64,12 +37,12 @@ export const AddRooms = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Setting, ROUTES.ROOM, data);
             dispatch(fillRoomnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Rooms.Messages.Add'),
             }));
             clearForm && clearForm('RoomsCreate')
             closeModal && closeModal()
@@ -88,12 +61,12 @@ export const AddRecordRooms = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.post(config.services.Setting, ROUTES.ROOM + '/AddRecord', data);
             dispatch(fillRoomnotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Add'),
+                description: t('Redux.Rooms.Messages.Add'),
             }));
             clearForm && clearForm('RoomsCreate')
             closeModal && closeModal()
@@ -112,12 +85,12 @@ export const EditRooms = createAsyncThunk(
     async ({ data, history, redirectUrl, closeModal, clearForm }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.put(config.services.Setting, ROUTES.ROOM, data);
             dispatch(fillRoomnotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Update'),
+                description: t('Redux.Rooms.Messages.Update'),
             }));
             clearForm && clearForm('RoomsUpdate')
             closeModal && closeModal()
@@ -137,12 +110,12 @@ export const DeleteRooms = createAsyncThunk(
         try {
 
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.Setting, `${ROUTES.ROOM}/${data.Uuid}`);
             dispatch(fillRoomnotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language] + ` : ${data?.Name}`,
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Rooms.Messages.Delete'),
             }));
             return response.data;
         } catch (error) {
@@ -161,12 +134,8 @@ export const RoomsSlice = createSlice({
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false
     },
     reducers: {
-        handleSelectedRoom: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillRoomnotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -175,9 +144,6 @@ export const RoomsSlice = createSlice({
         removeRoomnotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
@@ -255,10 +221,8 @@ export const RoomsSlice = createSlice({
 });
 
 export const {
-    handleSelectedRoom,
     fillRoomnotification,
     removeRoomnotification,
-    handleDeletemodal
 } = RoomsSlice.actions;
 
 export default RoomsSlice.reducer;
