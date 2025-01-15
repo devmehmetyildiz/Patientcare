@@ -5,7 +5,7 @@ import PersonelshiftsPrepareShiftsdetailDaycell from "../../Containers/Personels
 import PersonelshiftsPrepareShiftsdetailRemove from "../../Containers/Personelshifts/PersonelshiftsPrepareShiftsdetailRemove";
 import { Pagedivider } from "../../Components";
 
-export default function PersonelshiftsPrepareShiftsdetail({ columns, personelshifts, professionUsers, setPersonelshifts, floor, Shiftdefines, Profile, isLast }) {
+export default function PersonelshiftsPrepareShiftsdetail({ readOnly, columns, personelshifts, professionUsers, setPersonelshifts, floor, Shiftdefines, Profile, isLast }) {
 
     const [{ canDrop, isOver }, drop] = useDrop({
         accept: 'label',
@@ -52,7 +52,9 @@ export default function PersonelshiftsPrepareShiftsdetail({ columns, personelshi
                             {col.label}
                         </Table.HeaderCell>
                     })}
-                    <Table.HeaderCell singleLine key="remove" ></Table.HeaderCell>
+                    {!readOnly ?
+                        <Table.HeaderCell singleLine key="remove" ></Table.HeaderCell>
+                        : null}
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -69,6 +71,7 @@ export default function PersonelshiftsPrepareShiftsdetail({ columns, personelshi
                         {Object.keys(personelshift).map((shiftkey, index) => {
                             if (shiftkey !== "PersonelID" && shiftkey !== "ShiftID") {
                                 return <PersonelshiftsPrepareShiftsdetailDaycell
+                                    readOnly={readOnly}
                                     index={index}
                                     personelshift={personelshift}
                                     personelshifts={personelshifts}
@@ -79,13 +82,15 @@ export default function PersonelshiftsPrepareShiftsdetail({ columns, personelshi
                                 />
                             }
                         })}
-                        <Table.Cell >
-                            <PersonelshiftsPrepareShiftsdetailRemove
-                                personelshift={personelshift}
-                                personelshifts={personelshifts}
-                                setPersonelshifts={setPersonelshifts}
-                            />
-                        </Table.Cell >
+                        {!readOnly ?
+                            <Table.Cell>
+                                <PersonelshiftsPrepareShiftsdetailRemove
+                                    personelshift={personelshift}
+                                    personelshifts={personelshifts}
+                                    setPersonelshifts={setPersonelshifts}
+                                />
+                            </Table.Cell>
+                            : null}
                     </Table.Row>
                 })}
             </Table.Body>

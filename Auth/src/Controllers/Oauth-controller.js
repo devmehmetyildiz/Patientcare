@@ -6,7 +6,6 @@ const uuid = require('uuid').v4
 const { sequelizeErrorCatcher, requestErrorCatcher } = require("../Utilities/Error")
 const axios = require('axios')
 const config = require('../Config')
-const Createlog = require('../Utilities/Createlog')
 
 function Testserver(req, res) {
     res.status(200).json({ message: "success" })
@@ -163,7 +162,6 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
             Isactive: true
         })
         req.body.Password = ''
-        Createlog(req)
     } catch (err) {
         return next(sequelizeErrorCatcher(err))
     }

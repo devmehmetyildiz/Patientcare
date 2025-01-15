@@ -6,7 +6,7 @@ export default function PersonelshiftsPreparePersonels({ professionUsers, Startd
 
     const t = Profile?.i18n?.t
 
-    const usedUsers = [...new Set([...personelshifts.map(u => u?.PersonelID)])];
+    const usedUsers = [...new Set([...(personelshifts).map(u => u?.PersonelID)])];
 
     const freeUsercount = (professionUsers || []).filter(u => !usedUsers.includes(u?.Uuid)).length
 

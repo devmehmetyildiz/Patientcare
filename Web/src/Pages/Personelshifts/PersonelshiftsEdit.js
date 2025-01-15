@@ -26,7 +26,7 @@ export default function PersonelshiftsEdit(props) {
   const t = Profile?.i18n?.t
 
   const handleCalculatedShifts = (prev) => {
-    setCalculatedShifts(...prev)
+    setCalculatedShifts([...prev])
   }
 
   const resetCalculatedShifts = () => {

@@ -5,7 +5,7 @@ import { FormInput, Profilephoto } from "../../Components";
 import validator from "../../Utils/Validator";
 
 
-export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift, personelshifts, setPersonelshifts, Users, Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
+export default function PersonelshiftsPrepareShiftsdetailDaycell({ readOnly, personelshift, personelshifts, setPersonelshifts, Users, Usagetypes, shiftkey, index, fillPersonelshiftnotification, Profile }) {
 
     const t = Profile?.i18n?.t
 
@@ -64,6 +64,7 @@ export default function PersonelshiftsPrepareShiftsdetailDaycell({ personelshift
                 </div>}
                 wide
                 on='click'
+                disabled={!readOnly}
                 hideOnScroll
             >
                 <Card>

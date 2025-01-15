@@ -4,7 +4,7 @@ import { Card } from "semantic-ui-react"
 import { Getshiftstartdate } from "../../Utils/Formatdate"
 import { Pagedivider } from "../../Components"
 
-export default function PersonelshiftsPrepareShifts({ isGeneralshift, Startdate, startDay, lastDay, personelshifts, setPersonelshifts, professionFloors, professionUsers, Profile }) {
+export default function PersonelshiftsPrepareShifts({ readOnly, isGeneralshift, Startdate, startDay, lastDay, personelshifts, setPersonelshifts, professionFloors, professionUsers, Profile }) {
 
     const t = Profile?.i18n?.t
 
@@ -23,6 +23,7 @@ export default function PersonelshiftsPrepareShifts({ isGeneralshift, Startdate,
             {isGeneralshift
                 ? <div className='flex flex-col justify-center items-center w-full gap-4'>
                     <PersonelshiftsPrepareShiftsdetail
+                        readOnly={readOnly}
                         columns={columns}
                         personelshifts={personelshifts}
                         setPersonelshifts={setPersonelshifts}
@@ -32,6 +33,7 @@ export default function PersonelshiftsPrepareShifts({ isGeneralshift, Startdate,
                 : <div className='flex flex-col justify-center items-center w-full gap-4'>
                     {professionFloors.sort((a, b) => b.Gender - a.Gender).map((floor, index) => {
                         return <PersonelshiftsPrepareShiftsdetail
+                            readOnly={readOnly}
                             key={floor?.Uuid}
                             floor={floor}
                             columns={columns}

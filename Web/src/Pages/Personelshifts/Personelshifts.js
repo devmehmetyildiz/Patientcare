@@ -13,6 +13,7 @@ import PersonelshiftsComplete from '../../Containers/Personelshifts/Personelshif
 import PersonelshiftsActivate from '../../Containers/Personelshifts/PersonelshiftsActivate'
 import PersonelshiftsDeactivate from '../../Containers/Personelshifts/PersonelshiftsDeactivate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import PersonelshiftsDetail from '../../Containers/Personelshifts/PersonelshiftsDetail'
 
 export default function Personelshifts(props) {
 
@@ -24,6 +25,7 @@ export default function Personelshifts(props) {
   const [completeOpen, setCompleteOpen] = useState(false)
   const [activateOpen, setActivateOpen] = useState(false)
   const [deactivateOpen, setDeactivateOpen] = useState(false)
+  const [detailOpen, setDetailOpen] = useState(false)
   const [record, setRecord] = useState(null)
 
   const t = Profile?.i18n?.t
@@ -99,6 +101,7 @@ export default function Personelshifts(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
+    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
     { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
     { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
     { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
@@ -129,6 +132,10 @@ export default function Personelshifts(props) {
         setRecord(item)
         setSavePreviewOpen(true)
       }} />,
+      detail: <Icon link size='large' color='grey' name='history' onClick={() => {
+        setRecord(item)
+        setDetailOpen(true)
+      }} />,
     }
   })
 
@@ -157,112 +164,117 @@ export default function Personelshifts(props) {
   }, [])
 
   return (
-    isLoading ? <LoadingPage /> :
-      <React.Fragment>
-        <Pagewrapper>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Personelshifts"}>
-                    <Breadcrumb.Section>{t('Pages.Personelshifts.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Personelshifts.Page.CreateHeader')}
-                Pagecreatelink={"/Personelshifts/Create"}
-                Columns={Columns}
-                list={list}
-                initialConfig={initialConfig}
-                metaKey={metaKey}
-                Showcreatebutton
-                Showcolumnchooser
-                Showexcelexport
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Tab
-              onTabChange={(_, { activeIndex }) => {
-                setActiveTab(activeIndex)
-              }}
-              activeIndex={activeTab}
-              className="w-full !bg-transparent"
-              panes={[
-                {
-                  menuItem: `${t('Pages.Personelshifts.Tab.Completed')} (${(completedList || []).length})`,
-                  pane: {
-                    key: 'completed',
-                    content: renderView({ list: completedList, Columns, keys: ['completed'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Personelshifts.Tab.Approved')} (${(approvedList || []).length})`,
-                  pane: {
-                    key: 'approved',
-                    content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Personelshifts.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
-                  pane: {
-                    key: 'waitingapprove',
-                    content: renderView({ list: waitingapproveList, Columns, keys: ['waitingapprove'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Personelshifts.Tab.Onpreview')} (${(onpreviewList || []).length})`,
-                  pane: {
-                    key: 'onpreview',
-                    content: renderView({ list: onpreviewList, Columns, keys: ['onpreview'], initialConfig })
-                  }
-                },
-
-
-              ]}
-              renderActiveOnly={false}
+    <React.Fragment>
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Personelshifts"}>
+                  <Breadcrumb.Section>{t('Pages.Personelshifts.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t('Pages.Personelshifts.Page.CreateHeader')}
+              Pagecreatelink={"/Personelshifts/Create"}
+              Columns={Columns}
+              list={list}
+              initialConfig={initialConfig}
+              metaKey={metaKey}
+              Showcreatebutton
+              Showcolumnchooser
+              Showexcelexport
             />
-          </Contentwrapper>
-        </Pagewrapper>
-        <PersonelshiftsSavepreview
-          open={savePreviewOpen}
-          setOpen={setSavePreviewOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PersonelshiftsApprove
-          open={approveOpen}
-          setOpen={setApproveOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PersonelshiftsComplete
-          open={completeOpen}
-          setOpen={setCompleteOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PersonelshiftsActivate
-          open={activateOpen}
-          setOpen={setActivateOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PersonelshiftsDeactivate
-          open={deactivateOpen}
-          setOpen={setDeactivateOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PersonelshiftsDelete
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-      </React.Fragment>
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Personelshifts.Tab.Completed')} (${(completedList || []).length})`,
+                pane: {
+                  key: 'completed',
+                  content: renderView({ list: completedList, Columns, keys: ['completed'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Personelshifts.Tab.Approved')} (${(approvedList || []).length})`,
+                pane: {
+                  key: 'approved',
+                  content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Personelshifts.Tab.Waitingapprove')} (${(waitingapproveList || []).length})`,
+                pane: {
+                  key: 'waitingapprove',
+                  content: renderView({ list: waitingapproveList, Columns, keys: ['waitingapprove'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Personelshifts.Tab.Onpreview')} (${(onpreviewList || []).length})`,
+                pane: {
+                  key: 'onpreview',
+                  content: renderView({ list: onpreviewList, Columns, keys: ['onpreview'], initialConfig })
+                }
+              },
+
+
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
+      </Pagewrapper>
+      <PersonelshiftsSavepreview
+        open={savePreviewOpen}
+        setOpen={setSavePreviewOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsApprove
+        open={approveOpen}
+        setOpen={setApproveOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsComplete
+        open={completeOpen}
+        setOpen={setCompleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsActivate
+        open={activateOpen}
+        setOpen={setActivateOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsDeactivate
+        open={deactivateOpen}
+        setOpen={setDeactivateOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsDelete
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PersonelshiftsDetail
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+    </React.Fragment>
   )
 }
