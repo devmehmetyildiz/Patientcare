@@ -5,7 +5,8 @@ const useTabNavigation = ({
     additionalTabPrefix,
     history,
     tabOrder,
-    mainRoute
+    mainRoute,
+    resetParams
 }) => {
     const location = useLocation()
     const [activeTab, setActiveTab] = useState(0)
@@ -17,6 +18,13 @@ const useTabNavigation = ({
             params.has(key)
                 ? params.set(key, tabOrder[activeTab])
                 : params.append(key, tabOrder[activeTab])
+            if (resetParams) {
+                (resetParams || []).forEach(param => {
+                    if (params.has(param)) {
+                        params.delete(param)
+                    }
+                });
+            }
             history.push(`/${mainRoute}?${params.toString()}`)
         }
     }, [activeTab, history, tabOrder, location])

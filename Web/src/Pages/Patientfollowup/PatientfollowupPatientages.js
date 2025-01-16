@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon, Label } from 'semantic-ui-react'
 import { DataTable, MobileTable, Pagedivider } from '../../Components'
 import { Link } from 'react-router-dom'
-import Formatdate from '../../Utils/Formatdate'
 import { COL_PROPS } from '../../Utils/Constants'
+import Formatdate from '../../Utils/Formatdate'
 import { useLocation, useHistory } from 'react-router-dom'
 
-export default function PatientfollowupPatientdependency(props) {
+export default function PatientfollowupPatientages(props) {
 
-    const { patients, dependencyoptions, Patientdefines, Profile, bedCount } = props
+    const { patients, Patientdefines, Profile, bedCount } = props
 
     const [selectedType, setSelectedType] = useState('All')
-    console.log('selectedType: ', selectedType);
     const location = useLocation()
     const history = useHistory()
     const params = new URLSearchParams(location?.search)
@@ -30,31 +29,60 @@ export default function PatientfollowupPatientdependency(props) {
         return patientdefine?.CountryID
     }
 
-    const dateCellhandler = (value) => {
-        if (value) {
-            return Formatdate(value, true)
-        }
-        return null
+    const birthDateCellhandler = (row) => {
+        const patient = row
+        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
+        return Formatdate(patientdefine?.Dateofbirth)
     }
+
+    const AgeList = [
+        { value: "1", name: "0-6", min: 0, max: 6 },
+        { value: "2", name: "7-12", min: 7, max: 12 },
+        { value: "3", name: "13-18", min: 13, max: 18 },
+        { value: "4", name: "19-64", min: 19, max: 64 },
+        { value: "5", name: "65+", min: 65, max: Infinity },
+    ]
 
     const typeOptions = [
         { key: 'All', text: t('Pages.Patientfollowup.Columns.AllRecord'), value: 'All' },
-        ...dependencyoptions.map(u => ({ key: u?.value, text: u?.text, value: u.value }))
+        ...AgeList.map(u => ({ key: u?.value, text: u?.name, value: u.value }))
     ]
 
     const Columns = [
         { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
         { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
+        { Header: t('Pages.Patientfollowup.Columns.Age'), accessor: 'age', Title: true },
         { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
-        { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
+        { Header: t('Pages.Patientfollowup.Columns.Dateofbirth'), accessor: row => birthDateCellhandler(row), },
         { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
-    const panes = dependencyoptions.filter(u => selectedType === 'All' ? true : u.value === selectedType).map((dependency, index) => {
-        const decoratedpatients = patients.map(patient => {
-            const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
-            return patientdefine?.Dependency === dependency?.value ? patient : null
-        })
+
+
+
+    const panes = (AgeList || []).filter(u => selectedType === 'All' ? true : u.value === selectedType).map((ageData, index) => {
+        const decoratedpatients = patients
+            .map((patient) => {
+                const patientdefine = (Patientdefines.list || []).find((u) => u.Uuid === patient?.PatientdefineID);
+
+                if (!patientdefine || !patientdefine.Dateofbirth) return null;
+
+                const birthDate = new Date(patientdefine.Dateofbirth);
+                const currentDate = new Date();
+                let age = currentDate.getFullYear() - birthDate.getFullYear();
+                const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                if (age >= ageData.min && age <= ageData.max) {
+                    return {
+                        ...patient,
+                        age,
+                    };
+                }
+                return null;
+            })
             .filter(u => u)
             .map(item => {
                 return {
@@ -64,8 +92,7 @@ export default function PatientfollowupPatientdependency(props) {
             });
 
         return decoratedpatients.length > 0 ? <div key={index} className='w-full gap-2'>
-            <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{dependency?.text}</Label>
-
+            <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{ageData.name}</Label>
             <div className='w-full mx-auto '>
                 {Profile.Ismobile ?
                     <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
@@ -96,7 +123,6 @@ export default function PatientfollowupPatientdependency(props) {
                     params.has('type')
                         ? params.set('type', data.value)
                         : params.append('type', data.value)
-                    selectedType(data.value)
                     history.push(`${location.pathname}?${params.toString()}`)
                 }}
                 options={typeOptions} />

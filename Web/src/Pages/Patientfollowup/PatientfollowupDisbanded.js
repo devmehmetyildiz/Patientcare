@@ -3,6 +3,7 @@ import { Icon, Label } from 'semantic-ui-react'
 import { DataTable, MobileTable, Pagedivider } from '../../Components'
 import { Link } from 'react-router-dom'
 import Formatdate from '../../Utils/Formatdate'
+import { COL_PROPS } from '../../Utils/Constants'
 
 export default function PatientfollowupDisbanded(props) {
 
@@ -15,12 +16,6 @@ export default function PatientfollowupDisbanded(props) {
     cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus === 6))
     cases = cases.concat((Cases.list || []).filter(u => u.Isactive && u.Patientstatus === 4))
 
-    const colProps = {
-        sortable: true,
-        canGroupBy: true,
-        canFilter: true
-    }
-
     const nameCellhandler = (row) => {
         const patient = row
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
@@ -31,11 +26,6 @@ export default function PatientfollowupDisbanded(props) {
         const patient = row
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
         return patientdefine?.CountryID
-    }
-    const deathCellhandler = (row) => {
-        const patient = row
-        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-        return Formatdate(patientdefine?.Dateofdeath)
     }
 
     const getAge = (dateOfBirth, dateToCalculate) => {
@@ -50,15 +40,7 @@ export default function PatientfollowupDisbanded(props) {
         const patient = row
         const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
         const birthdate = new Date(patientdefine?.Dateofbirth)
-        const deathdate = patientdefine?.Dateofdeath ? new Date(patientdefine?.Dateofdeath) : new Date()
-        return getAge(birthdate, deathdate)
-    }
-
-    const agewithdeathCellhandler = (row) => {
-        const patient = row
-        const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
-        const birthdate = new Date(patientdefine?.Dateofbirth)
-        const deathdate = new Date()
+        const deathdate = patient?.Isalive ? new Date() : new Date(patient?.Deathdate)
         return getAge(birthdate, deathdate)
     }
 
@@ -85,21 +67,20 @@ export default function PatientfollowupDisbanded(props) {
         { Header: t('Pages.Patientfollowup.Columns.Age'), accessor: row => ageCellhandler(row), },
         { Header: t('Pages.Patientfollowup.Columns.Patienttype'), accessor: row => patienttypeCellhandler(row), },
         { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const deathColumns = [
         { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
         { Header: t('Pages.Patientfollowup.Columns.Name'), accessor: row => nameCellhandler(row), Title: true },
         { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
-        { Header: t('Pages.Patientfollowup.Columns.Dateofdeath'), accessor: row => deathCellhandler(row), },
+        { Header: t('Pages.Patientfollowup.Columns.Dateofdeath'), accessor: row => dateCellhandler(row?.Deathdate), },
         { Header: t('Pages.Patientfollowup.Columns.Age'), accessor: row => ageCellhandler(row), },
         { Header: t('Pages.Patientfollowup.Columns.Patienttype'), accessor: row => patienttypeCellhandler(row), },
         { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     return (cases.map((casedata, index) => {
-
         const decoratedpatients = patients.filter(patient => patient?.CaseID === casedata?.Uuid).map(item => {
             return {
                 ...item,
@@ -107,8 +88,10 @@ export default function PatientfollowupDisbanded(props) {
             }
         })
 
-        return <div key={index} className='flex flex-col w-full' >
-            <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{casedata?.Name}</Label>
+        return <div key={index} className='p-4 flex flex-col w-full gap-4' >
+            <div>
+                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{casedata?.Name}</Label>
+            </div>
             <div className='w-full mx-auto '>
                 {Profile.Ismobile ?
                     <MobileTable Columns={casedata?.Patientstatus === 6 ? leaveColumns : deathColumns} Data={decoratedpatients} Profile={Profile} /> :

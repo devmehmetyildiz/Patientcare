@@ -1,18 +1,21 @@
-import React from 'react'
-import { Icon, Label } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Dropdown, Icon, Label } from 'semantic-ui-react'
 import { DataTable, MobileTable, Pagedivider } from '../../Components'
 import { Link } from 'react-router-dom'
+import { COL_PROPS } from '../../Utils/Constants'
+import { useLocation, useHistory } from 'react-router-dom'
+import Formatdate from '../../Utils/Formatdate'
 
 export default function PatientfollowupPatienttypes(props) {
 
     const { patients, patienttypes, bedCount, Patientdefines, Profile, } = props
-    const t = Profile?.i18n?.t
 
-    const colProps = {
-        sortable: true,
-        canGroupBy: true,
-        canFilter: true
-    }
+    const [selectedType, setSelectedType] = useState('All')
+    const location = useLocation()
+    const history = useHistory()
+    const params = new URLSearchParams(location?.search)
+
+    const t = Profile?.i18n?.t
 
     const nameCellhandler = (row) => {
         const patient = row
@@ -28,10 +31,15 @@ export default function PatientfollowupPatienttypes(props) {
 
     const dateCellhandler = (value) => {
         if (value) {
-            return value.split('T')[0]
+            return Formatdate(value, true)
         }
-        return null
+        return value
     }
+
+    const typeOptions = [
+        { key: 'All', text: t('Pages.Patientfollowup.Columns.AllRecord'), value: 'All' },
+        ...patienttypes.map(u => ({ key: u?.Uuid, text: u?.Name, value: u.Uuid }))
+    ]
 
     const Columns = [
         { Header: t('Common.Column.Id'), accessor: "Id", Title: true },
@@ -39,32 +47,61 @@ export default function PatientfollowupPatienttypes(props) {
         { Header: t('Pages.Patientfollowup.Columns.CountryID'), accessor: row => countryIDCellhandler(row), Subtitle: true },
         { Header: t('Pages.Patientfollowup.Columns.Happensdate'), accessor: row => dateCellhandler(row?.Happensdate), },
         { Header: t('Pages.Patientfollowup.Columns.actions'), accessor: 'actions', disableProps: true }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
-    return <div className='grid grid-cols-1 md:grid-cols-2 w-full'>
-        {patienttypes.map((patienttype, index) => {
-            const decoratedpatients = patients.map(patient => {
-                const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
-                return patientdefine?.PatienttypeID === patienttype?.Uuid ? patient : null
-            })
-                .filter(u => u)
-                .map(item => {
-                    return {
-                        ...item,
-                        actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
-                    }
-                });
+    useEffect(() => {
+        if (params.has('type')) {
+            if (params.get('type') && typeOptions.find(u => u.value === params.get('type'))) {
+                setSelectedType(params.get('type'))
+            } else {
+                setSelectedType('All')
+            }
+        }
+    }, [params])
 
-            return decoratedpatients.length > 0 ? <div key={index} className='w-full gap-2'>
-                <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{patienttype?.Name}</Label>
+    const panes = patienttypes.filter(u => selectedType === 'All' ? true : u.Uuid === selectedType).map((patienttype, index) => {
+        const decoratedpatients = patients.map(patient => {
+            const patientdefine = (Patientdefines.list || []).find(define => define?.Uuid === patient?.PatientdefineID)
+            return patientdefine?.PatienttypeID === patienttype?.Uuid ? patient : null
+        })
+            .filter(u => u)
+            .map(item => {
+                return {
+                    ...item,
+                    actions: <Link to={`/Patients/${item.Uuid}`} ><Icon size='large' color='blue' className='row-edit' name='magnify' /> </Link>
+                }
+            });
 
-                <div className='w-full mx-auto '>
-                    {Profile.Ismobile ?
-                        <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
-                        <DataTable Columns={Columns} Data={decoratedpatients} additionalCountPrefix={bedCount} />}
-                </div>
-                <Pagedivider />
-            </div > : null
-        })}
+        return decoratedpatients.length > 0 ? <div key={index} className='w-full gap-2'>
+            <Label as={'a'} size='big' className='!bg-[#2355a0] !text-white ' >{patienttype?.Name}</Label>
+
+            <div className='w-full mx-auto '>
+                {Profile.Ismobile ?
+                    <MobileTable Columns={Columns} Data={decoratedpatients} Profile={Profile} /> :
+                    <DataTable Columns={Columns} Data={decoratedpatients} additionalCountPrefix={bedCount} />}
+            </div>
+            <Pagedivider />
+        </div > : null
+    })
+
+    return <div className='p-4 w-full flex flex-col justify-center items-center'>
+        <div className='w-full flex justify-end items-center'>
+            <Dropdown
+                placeholder={t('Pages.Patientfollowup.Columns.SelectRecord')}
+                search
+                selection
+                value={selectedType}
+                onChange={(e, data) => {
+                    params.has('type')
+                        ? params.set('type', data.value)
+                        : params.append('type', data.value)
+                    history.push(`${location.pathname}?${params.toString()}`)
+                }}
+                options={typeOptions} />
+        </div>
+        <Pagedivider />
+        <div className={`grid grid-cols-1 ${(panes || []).length > 1 ? ' md:grid-cols-2 ' : ''} w-full gap-4`}>
+            {panes}
+        </div>
     </div>
 }

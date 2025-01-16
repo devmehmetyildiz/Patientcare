@@ -420,27 +420,18 @@ export default function Patients(props) {
             panes={[
               {
                 menuItem: `${t('Pages.Patients.Page.Tab.PassHeader')} (${(passList || []).length})`,
-                pane: {
-                  key: 'pass',
-                  content: renderView({ list: passList, Columns, keys: ['pass'], initialConfig })
-                }
+                render: () => renderView({ list: passList, Columns, keys: ['pass'], initialConfig })
               },
               {
                 menuItem: `${t('Pages.Patients.Page.Tab.DeadHeader')} (${(deadList || []).length})`,
-                pane: {
-                  key: 'dead',
-                  content: renderView({ list: deadList, Columns, keys: ['dead'], initialConfig })
-                }
+                render: () => renderView({ list: deadList, Columns, keys: ['dead'], initialConfig })
               },
               {
                 menuItem: `${t('Pages.Patients.Page.Tab.LeftHeader')} (${(leftList || []).length})`,
-                pane: {
-                  key: 'left',
-                  content: renderView({ list: leftList, Columns, keys: ['left'], initialConfig })
-                }
+                render: () => renderView({ list: leftList, Columns, keys: ['left'], initialConfig })
               },
             ]}
-            renderActiveOnly={false}
+            renderActiveOnly
           />
         </Contentwrapper>
       </Pagewrapper>
