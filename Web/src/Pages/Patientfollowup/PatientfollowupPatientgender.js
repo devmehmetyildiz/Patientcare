@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon, Label } from 'semantic-ui-react'
-import { DataTable, MobileTable, Pagedivider } from '../../Components'
+import { DataTable, MobileTable, NoDataScreen, Pagedivider } from '../../Components'
 import { Link } from 'react-router-dom'
 import { useLocation, useHistory } from 'react-router-dom'
 import Formatdate from '../../Utils/Formatdate'
@@ -38,7 +38,7 @@ export default function PatientfollowupPatientgender(props) {
 
     const typeOptions = [
         { key: 'All', text: t('Pages.Patientfollowup.Columns.AllRecord'), value: 'All' },
-        ...genderoptions.map(u => ({ key: u?.value, text: u?.text, value: u.value }))
+        ...genderoptions.map(u => ({ key: u?.value, text: u?.text, value: `gender${u.value}` }))
     ]
 
     const Columns = [
@@ -72,7 +72,7 @@ export default function PatientfollowupPatientgender(props) {
             </div>
             <Pagedivider />
         </div > : null
-    })
+    }).filter(u => u)
 
     useEffect(() => {
         if (params.has('type')) {
@@ -101,7 +101,9 @@ export default function PatientfollowupPatientgender(props) {
         </div>
         <Pagedivider />
         <div className={`grid grid-cols-1 ${(panes || []).length > 1 ? ' md:grid-cols-2 ' : ''} w-full gap-4`}>
-            {panes}
+            {panes.length <= 0
+                ? <NoDataScreen autosize message={t('Common.NoDataFound')} />
+                : panes}
         </div>
     </div>
 }

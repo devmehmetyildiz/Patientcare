@@ -932,3 +932,7 @@ code {
   margin-left: auto !important;
   margin-bottom: auto !important;
 }
+
+.highcharts-point {
+  cursor: pointer !important;
+}

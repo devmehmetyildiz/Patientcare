@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon, Label } from 'semantic-ui-react'
-import { DataTable, MobileTable, Pagedivider } from '../../Components'
+import { DataTable, MobileTable, NoDataScreen, Pagedivider } from '../../Components'
 import { Link } from 'react-router-dom'
 import { COL_PROPS } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
@@ -36,11 +36,11 @@ export default function PatientfollowupPatientages(props) {
     }
 
     const AgeList = [
-        { value: "1", name: "0-6", min: 0, max: 6 },
-        { value: "2", name: "7-12", min: 7, max: 12 },
-        { value: "3", name: "13-18", min: 13, max: 18 },
-        { value: "4", name: "19-64", min: 19, max: 64 },
-        { value: "5", name: "65+", min: 65, max: Infinity },
+        { value: "age1", name: "0-6", min: 0, max: 6 },
+        { value: "age2", name: "7-12", min: 7, max: 12 },
+        { value: "age3", name: "13-18", min: 13, max: 18 },
+        { value: "age4", name: "19-64", min: 19, max: 64 },
+        { value: "age5", name: "65+", min: 65, max: Infinity },
     ]
 
     const typeOptions = [
@@ -100,7 +100,7 @@ export default function PatientfollowupPatientages(props) {
             </div>
             <Pagedivider />
         </div > : null
-    })
+    }).filter(u => u)
 
     useEffect(() => {
         if (params.has('type')) {
@@ -111,6 +111,7 @@ export default function PatientfollowupPatientages(props) {
             }
         }
     }, [params])
+
 
     return <div className='p-4 w-full flex flex-col justify-center items-center'>
         <div className='w-full flex justify-end items-center'>
@@ -129,7 +130,9 @@ export default function PatientfollowupPatientages(props) {
         </div>
         <Pagedivider />
         <div className={`grid grid-cols-1 ${(panes || []).length > 1 ? ' md:grid-cols-2 ' : ''} w-full gap-4`}>
-            {panes}
+            {panes.length <= 0
+                ? <NoDataScreen autosize message={t('Common.NoDataFound')} />
+                : panes}
         </div>
     </div>
 }

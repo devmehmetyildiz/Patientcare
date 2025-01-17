@@ -31,9 +31,10 @@ export default function OverviewPatientpiechartMedicalboardreport(props) {
                 const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
                 return patientdefine?.Medicalboardreport === report.value
             })
-            const reportname = Medicalboardreportoptions.find(u => u.value === report.value)?.text
+            
             return {
-                name: reportname || t('Common.NoDataFound'),
+                name: report?.text || t('Common.NoDataFound'),
+                value: report?.value,
                 y: reportpatients.length || 0
             }
         })
@@ -79,7 +80,7 @@ export default function OverviewPatientpiechartMedicalboardreport(props) {
                     point: {
                         events: {
                             click: function () {
-                                history.push(`/Patientfollowup?tab=patientmedicalboardreport`)
+                                history.push(`/Patientfollowup?tab=patientmedicalboardreport&type=medicalboardreport${this.value}`);
                             },
                         },
                     },

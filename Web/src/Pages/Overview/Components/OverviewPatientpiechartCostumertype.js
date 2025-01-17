@@ -32,6 +32,7 @@ export default function OverviewPatientpiechartCostumertype(props) {
             const costumertypedata = (Costumertypes.list || []).find(u => u.Uuid === costumertype)
             return {
                 name: costumertypedata?.Name || t('Common.NoDataFound'),
+                value: costumertypedata?.Uuid || null,
                 y: costumertypepatients.length || 0
             }
         })
@@ -76,7 +77,7 @@ export default function OverviewPatientpiechartCostumertype(props) {
                     point: {
                         events: {
                             click: function () {
-                                history.push(`/Patientfollowup?tab=costumertypes`)
+                                history.push(`/Patientfollowup?tab=costumertypes&type=${this.value}`);
                             },
                         },
                     },

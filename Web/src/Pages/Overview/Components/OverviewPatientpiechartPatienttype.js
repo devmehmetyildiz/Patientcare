@@ -79,7 +79,7 @@ export default function OverviewPatientpiechartPatienttype(props) {
                     point: {
                         events: {
                             click: function () {
-                                history.push(`/Patientfollowup?tab=patienttypes`)
+                                history.push(`/Patientfollowup?tab=patienttypes&type=${this.value}`);
                             },
                         },
                     },

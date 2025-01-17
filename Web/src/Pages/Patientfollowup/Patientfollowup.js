@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Breadcrumb, Button, Tab } from 'semantic-ui-react'
 import { Contentwrapper, Headerbredcrump, Headerwrapper, LoadingPage, Pagedivider, Pagewrapper } from '../../Components'
-import { CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, GENDER_OPTION_MEN, GENDER_OPTION_WOMEN, MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL } from '../../Utils/Constants'
+import {
+    CASE_PATIENT_STATUS_DEATH, CASE_PATIENT_STATUS_LEFT, DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, GENDER_OPTION_MEN, GENDER_OPTION_WOMEN,
+    MEDICALBOARDREPORT_OPTION_MENTAL, MEDICALBOARDREPORT_OPTION_PHYSICAL, MEDICALBOARDREPORT_OPTION_SPIRITUAL
+} from '../../Utils/Constants'
 
 import PatientfollowupPatienttypes from '../../Containers/Patientfollowup/PatientfollowupPatienttypes'
 import PatientfollowupPatientcases from '../../Containers/Patientfollowup/PatientfollowupPatientcases'
@@ -96,11 +99,11 @@ export default function Patientfollowup(props) {
         GetBeds()
     }, [])
 
+
     const { activeTab, setActiveTab } = useTabNavigation({
         history,
         tabOrder,
         mainRoute: 'Patientfollowup',
-        resetParams: ['type']
     })
 
     return (

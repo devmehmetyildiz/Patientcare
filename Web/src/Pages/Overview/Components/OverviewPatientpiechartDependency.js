@@ -31,9 +31,9 @@ export default function OverviewPatientpiechartDependency(props) {
                 const patientdefine = (Patientdefines.list || []).find(u => u.Uuid === patient?.PatientdefineID)
                 return patientdefine?.Dependency === dependency.value
             })
-            const dependencyname = Dependencyoptions.find(u => u.value === dependency.value)?.text
             return {
-                name: dependencyname || t('Common.NoDataFound'),
+                name: dependency?.text || t('Common.NoDataFound'),
+                value: `dependency${dependency?.value}`,
                 y: dependencypatients.length || 0
             }
         })
@@ -79,7 +79,7 @@ export default function OverviewPatientpiechartDependency(props) {
                     point: {
                         events: {
                             click: function () {
-                                history.push(`/Patientfollowup?tab=patientdependency`)
+                                history.push(`/Patientfollowup?tab=patientdependency&type=${this.value}`);
                             },
                         },
                     },
