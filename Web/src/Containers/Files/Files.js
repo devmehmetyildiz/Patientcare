@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Files from '../../Pages/Files/Files'
-import { GetFiles, fillFilenotification, DeleteFiles, handleDeletemodal, handleSelectedFile } from '../../Redux/FileSlice'
+import { GetFiles, fillFilenotification, } from '../../Redux/FileSlice'
 import { GetUsagetypes } from '../../Redux/UsagetypeSlice'
 
 const mapStateToProps = (state) => ({
@@ -10,8 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetFiles, fillFilenotification, DeleteFiles,
-    handleDeletemodal, handleSelectedFile, GetUsagetypes
+    GetFiles, fillFilenotification, GetUsagetypes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Files)

@@ -1,47 +1,46 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
-export default class FilesDelete extends Component {
-  render() {
-    const { Profile, Files, DeleteFiles, handleDeletemodal, handleSelectedFile } = this.props
 
-    const t = Profile?.i18n?.t
+export default function FilesDelete(props) {
+  const { Profile, Files, DeleteFiles, open, setOpen, record, setRecord } = props
 
-    const { isDeletemodalopen, selected_record } = Files
-    return (
-      <Modal
-        onClose={() => handleDeletemodal(false)}
-        onOpen={() => handleDeletemodal(true)}
-        open={isDeletemodalopen}
-      >
-        <Modal.Header>{t('Pages.Files.Page.DeleteHeader')}</Modal.Header>
-        <Modal.Content image>
-          <Modal.Description>
-            <p>
-              <span className='font-bold'>{selected_record?.Filename} </span>
-              {t('Pages.Files.Delete.Label.Check')}
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='black' onClick={() => {
-            handleDeletemodal(false)
-            handleSelectedFile({})
-          }}>
-            {t('Common.Button.Giveup')}
-          </Button>
-          <Button
-            content={t('Common.Button.Delete')}
-            labelPosition='right'
-            icon='checkmark'
-            onClick={() => {
-              DeleteFiles(selected_record)
-              handleDeletemodal(false)
-              handleSelectedFile({})
-            }}
-            positive
-          />
-        </Modal.Actions>
-      </Modal>
-    )
-  }
+  const t = Profile?.i18n?.t
+
+  return (
+    <Modal
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
+    >
+      <Modal.Header>{t('Pages.Files.Page.DeleteHeader')}</Modal.Header>
+      <Modal.Content image>
+        <Modal.Description>
+          <p>
+            <span className='font-bold'>{record?.Filename} </span>
+            {t('Pages.Files.Delete.Label.Check')}
+          </p>
+        </Modal.Description>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color='black' onClick={() => {
+          setOpen(false)
+          setRecord(null)
+        }}>
+          {t('Common.Button.Giveup')}
+        </Button>
+        <Button
+          loading={Files.isLoading}
+          content={t('Common.Button.Delete')}
+          labelPosition='right'
+          icon='checkmark'
+          onClick={() => {
+            DeleteFiles(record)
+            setOpen(false)
+            setRecord(null)
+          }}
+          positive
+        />
+      </Modal.Actions>
+    </Modal>
+  )
 }
