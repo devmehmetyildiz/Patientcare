@@ -25,7 +25,8 @@ export default function Settings(props) {
         Showcreatebutton,
         Additionalfunctiontxt,
         Additionalfunction,
-        ExtendedButtons
+        ExtendedButtons,
+        defaultHiddenColumns
     } = props
 
     const { roles, i18n } = Profile
@@ -60,7 +61,7 @@ export default function Settings(props) {
                                 }
                                 {Showcolumnchooser && willshowmanageview && <>
                                     <Pagedivider />
-                                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />
+                                    <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} defaultHiddenColumns={defaultHiddenColumns} />
                                 </>
 
                                 }
@@ -93,7 +94,7 @@ export default function Settings(props) {
                         {Pagecreateheader}
                     </Button>
                 </Link>}
-                {Showcolumnchooser && willshowmanageview && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} />}
+                {Showcolumnchooser && willshowmanageview && <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} defaultHiddenColumns={defaultHiddenColumns} />}
                 {Showexcelimport && willshowreport && <ExcelImport columns={Columns} addData={AddRecord} />}
                 {Showexcelexport && willshowreport && <ExcelExport columns={Columns} data={list} name={metaKey} Config={initialConfig} />}
                 {(ExtendedButtons || []).map(button => {

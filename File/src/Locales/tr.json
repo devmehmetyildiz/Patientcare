@@ -2,6 +2,7 @@
     "Files": "Dosyalar",
     "Files.Error.NotFound": "Dosya Bulunamadı",
     "Files.Error.NotActive": "Dosya Aktif Değil",
+    "Files.Error.FileNotFound": "Dosya Bulut Sistemde Bulunmadı",
     "Files.Error.ParentIDRequired": "Üst ID Gerekli",
     "Files.Error.UnsupportedParentID": "Tanımsız Üst ID",
     "Files.Error.FileIDRequired": "Dosya ID Gerekli",

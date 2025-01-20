@@ -13,7 +13,7 @@ class ColumnChooser extends Component {
   }
 
   componentDidMount() {
-    const { metaKey, meta, columns } = this.props
+    const { metaKey, meta, columns, defaultHiddenColumns } = this.props
 
     let tableMeta = (meta || []).find(u => u.Meta === metaKey)
     if (tableMeta) {
@@ -27,7 +27,7 @@ class ColumnChooser extends Component {
         })
       this.setState({ decoratedColumns: decoratedColumns })
     } else {
-      const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
+      const defaultHiddens = defaultHiddenColumns || ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
       const decoratedColumns = columns.map((item, index) => {
         return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
       })
@@ -36,7 +36,7 @@ class ColumnChooser extends Component {
   }
 
   componentDidUpdate(prev) {
-    const { metaKey, meta, columns } = this.props
+    const { metaKey, meta, columns, defaultHiddenColumns } = this.props
     if (prev.metaKey !== metaKey) {
       let tableMeta = (meta || []).find(u => u.Meta === metaKey)
       if (tableMeta) {
@@ -50,7 +50,7 @@ class ColumnChooser extends Component {
           })
         this.setState({ decoratedColumns: decoratedColumns })
       } else {
-        const defaultHiddens = ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
+        const defaultHiddens = defaultHiddenColumns || ["Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
         const decoratedColumns = columns.map((item, index) => {
           return { order: index, isVisible: defaultHiddens.includes(this.getAccessor(item)) ? false : true, name: item.Header, key: this.getAccessor(item), isGroup: false, sorting: 'None' }
         })

@@ -44,8 +44,9 @@ export default function Files(props) {
     { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
+  const defaultHiddenColumns = ["Id", "ParentID", "Filename", "Filefolder", "Filepath", "Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
   const metaKey = "file"
-  let initialConfig = GetInitialconfig(Profile, metaKey)
+  let initialConfig = GetInitialconfig(Profile, metaKey, { hiddenColumns: defaultHiddenColumns })
 
   const list = (Files.list || []).filter(u => u.Isactive).map(item => {
     return {
@@ -81,6 +82,7 @@ export default function Files(props) {
               </Breadcrumb>
             </GridColumn>
             <Settings
+              defaultHiddenColumns={defaultHiddenColumns}
               Profile={Profile}
               Columns={Columns}
               list={list}

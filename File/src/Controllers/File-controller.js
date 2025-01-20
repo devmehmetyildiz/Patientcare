@@ -102,8 +102,23 @@ async function Downloadfile(req, res, next) {
             return next(createNotFoundError(req.t('Files.Error.NotActive'), req.t('Files'), req.language))
         }
         const encodedFileName = encodeURIComponent(file.Filename);
+
+        const remoteFolderpath = `${config.ftp.mainfolder}/${file.Filefolder}`;
+        const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
+
+        const isExists = await CheckFileExists(remoteFilePath)
+
+        if (!isExists) {
+            return next(createNotFoundError(req.t('Files.Error.FileNotFound'), req.t('Files'), req.language))
+        }
+
         res.setHeader("Content-Disposition", `attachment; filename="${encodedFileName}"`);
         res.setHeader("Content-Type", file.Filetype);
+
+        const stat = await CheckFileSize(remoteFilePath)
+
+        res.setHeader("Content-Length", stat?.size);
+
         const fileStream = new stream.Writable({
             write(chunk, encoding, callback) {
                 if (res.writableEnded) {
@@ -115,8 +130,6 @@ async function Downloadfile(req, res, next) {
                 res.end(callback);
             },
         });
-        const remoteFolderpath = `${config.ftp.mainfolder}/${file.Filefolder}`;
-        const remoteFilePath = `/${remoteFolderpath}/${file.Filename}`;
 
         await (async () => {
             try {
@@ -433,6 +446,40 @@ async function Checkdirectoryfromftp(directoryname) {
     }
 
     return isdirectoryactive;
+}
+
+async function CheckFileSize(path) {
+    try {
+        const client = new SftpClient();
+        await client.connect({
+            host: config.ftp.host,
+            port: 22,
+            username: config.ftp.user,
+            password: config.ftp.password
+        });
+        const stat = await client.stat(path);
+        await client.end()
+        return stat
+    } catch {
+        return { size: 0 }
+    }
+}
+
+async function CheckFileExists(path) {
+    try {
+        const client = new SftpClient();
+        await client.connect({
+            host: config.ftp.host,
+            port: 22,
+            username: config.ftp.user,
+            password: config.ftp.password
+        });
+        const isExists = await client.exists(path);
+        await client.end()
+        return isExists
+    } catch {
+        return false
+    }
 }
 
 module.exports = {
