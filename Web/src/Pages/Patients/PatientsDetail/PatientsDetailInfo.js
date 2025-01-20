@@ -1,5 +1,5 @@
 import React from 'react'
-import { GENDER_OPTION } from '../../../Utils/Constants'
+import { DEPENDENCY_OPTION_FULLY, DEPENDENCY_OPTION_NON, DEPENDENCY_OPTION_PARTIAL, GENDER_OPTION } from '../../../Utils/Constants'
 import { Header } from 'semantic-ui-react'
 import Formatdate from '../../../Utils/Formatdate'
 import { Pagedivider } from '../../../Components'
@@ -21,8 +21,16 @@ export default function PatientsDetailInfo(props) {
   };
 
 
+  const Dependencyoptions = [
+    { key: 0, text: t('Option.Dependencyoption.Fully'), value: DEPENDENCY_OPTION_FULLY },
+    { key: 1, text: t('Option.Dependencyoption.Partial'), value: DEPENDENCY_OPTION_PARTIAL },
+    { key: 2, text: t('Option.Dependencyoption.Non'), value: DEPENDENCY_OPTION_NON }
+  ]
+
+
   const Age = patientdefine?.Placeofbirth ? getAge(patientdefine?.Dateofbirth, new Date()) : t('Common.NoDataFound')
   const Gender = GENDER_OPTION.find(u => u.value === patientdefine?.Gender)?.text[Profile?.Language] || t('Common.NoDataFound')
+  const Dependency = Dependencyoptions.find(u => u.value === patientdefine?.Dependency)?.text || t('Common.NoDataFound')
   const Fathername = patientdefine?.Fathername || t('Common.NoDataFound')
   const CountryID = patientdefine?.CountryID || t('Common.NoDataFound')
   const Dateofbirth = patientdefine?.Dateofbirth ? Formatdate(patientdefine?.Dateofbirth, true) : t('Common.NoDataFound')
@@ -40,6 +48,7 @@ export default function PatientsDetailInfo(props) {
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Fathername'), value: Fathername },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.CountryID'), value: CountryID },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Dateofbirth'), value: Dateofbirth },
+    { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Dependency'), value: Dependency },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Placeofbirth'), value: Placeofbirth },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Patienttype'), value: PatienttypeName },
     { label: t('Pages.Patients.PatientsDetail.PatientDetailInfo.Costumertype'), value: CostumertypeName },

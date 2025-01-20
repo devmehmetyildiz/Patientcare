@@ -446,8 +446,35 @@ const version1_0_1_18 = {
     ],
 }
 
+const version1_0_1_19 = {
+    version: "1.0.1.19",
+    changes: [
+        {
+            title: "Kurum Yönetimi", commits: [
+                "Kurum Arşivi eklendi",
+            ],
+        },
+        {
+            title: "Hastalar", commits: [
+                "Hasta Detayı Özlük bilgilerine Bağımlılık Derecesi eklendi.",
+                "Genel Hasta Takibine sayfası daha hızlı yüklenmesi için performans düzenlemeleri yapıldı.",
+                "Genel Hasta Takibine yaşlar eklendi",
+                "Genel Hasta Takibinde yer alan tablara filtreleme eklendi, Hasta Grafiklerinde yer alan seçeneklere tıklandığında ilgili filtre uygulanmış şekilde sayfa açılacak.",
+            ],
+        },
+        {
+            title: "Sistem", commits: [
+                "Dosyalar Tabı Yenilendi, Önizleme Eklendi",
+                "Dosya Önizleme barına ait genişlikler arttırıldı, dosya indirilme öncesi dosya botunu görünecek, indirilme durumu takip edilebilecek.",
+                "Dosya Önizlemede yazdırma butonu eklendi, dosyalar indirilmeden yazdırılabilecek",
+            ],
+        },
+    ],
+}
+
 export default
     [
+        version1_0_1_19,
         version1_0_1_18,
         version1_0_1_17,
         version1_0_1_16,

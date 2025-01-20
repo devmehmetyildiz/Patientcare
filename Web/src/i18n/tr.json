@@ -570,6 +570,7 @@
         "Pages.Patients.PatientsDetail.PatientDetailInfo.CountryID": "TC Kimlik No",
         "Pages.Patients.PatientsDetail.PatientDetailInfo.Dateofbirth": "Doğum Tarihi",
         "Pages.Patients.PatientsDetail.PatientDetailInfo.Placeofbirth": "Doğum Yeri",
+        "Pages.Patients.PatientsDetail.PatientDetailInfo.Dependency": "Bağımlılık Derecesi",
         "Pages.Patients.PatientsDetail.PatientDetailInfo.Patienttype": "Hasta Türü",
         "Pages.Patients.PatientsDetail.PatientDetailInfo.Costumertype": "Müşteri Türü",
         "Pages.Patients.PatientsDetail.PatientDetailInfo.Info": "Açıklama",
