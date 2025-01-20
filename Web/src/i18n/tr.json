@@ -784,6 +784,8 @@
         "Pages.Mainteancies.Messages.ResponsibleuserRequired": "Sorumlu Kullanıcı Gerekli",
         "Pages.Mainteancies.Delete.Label.Check": "Malzeme Bakım Talebini Silmek İstediğinize Emin misiniz?",
         "Pages.Mainteancies.Complete.Label.Check": "Malzeme Bakım Talebini Talebini Tamamlamak İstediğinize Emin misiniz?",
+        "Pages.Companyfiles.Page.Header": "Kurum Dosya Arşivi",
+        "Pages.Companyfiles.Page.CreateHeader": "Dosya Ekleme",
         "Pages.Files.Page.Header": "Dosyalar",
         "Pages.Files.Page.DeleteHeader": "Dosya Silme",
         "Pages.Files.Column.Name": "Dosya Adı",

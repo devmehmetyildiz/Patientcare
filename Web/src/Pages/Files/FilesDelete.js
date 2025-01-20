@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
 export default function FilesDelete(props) {
-  const { Profile, Files, DeleteFiles, open, setOpen, record, setRecord } = props
+  const { Profile, Files, DeleteFiles, open, setOpen, record, setRecord, onSuccess } = props
 
   const t = Profile?.i18n?.t
 
@@ -34,7 +34,10 @@ export default function FilesDelete(props) {
           labelPosition='right'
           icon='checkmark'
           onClick={() => {
-            DeleteFiles(record)
+            DeleteFiles({
+              guid: record?.Uuid,
+              onSuccess
+            })
             setOpen(false)
             setRecord(null)
           }}

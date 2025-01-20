@@ -166,6 +166,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 2, subtitle: t('Pages.Patientsrollcall.Page.Header'), url: "/Patientsrollcall", permission: checkAuth('patientsrollcallview') },
                 { id: 3, subtitle: t('Pages.Overviewcard.Page.Header'), url: "/Overviewcard", permission: checkAuth('overviewcardview') },
                 { id: 4, subtitle: t('Pages.Overviewhealthcarecard.Page.Header'), url: "/Overviewhealthcarecard", permission: checkAuth('overviewhealthcarecardview') },
+                { id: 4, subtitle: t('Pages.Companyfiles.Page.Header'), url: "/Companyfiles", permission: checkAuth('companyfileview') },
                 { id: 5, subtitle: t('Pages.Patienteventmovements.Page.Header'), url: "/Patienteventmovements", permission: checkAuth('patienteventmovementview') },
                 { id: 6, subtitle: t('Pages.Userincidents.Page.Header'), url: "/Userincidents", permission: checkAuth('userincidentview') },
                 { id: 7, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },

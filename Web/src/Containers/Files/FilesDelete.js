@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import FilesDelete from '../../Pages/Files/FilesDelete'
-import { DeleteFiles, handleDeletemodal, handleSelectedFile } from '../../Redux/FileSlice'
+import { DeleteFiles } from '../../Redux/FileSlice'
 
 const mapStateToProps = (state) => ({
     Files: state.Files,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteFiles, handleDeletemodal, handleSelectedFile
+    DeleteFiles
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilesDelete)

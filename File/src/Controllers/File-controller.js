@@ -10,7 +10,16 @@ const SftpClient = require('ssh2-sftp-client');
 
 async function GetFiles(req, res, next) {
     try {
-        const files = await db.fileModel.findAll()
+        const { ParentID } = req.query
+        console.log('ParentID: ', ParentID);
+
+        let whereClause = {}
+
+        if (validator.isString(ParentID)) {
+            whereClause.ParentID = ParentID
+        }
+
+        const files = await db.fileModel.findAll({ where: whereClause })
         res.status(200).json(files)
     } catch (error) {
         return next(sequelizeErrorCatcher(error))
@@ -336,6 +345,7 @@ async function DeleteFile(req, res, next) {
         await db.fileModel.update({
             Deleteduser: username,
             Deletetime: new Date(),
+            Isactive: false
         }, { where: { Uuid: Uuid }, transaction: t })
         await t.commit();
     } catch (error) {

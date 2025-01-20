@@ -36,6 +36,9 @@ const UsersEdit = lazy(() => import('./Containers/Users/UsersEdit'));
 
 const Files = lazy(() => import('./Containers/Files/Files'));
 
+const Companyfiles = lazy(() => import('./Containers/Companyfiles/Companyfiles'));
+const CompanyfilesCreate = lazy(() => import('./Containers/Companyfiles/CompanyfilesCreate'));
+
 const Costumertypes = lazy(() => import('./Containers/Costumertypes/Costumertypes'));
 const CostumertypesCreate = lazy(() => import('./Containers/Costumertypes/CostumertypesCreate'));
 const CostumertypesEdit = lazy(() => import('./Containers/Costumertypes/CostumertypesEdit'));
@@ -318,6 +321,8 @@ class Routes extends Component {
       { exact: true, path: "/Users/:UserID/Edit", auth: true, component: UsersEdit, permission: 'userupdate' },
 
       { exact: true, path: "/Files", auth: true, component: Files, permission: 'fileview' },
+      { exact: true, path: "/Companyfiles", auth: true, component: Companyfiles, permission: 'companyfileview' },
+      { exact: true, path: "/Companyfiles/Create", auth: true, component: CompanyfilesCreate, permission: 'companyfileadd' },
 
       { exact: true, path: "/Costumertypes", auth: true, component: Costumertypes, permission: 'costumertypeview' },
       { exact: true, path: "/Costumertypes/Create", auth: true, component: CostumertypesCreate, permission: 'costumertypeadd' },

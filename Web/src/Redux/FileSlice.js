@@ -46,6 +46,20 @@ export const GetFiles = createAsyncThunk(
     }
 );
 
+export const GetCompanyFiles = createAsyncThunk(
+    'Files/GetCompanyFiles',
+    async ({ data }, { dispatch }) => {
+        try {
+            const response = await instanse.get(config.services.File, ROUTES.FILE, data);
+            return response.data;
+        } catch (error) {
+            const errorPayload = AxiosErrorHelper(error);
+            dispatch(fillFilenotification(errorPayload));
+            throw errorPayload;
+        }
+    }
+);
+
 export const GetPPFiles = createAsyncThunk(
     'Files/GetPPFiles',
     async (_, { dispatch }) => {
@@ -141,17 +155,18 @@ export const EditFiles = createAsyncThunk(
 
 export const DeleteFiles = createAsyncThunk(
     'Files/DeleteFiles',
-    async (data, { dispatch, getState }) => {
+    async ({ guid, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
             const Language = state.Profile.Language || 'en'
 
-            const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${data.Uuid}`);
+            const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${guid}`);
             dispatch(fillFilenotification({
                 type: 'Success',
                 code: Literals.deletecode[Language],
                 description: Literals.deletedescription[Language],
             }));
+            onSuccess && onSuccess()
             return response.data;
         } catch (error) {
             const errorPayload = AxiosErrorHelper(error);
@@ -166,16 +181,14 @@ export const FilesSlice = createSlice({
     initialState: {
         ppList: [],
         list: [],
+        companyFileList: [],
         selected_record: {},
         errMsg: null,
         notifications: [],
         isLoading: false,
-        isDeletemodalopen: false
+        isCompanyFileListLoading: false,
     },
     reducers: {
-        handleSelectedFile: (state, action) => {
-            state.selected_record = action.payload;
-        },
         fillFilenotification: (state, action) => {
             const payload = action.payload;
             const messages = Array.isArray(payload) ? payload : [payload];
@@ -184,22 +197,32 @@ export const FilesSlice = createSlice({
         removeFilenotification: (state) => {
             state.notifications.splice(0, 1);
         },
-        handleDeletemodal: (state, action) => {
-            state.isDeletemodalopen = action.payload
-        }
     },
     extraReducers: (builder) => {
         builder
+            .addCase(GetCompanyFiles.pending, (state) => {
+                state.isCompanyFileListLoading = true;
+                state.errMsg = null;
+            })
+            .addCase(GetCompanyFiles.fulfilled, (state, action) => {
+                state.isCompanyFileListLoading = false;
+                state.companyFileList = action.payload;
+            })
+            .addCase(GetCompanyFiles.rejected, (state, action) => {
+                state.companyFileList = [];
+                state.isCompanyFileListLoading = false;
+                state.errMsg = action.error.message;
+            })
             .addCase(GetFiles.pending, (state) => {
                 state.isLoading = true;
                 state.errMsg = null;
-                state.list = [];
             })
             .addCase(GetFiles.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.list = action.payload;
             })
             .addCase(GetFiles.rejected, (state, action) => {
+                state.list = [];
                 state.isLoading = false;
                 state.errMsg = action.error.message;
             })
@@ -266,10 +289,8 @@ export const FilesSlice = createSlice({
 });
 
 export const {
-    handleSelectedFile,
     fillFilenotification,
     removeFilenotification,
-    handleDeletemodal
 } = FilesSlice.actions;
 
 export default FilesSlice.reducer;
