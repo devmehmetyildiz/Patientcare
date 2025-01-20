@@ -448,12 +448,14 @@ const version1_0_1_18 = {
 
 const version1_0_1_19 = {
     version: "1.0.1.19",
-    changes: [
+    features: [
         {
             title: "Kurum Yönetimi", commits: [
                 "Kurum Arşivi eklendi",
             ],
         },
+    ],
+    changes: [
         {
             title: "Hastalar", commits: [
                 "Hasta Detayı Özlük bilgilerine Bağımlılık Derecesi eklendi.",
