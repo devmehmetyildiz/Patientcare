@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
-import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
+import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import StocksDelete from '../../Containers/Stocks/StocksDelete'
 import StocksApprove from '../../Containers/Stocks/StocksApprove'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 
 export default function Stocks(props) {
   const { GetStocks, GetStockdefines, GetDepartments, GetStockmovements, GetWarehouses, GetUnits, GetStocktypes } = props
-  const { Warehouses, Stockmovements, Units, Stockdefines, Profile, Stocktypes, Stocks } = props
+  const { Warehouses, Stockmovements, Units, Stockdefines, Profile, Stocktypes, Stocks, history } = props
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [approveOpen, setApproveOpen] = useState(false)
@@ -19,6 +21,32 @@ export default function Stocks(props) {
   const t = Profile?.i18n?.t
 
   const { isLoading } = Stocks
+
+  const renderView = ({ list, Columns, keys, initialConfig }) => {
+
+    const searchbykey = (data, searchkeys) => {
+      let ok = false
+      searchkeys.forEach(key => {
+
+        if (!ok) {
+          if (data.includes(key)) {
+            ok = true
+          }
+        }
+      });
+
+      return ok
+    }
+
+    const columns = Columns.filter(u => searchbykey((u?.keys || []), keys) || !(u?.keys))
+
+    return list.length > 0 ?
+      <div className='w-full mx-auto '>
+        {Profile.Ismobile ?
+          <MobileTable Columns={columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+          <DataTable Columns={columns} Data={list} Config={initialConfig} />}
+      </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+  }
 
   const stockdefineCellhandler = (value) => {
     if (Stockdefines.isLoading) {
@@ -77,10 +105,10 @@ export default function Stocks(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.change'), accessor: 'change', disableProps: true },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.change'), accessor: 'change', disableProps: true, keys: ['approved'], role: privileges.stockadd },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['created'], role: privileges.stockapprove },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.stockupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.stockdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "stock"
@@ -100,6 +128,20 @@ export default function Stocks(props) {
         setDeleteOpen(true)
       }} />,
     }
+  })
+
+  const createdList = list.filter(u => !u.Isapproved)
+  const approvedList = list.filter(u => u.Isapproved)
+
+  const tabOrder = [
+    'approved',
+    'created',
+  ]
+
+  const { activeTab, setActiveTab } = useTabNavigation({
+    history,
+    tabOrder,
+    mainRoute: 'Stocks'
   })
 
   useEffect(() => {
@@ -135,17 +177,39 @@ export default function Stocks(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.stockadd}
+              ReportRole={privileges.stockgetreport}
+              ViewRole={privileges.stockmanageview}
             />
           </Grid>
         </Headerwrapper>
         <Pagedivider />
-        {list.length > 0 ?
-          <div className='w-full mx-auto '>
-            {Profile.Ismobile ?
-              <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-              <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-          </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-        }
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Stocks.Page.Tab.ApproveHeader')} (${(approvedList || []).length})`,
+                pane: {
+                  key: 'approved',
+                  content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Stocks.Page.Tab.CreateHeader')} (${(createdList || []).length})`,
+                pane: {
+                  key: 'created',
+                  content: renderView({ list: createdList, Columns, keys: ['created'], initialConfig })
+                }
+              },
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
       </Pagewrapper>
       <StocksDelete
         open={deleteOpen}

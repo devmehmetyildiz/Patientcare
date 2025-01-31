@@ -26,18 +26,20 @@ export default function Settings(props) {
         Additionalfunctiontxt,
         Additionalfunction,
         ExtendedButtons,
-        defaultHiddenColumns
+        defaultHiddenColumns,
+        CreateRole,
+        ViewRole,
+        ReportRole,
     } = props
 
     const { roles, i18n } = Profile
     const t = i18n?.t
-    const createRole = `${metaKey}add`
-    const reportRole = `${metaKey}getreport`
-    const manageviewRole = `${metaKey}manageview`
+    const createRole = CreateRole || `${metaKey}add`
+    const reportRole = ReportRole || `${metaKey}getreport`
 
     const willshowcolumncreate = (roles || []).includes(createRole) || (roles || []).includes('admin')
     const willshowreport = (roles || []).includes(reportRole) || (roles || []).includes('admin')
-    const willshowmanageview = (roles || []).includes(manageviewRole) || (roles || []).includes('admin')
+    const willshowmanageview = (roles || []).includes(ViewRole) || (roles || []).includes('admin')
 
     return (
         Profile.Ismobile ?
@@ -63,7 +65,6 @@ export default function Settings(props) {
                                     <Pagedivider />
                                     <ColumnChooser meta={Profile.tablemeta} columns={Columns} metaKey={metaKey} defaultHiddenColumns={defaultHiddenColumns} />
                                 </>
-
                                 }
                                 {Showexcelimport && willshowreport && <>
                                     <Pagedivider />

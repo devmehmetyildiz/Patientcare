@@ -18,9 +18,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    EditEquipments, GetEquipment, fillEquipmentnotification, GetEquipmentgroups, GetRooms
-    , GetFloors, GetBeds, GetUsers
-
+    EditEquipments, GetEquipment, fillEquipmentnotification, GetEquipmentgroups, GetRooms, GetFloors, GetBeds, GetUsers
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EquipmentsEdit)

@@ -2,6 +2,8 @@ import React from 'react'
 import { Button, Header, Icon } from 'semantic-ui-react'
 import { useHistory } from 'react-router-dom'
 import { Profilephoto } from '../../../Components'
+import validator from '../../../Utils/Validator'
+import privileges from '../../../Constants/Privileges'
 
 export default function UserDetailProfile(props) {
 
@@ -9,6 +11,7 @@ export default function UserDetailProfile(props) {
 
     const history = useHistory()
     const t = Profile?.i18n?.t
+    const userRoles = Profile?.roles
 
     const usagetypePP = (Usagetypes.list || []).find(u => u.Value === 'PP')?.Uuid || null
     const ppFile = (Files.list || []).find(u => u.ParentID === user?.Uuid && (((u.Usagetype || '').split(',')) || []).includes(usagetypePP) && u.Isactive)
@@ -35,6 +38,7 @@ export default function UserDetailProfile(props) {
             <Header className='!m-0 !p-0 !mt-1 !text-[#bebebe]' as='h4'>{`${t('Pages.Users.Detail.Profile.Label.Roles')} : ${roles || t('Common.NoDataFound')}`}</Header>
             <div className='mt-4'>
                 <Button
+                    disabled={!validator.isHavePermission(privileges.userupdate, userRoles)}
                     className='!bg-[#2355a0] !text-white !mt-8 mb-4'
                     fluid
                     onClick={() => { history.push(`/Users/${user?.Uuid}/edit`, { redirectUrl: "/Users/" + user?.Uuid }) }}>

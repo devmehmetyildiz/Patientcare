@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Confirm, Icon, Loader, } from 'semantic-ui-react'
 import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
-import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import { DataTable, Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import BedsDelete from '../../Containers/Beds/BedsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import { COL_PROPS } from '../../Utils/Constants'
+import validator from '../../Utils/Validator'
+import privileges from '../../Constants/Privileges'
 
 export default function Beds(props) {
   const [bedID, setBedID] = useState(null)
@@ -14,6 +17,8 @@ export default function Beds(props) {
   const { Beds, Profile, handleDeletemodal, handleSelectedBed, ChangeBedOccupied, Rooms, Floors } = props
 
   const t = Profile?.i18n?.t
+  const userRoles = Profile?.roles
+
   const { isLoading } = Beds
 
   const roomCellhandler = ({ value, props }) => {
@@ -40,17 +45,19 @@ export default function Beds(props) {
           className='group cursor-pointer flex flex-row flex-nowrap'
         >
           {`${patientdefine?.Firstname} ${patientdefine?.Lastname} (${patientdefine?.CountryID})`}
-          <div
-            onClick={() => {
-              setBedID(bedID)
-              setOpenConfirm(true)
-            }}
-            className='opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-500'>
-            <Icon color='red' name='delete' />
-          </div>
+          {validator.isHavePermission(privileges.bedupdate, userRoles) ?
+            <div
+              onClick={() => {
+                setBedID(bedID)
+                setOpenConfirm(true)
+              }}
+              className='opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-500'>
+              <Icon color='red' name='delete' />
+            </div>
+            : null}
         </div>
         : bed
-          ? bed?.Isoccupied ? <div
+          ? bed?.Isoccupied && validator.isHavePermission(privileges.bedupdate, userRoles) ? <div
             onClick={() => {
               setBedID(bedID)
               setOpenConfirm(true)
@@ -70,12 +77,6 @@ export default function Beds(props) {
     return value !== null && (value ? t('Pages.Beds.Label.Filled') : t('Pages.Beds.Label.Empty'))
   }
 
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
-
   const Columns = [
     { Header: t('Common.Column.Id'), accessor: 'Id' },
     { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
@@ -87,9 +88,9 @@ export default function Beds(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.bedupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.beddelete },
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "bed"
   let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -119,61 +120,64 @@ export default function Beds(props) {
   }, [])
 
   return (
-      <React.Fragment>
-        <Confirm
-          cancelButton={t('Common.Button.Giveup')}
-          confirmButton={t('Common.Button.Update')}
-          content={`${bedName} ${t('Pages.Beds.Messages.EmptyCheck')}`}
-          open={openConfirm}
-          onCancel={() => {
-            setBedID(null)
-            setOpenConfirm(false)
-          }}
-          onConfirm={() => {
-            ChangeBedOccupied({
-              data: {
-                BedID: bedID,
-                Isoccupied: false
-              }
-            })
-            setBedID(null)
-            setOpenConfirm(false)
-          }}
-        />
-        <Pagewrapper dimmer isLoading={isLoading}>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Beds"}>
-                    <Breadcrumb.Section>{t('Pages.Beds.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Beds.Page.CreateHeader')}
-                Pagecreatelink={"/Beds/Create"}
-                Columns={Columns}
-                list={list}
-                initialConfig={initialConfig}
-                metaKey={metaKey}
-                Showcreatebutton
-                Showcolumnchooser
-                Showexcelexport
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          {list.length > 0 ?
-            <div className='w-full mx-auto '>
-              {Profile.Ismobile ?
-                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-          }
-        </Pagewrapper>
-        <BedsDelete />
-      </React.Fragment>
+    <React.Fragment>
+      <Confirm
+        cancelButton={t('Common.Button.Giveup')}
+        confirmButton={t('Common.Button.Update')}
+        content={`${bedName} ${t('Pages.Beds.Messages.EmptyCheck')}`}
+        open={openConfirm}
+        onCancel={() => {
+          setBedID(null)
+          setOpenConfirm(false)
+        }}
+        onConfirm={() => {
+          ChangeBedOccupied({
+            data: {
+              BedID: bedID,
+              Isoccupied: false
+            }
+          })
+          setBedID(null)
+          setOpenConfirm(false)
+        }}
+      />
+      <Pagewrapper dimmer isLoading={isLoading}>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Beds"}>
+                  <Breadcrumb.Section>{t('Pages.Beds.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t('Pages.Beds.Page.CreateHeader')}
+              Pagecreatelink={"/Beds/Create"}
+              Columns={Columns}
+              list={list}
+              initialConfig={initialConfig}
+              metaKey={metaKey}
+              Showcreatebutton
+              Showcolumnchooser
+              Showexcelexport
+              CreateRole={privileges.bedadd}
+              ReportRole={privileges.bedgetreport}
+              ViewRole={privileges.bedmanageview}
+            />
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        {list.length > 0 ?
+          <div className='w-full mx-auto '>
+            {Profile.Ismobile ?
+              <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+              <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
+          </div> : <NoDataScreen message={t('Common.NoDataFound')} />
+        }
+      </Pagewrapper>
+      <BedsDelete />
+    </React.Fragment>
   )
 }

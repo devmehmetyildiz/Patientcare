@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Grid, GridColumn, Icon } from 'semantic-ui-react'
+import { Breadcrumb, Button, Grid, GridColumn, Icon } from 'semantic-ui-react'
 import FloorsDelete from '../../Containers/Floors/FloorsDelete'
 import FloorsFastcreate from '../../Containers/Floors/FloorsFastcreate'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import { GENDER_OPTION_MEN, GENDER_OPTION_WOMEN } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
+import validator from '../../Utils/Validator'
 
 export default class Floors extends Component {
 
@@ -36,8 +38,8 @@ export default class Floors extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.floorupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.floordelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "floor"
@@ -53,6 +55,12 @@ export default class Floors extends Component {
         }} />
       }
     })
+
+    let buttons = []
+
+    if (validator.isHavePermission(privileges.flooradd, Profile.roles)) {
+      buttons.push(<Button key={1} onClick={() => handleFastcreatemodal(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Floors.Column.Fastcreate')}</Button>)
+    }
 
     return (
       <React.Fragment>
@@ -77,8 +85,7 @@ export default class Floors extends Component {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
-                Additionalfunction={() => { handleFastcreatemodal(true) }}
-                Additionalfunctiontxt={t('Pages.Floors.Column.Fastcreate')}
+                ExtendedButtons={buttons}
               />
             </Grid>
           </Headerwrapper>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Equipments from '../../Pages/Equipments/Equipments'
-import { GetEquipments, handleDeletemodal, handleSelectedEquipment } from "../../Redux/EquipmentSlice"
+import { GetEquipments } from "../../Redux/EquipmentSlice"
 import { GetEquipmentgroups } from "../../Redux/EquipmentgroupSlice"
 import { GetRooms } from "../../Redux/RoomSlice"
 import { GetFloors } from "../../Redux/FloorSlice"
@@ -18,9 +18,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetEquipments, handleDeletemodal, handleSelectedEquipment, GetEquipmentgroups, GetRooms
-    , GetFloors, GetBeds, GetUsers
-
+    GetEquipments, GetEquipmentgroups, GetRooms, GetFloors, GetBeds, GetUsers
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Equipments)

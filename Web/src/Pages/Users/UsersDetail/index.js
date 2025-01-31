@@ -14,6 +14,7 @@ import UsersDetailPurchaseorders from './UsersDetailPurchaseorders'
 import UserDetailTimeline from './UserDetailTimeline'
 import UsersEditcaseModal from '../../../Containers/Users/UsersEditcaseModal'
 import UsersDetailTrainings from './UsersDetailTrainings'
+import privileges from '../../../Constants/Privileges'
 
 export default function UsersDetail(props) {
 
@@ -32,6 +33,7 @@ export default function UsersDetail(props) {
 
     const Id = match?.params?.UserID || UserID
     const t = Profile?.i18n?.t
+    const userRoles = Profile?.roles
 
     useEffect(() => {
         if (validator.isUUID(Id)) {
@@ -112,6 +114,7 @@ export default function UsersDetail(props) {
                                 >
                                     <Dropdown.Menu>
                                         <Dropdown.Item
+                                            disabled={!validator.isHavePermission(privileges.userupdatecase, userRoles)}
                                             onClick={() => {
                                                 setRecord(user)
                                                 setOpeneditcase(true)
@@ -119,7 +122,10 @@ export default function UsersDetail(props) {
                                             <Icon name='attention' className='right floated' />
                                             {t('Pages.Users.Detail.Button.Editcase')}
                                         </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => { history.push(`/Users/${Id}/Movements`) }}>
+                                        <Dropdown.Item
+                                            disabled={!validator.isHavePermission(privileges.userupdatemovement, userRoles)}
+                                            onClick={() => { history.push(`/Users/${Id}/Movements`) }}
+                                        >
                                             <Icon name='conversation' className='right floated' />
                                             {t('Pages.Users.Detail.Button.Editmovements')}
                                         </Dropdown.Item>

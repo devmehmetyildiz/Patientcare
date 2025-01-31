@@ -5,7 +5,6 @@ import { DataTable } from '../../Components'
 
 export default function WarehousesList({ Data, Columns, Stocks, initialConfig, Profile, Units, Stockmovements, Stockdefines }) {
 
-
   const stockdefineCellhandler = (col) => {
     if (Stockdefines.isLoading) {
       return <Loader size='small' active inline='centered' ></Loader>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import EquipmentsDelete from '../../Pages/Equipments/EquipmentsDelete'
-import { DeleteEquipments, handleDeletemodal, handleSelectedEquipment } from "../../Redux/EquipmentSlice"
+import { DeleteEquipments, } from "../../Redux/EquipmentSlice"
 
 const mapStateToProps = (state) => ({
     Equipments: state.Equipments,
@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    DeleteEquipments, handleDeletemodal, handleSelectedEquipment
+    DeleteEquipments,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EquipmentsDelete)

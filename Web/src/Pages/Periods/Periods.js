@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
+import { Icon, Breadcrumb, Grid, GridColumn, Button } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import PeriodsDelete from '../../Containers/Periods/PeriodsDelete'
 import PeriodsFastcreate from '../../Containers/Periods/PeriodsFastcreate'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 export default class Periods extends Component {
 
 
@@ -37,8 +38,8 @@ export default class Periods extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.periodupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.perioddelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "period"
@@ -54,6 +55,12 @@ export default class Periods extends Component {
         }} />
       }
     })
+
+    let buttons = []
+
+    if (validator.isHavePermission(privileges.periodadd, Profile.roles)) {
+      buttons.push(<Button key={1} onClick={() => handleFastcreatemodal(true)} className='!bg-[#2355a0] !text-white' floated='right'  >{t('Pages.Periods.Column.Fastcreate')}</Button>)
+    }
 
     return (
       isLoading ? <LoadingPage /> :
@@ -79,9 +86,10 @@ export default class Periods extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
-                  Additionalfunction={() => { handleFastcreatemodal(true) }}
-                  Additionalfunctiontxt={t('Pages.Periods.Column.Fastcreate')}
-
+                  ExtendedButtons={buttons}
+                  CreateRole={privileges.periodadd}
+                  ReportRole={privileges.periodgetreport}
+                  ViewRole={privileges.periodmanageview}
                 />
               </Grid>
             </Headerwrapper>

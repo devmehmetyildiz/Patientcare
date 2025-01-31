@@ -6,6 +6,8 @@ import UsersDelete from '../../Containers/Users/UsersDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import Formatdate from '../../Utils/Formatdate'
 import UsersLeft from '../../Containers/Users/UsersLeft'
+import privileges from '../../Constants/Privileges'
+import { COL_PROPS } from '../../Utils/Constants'
 
 export default function Users(props) {
 
@@ -61,6 +63,9 @@ export default function Users(props) {
               Pagecreateheader={t('Pages.Users.Page.CreateHeader')}
               Pagecreatelink={"/Users/Create"}
               Showcreatebutton
+              CreateRole={privileges.useradd}
+              ReportRole={privileges.usergetreport}
+              ViewRole={privileges.usermanageview}
             />
           </Grid>
         </Headerwrapper>
@@ -122,11 +127,6 @@ export default function Users(props) {
 
 function UsersWorkerList({ Profile, list, Cases, Professions }) {
 
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
 
   const metaKey = "user"
   let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -174,11 +174,11 @@ function UsersWorkerList({ Profile, list, Cases, Professions }) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
-    { Header: t('Common.Column.remove'), accessor: 'remove', disableProps: true },
-    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    { Header: t('Common.Column.remove'), accessor: 'remove', disableProps: true, role: privileges.userremove },
+    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true, role: privileges.userview },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.userupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.userdelete }
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   return (
     <>
@@ -193,6 +193,9 @@ function UsersWorkerList({ Profile, list, Cases, Professions }) {
             metaKey={metaKey}
             Showcolumnchooser
             Showexcelexport
+            CreateRole={privileges.useradd}
+            ReportRole={privileges.usergetreport}
+            ViewRole={privileges.usermanageview}
           />
         </Grid>
       </Headerwrapper>
@@ -208,12 +211,6 @@ function UsersWorkerList({ Profile, list, Cases, Professions }) {
 }
 
 function UsersWorkerleftList({ Profile, list, Professions }) {
-
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
 
   const metaKey = "user"
   let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -249,7 +246,7 @@ function UsersWorkerleftList({ Profile, list, Professions }) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   return (
     <>
@@ -264,6 +261,9 @@ function UsersWorkerleftList({ Profile, list, Professions }) {
             metaKey={metaKey}
             Showcolumnchooser
             Showexcelexport
+            CreateRole={privileges.useradd}
+            ReportRole={privileges.usergetreport}
+            ViewRole={privileges.usermanageview}
           />
         </Grid>
       </Headerwrapper>
@@ -319,6 +319,9 @@ function UsersAppList({ Profile, list }) {
             metaKey={metaKey}
             Showcolumnchooser
             Showexcelexport
+            CreateRole={privileges.useradd}
+            ReportRole={privileges.usergetreport}
+            ViewRole={privileges.usermanageview}
           />
         </Grid>
       </Headerwrapper>

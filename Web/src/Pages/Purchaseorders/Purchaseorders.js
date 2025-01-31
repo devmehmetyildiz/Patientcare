@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
+import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import PurchaseordersDelete from '../../Containers/Purchaseorders/PurchaseordersDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
@@ -9,10 +9,11 @@ import PurchaseordersCheck from '../../Containers/Purchaseorders/PurchaseordersC
 import PurchaseordersApprove from '../../Containers/Purchaseorders/PurchaseordersApprove'
 import PurchaseordersComplete from '../../Containers/Purchaseorders/PurchaseordersComplete'
 import PurchaseordersDetail from '../../Containers/Purchaseorders/PurchaseordersDetail'
-import { COL_PROPS } from '../../Utils/Constants'
-import useTabNavigation from '../../Hooks/useTabNavigation'
 import PurchaseordersCancelCheck from '../../Containers/Purchaseorders/PurchaseordersCancelCheck'
 import PurchaseordersCancelApprove from '../../Containers/Purchaseorders/PurchaseordersCancelApprove'
+import useTabNavigation from '../../Hooks/useTabNavigation'
+import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Purchaseorders(props) {
 
@@ -104,13 +105,13 @@ export default function Purchaseorders(props) {
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
     { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-    { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, keys: ['created'] },
-    { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, keys: ['checked'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['checked'] },
-    { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true, keys: ['created', 'chcked', 'approved'] }
+    { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, keys: ['created'], role: privileges.purchaseordercheck },
+    { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, keys: ['checked'], role: privileges.purchaseorderapprove },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['checked'], role: privileges.purchaseorderapprove },
+    { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, keys: ['approved'], role: privileges.purchaseordercomplete },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.purchaseordercomplete },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'], role: privileges.purchaseorderupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, disableOncomplete: true, keys: ['created', 'chcked', 'approved'], role: privileges.purchaseorderdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "purchaseorder"
@@ -175,112 +176,115 @@ export default function Purchaseorders(props) {
   }, [])
 
   return (
-      <React.Fragment>
-        <Pagewrapper isLoading={isLoading} dimmer>
-          <Headerwrapper>
-            <Grid columns='2' >
-              <GridColumn width={8}>
-                <Breadcrumb size='big'>
-                  <Link to={"/Purchaseorders"}>
-                    <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
-                  </Link>
-                </Breadcrumb>
-              </GridColumn>
-              <Settings
-                Profile={Profile}
-                Pagecreateheader={t('Pages.Purchaseorder.Page.CreateHeader')}
-                Pagecreatelink={"/Purchaseorders/Create"}
-                Showcreatebutton
-              />
-            </Grid>
-          </Headerwrapper>
-          <Pagedivider />
-          <Contentwrapper>
-            <Tab
-              onTabChange={(_, { activeIndex }) => {
-                setActiveTab(activeIndex)
-              }}
-              activeIndex={activeTab}
-              className="w-full !bg-transparent"
-              panes={[
-                {
-                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CreateHeader')} (${(createList || []).length})`,
-                  pane: {
-                    key: 'created',
-                    content: renderView({ list: createList, Columns, keys: ['created'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CheckHeader')} (${(checkList || []).length})`,
-                  pane: {
-                    key: 'checked',
-                    content: renderView({ list: checkList, Columns, keys: ['checked'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.ApproveHeader')} (${(approveList || []).length})`,
-                  pane: {
-                    key: 'approved',
-                    content: renderView({ list: approveList, Columns, keys: ['approved'], initialConfig })
-                  }
-                },
-                {
-                  menuItem: `${t('Pages.Purchaseorder.Page.Tab.CompleteHeader')} (${(completeList || []).length})`,
-                  pane: {
-                    key: 'completed',
-                    content: renderView({ list: completeList, Columns, keys: ['completed'], initialConfig })
-                  }
-                },
-
-
-              ]}
-              renderActiveOnly={false}
+    <React.Fragment>
+      <Pagewrapper isLoading={isLoading} dimmer>
+        <Headerwrapper>
+          <Grid columns='2' >
+            <GridColumn width={8}>
+              <Breadcrumb size='big'>
+                <Link to={"/Purchaseorders"}>
+                  <Breadcrumb.Section>{t('Pages.Purchaseorder.Page.Header')}</Breadcrumb.Section>
+                </Link>
+              </Breadcrumb>
+            </GridColumn>
+            <Settings
+              Profile={Profile}
+              Pagecreateheader={t('Pages.Purchaseorder.Page.CreateHeader')}
+              Pagecreatelink={"/Purchaseorders/Create"}
+              Showcreatebutton
+              CreateRole={privileges.purchaseorderadd}
+              ReportRole={privileges.purchaseordergetreport}
+              ViewRole={privileges.purchaseordermanageview}
             />
-          </Contentwrapper>
-        </Pagewrapper>
-        <PurchaseordersDetail
-          open={detailOpen}
-          setOpen={setDetailOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersDelete
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersCheck
-          open={checkOpen}
-          setOpen={setCheckOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersApprove
-          open={approveOpen}
-          setOpen={setApproveOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersComplete
-          open={completeOpen}
-          setOpen={setCompleteOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersCancelCheck
-          open={cancelCheckOpen}
-          setOpen={setCancelCheckOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-        <PurchaseordersCancelApprove
-          open={cancelApproveOpen}
-          setOpen={setCancelApproveOpen}
-          record={record}
-          setRecord={setRecord}
-        />
-      </React.Fragment>
+          </Grid>
+        </Headerwrapper>
+        <Pagedivider />
+        <Contentwrapper>
+          <Tab
+            onTabChange={(_, { activeIndex }) => {
+              setActiveTab(activeIndex)
+            }}
+            activeIndex={activeTab}
+            className="w-full !bg-transparent"
+            panes={[
+              {
+                menuItem: `${t('Pages.Purchaseorder.Page.Tab.CreateHeader')} (${(createList || []).length})`,
+                pane: {
+                  key: 'created',
+                  content: renderView({ list: createList, Columns, keys: ['created'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Purchaseorder.Page.Tab.CheckHeader')} (${(checkList || []).length})`,
+                pane: {
+                  key: 'checked',
+                  content: renderView({ list: checkList, Columns, keys: ['checked'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Purchaseorder.Page.Tab.ApproveHeader')} (${(approveList || []).length})`,
+                pane: {
+                  key: 'approved',
+                  content: renderView({ list: approveList, Columns, keys: ['approved'], initialConfig })
+                }
+              },
+              {
+                menuItem: `${t('Pages.Purchaseorder.Page.Tab.CompleteHeader')} (${(completeList || []).length})`,
+                pane: {
+                  key: 'completed',
+                  content: renderView({ list: completeList, Columns, keys: ['completed'], initialConfig })
+                }
+              },
+
+
+            ]}
+            renderActiveOnly={false}
+          />
+        </Contentwrapper>
+      </Pagewrapper>
+      <PurchaseordersDetail
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersDelete
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersCheck
+        open={checkOpen}
+        setOpen={setCheckOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersApprove
+        open={approveOpen}
+        setOpen={setApproveOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersComplete
+        open={completeOpen}
+        setOpen={setCompleteOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersCancelCheck
+        open={cancelCheckOpen}
+        setOpen={setCancelCheckOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+      <PurchaseordersCancelApprove
+        open={cancelApproveOpen}
+        setOpen={setCancelApproveOpen}
+        record={record}
+        setRecord={setRecord}
+      />
+    </React.Fragment>
   )
 
 }

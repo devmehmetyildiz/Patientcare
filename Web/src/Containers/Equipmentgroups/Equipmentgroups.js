@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Equipmentgroups from '../../Pages/Equipmentgroups/Equipmentgroups'
-import { GetEquipmentgroups, handleDeletemodal, handleSelectedEquipmentgroup } from '../../Redux/EquipmentgroupSlice'
+import { GetEquipmentgroups, } from '../../Redux/EquipmentgroupSlice'
 import { GetDepartments } from '../../Redux/DepartmentSlice'
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetEquipmentgroups, handleDeletemodal, handleSelectedEquipmentgroup, GetDepartments
+    GetEquipmentgroups, GetDepartments
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Equipmentgroups)

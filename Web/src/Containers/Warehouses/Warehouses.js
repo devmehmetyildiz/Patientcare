@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Warehouses from '../../Pages/Warehouses/Warehouses'
-import { GetWarehouses, fillWarehousenotification, DeleteWarehouses, handleDeletemodal, handleSelectedWarehouse } from '../../Redux/WarehouseSlice'
+import { GetWarehouses, fillWarehousenotification, } from '../../Redux/WarehouseSlice'
 import { GetUnits } from '../../Redux/UnitSlice'
 import { GetStockdefines } from '../../Redux/StockdefineSlice'
 import { GetStockmovements } from '../../Redux/StockmovementSlice'
@@ -19,7 +19,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     GetWarehouses, fillWarehousenotification,
-    DeleteWarehouses, handleDeletemodal, handleSelectedWarehouse,
     GetUnits, GetStockdefines,
     GetStockmovements, GetStocks, GetStocktypegroups
 }

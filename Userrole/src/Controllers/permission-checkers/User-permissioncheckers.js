@@ -21,19 +21,19 @@ async function UpdateUser(req, res, next) {
 }
 
 async function RemoveUsers(req, res, next) {
-    PermissionHandler(req, next, 'userupdate')
+    PermissionHandler(req, next, 'userremove')
 }
 
 async function UpdateUsercase(req, res, next) {
-    PermissionHandler(req, next, 'userupdate')
+    PermissionHandler(req, next, 'userupdatecase')
 }
 
 async function UpdateUsermovement(req, res, next) {
-    PermissionHandler(req, next, 'userupdate')
+    PermissionHandler(req, next, 'userupdatemovement')
 }
 
 async function DeleteUsermovement(req, res, next) {
-    PermissionHandler(req, next, 'userdelete')
+    PermissionHandler(req, next, 'userdeletemovement')
 }
 
 async function DeleteUser(req, res, next) {

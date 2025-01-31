@@ -1,13 +1,14 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import CasesDelete from '../../Containers/Cases/CasesDelete'
 import { CASE_STATUS_COMPLETE, CASE_STATUS_DEACTIVE, CASE_STATUS_PASSIVE, CASE_STATUS_START, COL_PROPS, PATIENTMOVEMENTTYPE, PERSONEL_CASE_TYPE_ANNUALPERMIT, PERSONEL_CASE_TYPE_PASSIVE, PERSONEL_CASE_TYPE_PERMIT, PERSONEL_CASE_TYPE_START, PERSONEL_CASE_TYPE_WORK } from '../../Utils/Constants'
 import {
-  DataTable, Headerwrapper, LoadingPage,
+  DataTable, Headerwrapper,
   MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings
 } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 
 export default function Cases(props) {
   const { GetCases, GetDepartments, Departments, Cases, Profile, } = props
@@ -144,8 +145,8 @@ export default function Cases(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.caseupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.casedelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "case"
@@ -190,6 +191,9 @@ export default function Cases(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.caseadd}
+              ReportRole={privileges.casegetreport}
+              ViewRole={privileges.casemanageview}
             />
           </Grid>
         </Headerwrapper>

@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import Pagedivider from '../Pagedivider';
 import { Tb3DRotate, TbActivity, TbGauge, TbCalendar, TbReportMoney } from "react-icons/tb"
 import { MdSettings } from "react-icons/md"
+import validator from '../../Utils/Validator';
+import privileges from '../../Constants/Privileges';
 
 export function Sidebar(props) {
 
@@ -270,7 +272,7 @@ export const getSidebarroutes = (Profile) => {
                 { id: 11, subtitle: t('Pages.Stockdefines.Page.Header'), url: "/Stockdefines", permission: checkAuth('stockdefineview') },
                 { id: 12, subtitle: t('Pages.Floors.Page.Header'), url: "/Floors", permission: checkAuth('floorview') },
                 { id: 13, subtitle: t('Pages.Rooms.Page.Header'), url: "/Rooms", permission: checkAuth('roomview') },
-                { id: 14, subtitle: t('Pages.Beds.Page.Header'), url: "/Beds", permission: checkAuth('bedview') },
+                { id: 14, subtitle: t('Pages.Beds.Page.Header'), url: "/Beds", permission: validator.isHavePermission(privileges.bedview, roles) },
                 { id: 15, subtitle: t('Pages.Patientcashregisters.Page.Header'), url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
                 { id: 16, subtitle: t('Pages.Patienttypes.Page.Header'), url: "/Patienttypes", permission: checkAuth('patienttypeview') },
                 { id: 17, subtitle: t('Pages.Costumertypes.Page.Header'), url: "/Costumertypes", permission: checkAuth('costumertypeview') },

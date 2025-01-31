@@ -5,6 +5,7 @@ import DepartmentDelete from "../../Containers/Departments/DepartmentsDelete"
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Departments(props) {
 
@@ -33,8 +34,8 @@ export default function Departments(props) {
     { Header: t("Common.Column.Updateduser"), accessor: 'Updateduser' },
     { Header: t("Common.Column.Createtime"), accessor: 'Createtime' },
     { Header: t("Common.Column.Updatetime"), accessor: 'Updatetime' },
-    { Header: t("Common.Column.edit"), accessor: 'edit', disableProps: true },
-    { Header: t("Common.Column.delete"), accessor: 'delete', disableProps: true }
+    { Header: t("Common.Column.edit"), accessor: 'edit', disableProps: true, role: privileges.departmentupdate },
+    { Header: t("Common.Column.delete"), accessor: 'delete', disableProps: true, role: privileges.departmentdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "department"
@@ -78,6 +79,9 @@ export default function Departments(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.departmentadd}
+              ReportRole={privileges.departmentgetreport}
+              ViewRole={privileges.departmentmanageview}
             />
           </Grid>
         </Headerwrapper>

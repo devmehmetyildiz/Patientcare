@@ -4,6 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import CostumertypesDelete from "../../Containers/Costumertypes/CostumertypesDelete"
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import privileges from '../../Constants/Privileges'
 export default class Costumertypes extends Component {
 
   constructor(props) {
@@ -42,8 +43,8 @@ export default class Costumertypes extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.costumertypeupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.costumertypedelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "costumertype"
@@ -88,6 +89,9 @@ export default class Costumertypes extends Component {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.costumertypeadd}
+                ReportRole={privileges.costumertypegetreport}
+                ViewRole={privileges.costumertypemanageview}
               />
             </Grid>
           </Headerwrapper>

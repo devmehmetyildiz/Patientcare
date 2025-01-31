@@ -18,7 +18,7 @@ async function GetFile(req, res, next) {
 }
 
 async function Downloadfile(req, res, next) {
-    PermissionHandler(req, next, 'filescreen')
+    PermissionHandler(req, next, 'filedownload')
 }
 
 async function AddFile(req, res, next) {

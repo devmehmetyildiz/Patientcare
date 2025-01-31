@@ -5,6 +5,7 @@ import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Set
 import ShiftdefinesDelete from '../../Containers/Shiftdefines/ShiftdefinesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Shiftdefines(props) {
   const { GetShiftdefines, Shiftdefines, Profile } = props
@@ -32,8 +33,8 @@ export default function Shiftdefines(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.shiftdefineupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.shiftdefinedelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "shiftdefine"
@@ -77,6 +78,9 @@ export default function Shiftdefines(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.shiftdefineadd}
+              ReportRole={privileges.shiftdefinegetreport}
+              ViewRole={privileges.shiftdefinemanageview}
             />
           </Grid>
         </Headerwrapper>

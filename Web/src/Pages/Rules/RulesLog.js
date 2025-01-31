@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 import { NoDataScreen, Footerwrapper } from '../../Components'
+import validator from '../../Utils/Validator'
+import privileges from '../../Constants/Privileges'
 
 export default function RulesLog(props) {
     const { Profile, Rules, open, setOpen, record, setRecord, ClearRulelogs, GetRulelogswithoutloading } = props
@@ -12,6 +14,7 @@ export default function RulesLog(props) {
     }
 
     const t = Profile?.i18n?.t
+    const roles = Profile?.roles
 
     const { loglist } = Rules
 
@@ -47,11 +50,13 @@ export default function RulesLog(props) {
             </Modal.Content>
             <Modal.Actions>
                 <Footerwrapper>
-                    <Button color='black' onClick={() => {
-                        ClearRulelogs(record)
-                    }}>
-                        {t('Common.Button.Clear')}
-                    </Button>
+                    {validator.isHavePermission(privileges.ruleupdate, roles) ?
+                        <Button color='black' onClick={() => {
+                            ClearRulelogs(record)
+                        }}>
+                            {t('Common.Button.Clear')}
+                        </Button>
+                        : null}
                     <Button
                         content={t('Common.Button.Close')}
                         labelPosition='right'

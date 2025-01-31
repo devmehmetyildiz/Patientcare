@@ -6,7 +6,7 @@ import RulesDelete from '../../Containers/Rules/RulesDelete'
 import RulesLog from '../../Containers/Rules/RulesLog'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { COL_PROPS } from '../../Utils/Constants'
-
+import privileges from '../../Constants/Privileges'
 
 export default function Rules(props) {
   const { GetRules } = props
@@ -35,10 +35,10 @@ export default function Rules(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Pages.Rules.Column.Stop'), accessor: 'Stop', disableProps: true },
-    { Header: t('Pages.Rules.Column.Log'), accessor: 'log', disableProps: true },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Pages.Rules.Column.Stop'), accessor: 'Stop', disableProps: true, role: privileges.ruleupdate },
+    { Header: t('Pages.Rules.Column.Log'), accessor: 'log', disableProps: true, role: privileges.ruleview },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.ruleupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.ruledelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "rule"
@@ -91,6 +91,9 @@ export default function Rules(props) {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.ruleadd}
+                ReportRole={privileges.rulegetreport}
+                ViewRole={privileges.rulemanageview}
               />
             </Grid>
           </Headerwrapper>

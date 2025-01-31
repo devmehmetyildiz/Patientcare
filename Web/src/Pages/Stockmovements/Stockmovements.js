@@ -1,12 +1,14 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
-import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import { Icon, Breadcrumb, Grid, GridColumn, Loader, Tab } from 'semantic-ui-react'
+import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Contentwrapper } from '../../Components'
 import StockmovementsDelete from '../../Containers/Stockmovements/StockmovementsDelete'
 import StockmovementsApprove from '../../Containers/Stockmovements/StockmovementsApprove'
-import { COL_PROPS, STOCK_TYPE_PATIENT, STOCK_TYPE_PURCHASEORDER, STOCK_TYPE_WAREHOUSE } from '../../Utils/Constants'
+import { COL_PROPS, STOCK_TYPE_PATIENT, STOCK_TYPE_PURCHASEORDER } from '../../Utils/Constants'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
+import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Stockmovements(props) {
   const { GetStockmovements, GetStocks, GetUnits, GetStockdefines, GetStocktypes,
@@ -20,6 +22,32 @@ export default function Stockmovements(props) {
   const t = Profile?.i18n?.t
 
   const { isLoading } = Stockmovements
+
+  const renderView = ({ list, Columns, keys, initialConfig }) => {
+
+    const searchbykey = (data, searchkeys) => {
+      let ok = false
+      searchkeys.forEach(key => {
+
+        if (!ok) {
+          if (data.includes(key)) {
+            ok = true
+          }
+        }
+      });
+
+      return ok
+    }
+
+    const columns = Columns.filter(u => searchbykey((u?.keys || []), keys) || !(u?.keys))
+
+    return list.length > 0 ?
+      <div className='w-full mx-auto '>
+        {Profile.Ismobile ?
+          <MobileTable Columns={columns} Data={list} Config={initialConfig} Profile={Profile} /> :
+          <DataTable Columns={columns} Data={list} Config={initialConfig} />}
+      </div> : <NoDataScreen style={{ height: 'auto' }} message={t('Common.NoDataFound')} />
+  }
 
   const amountCellhandler = (row) => {
     if (Stocks.isLoading || Stockdefines.isLoading || Units.isLoading || Stockmovements.isLoading) {
@@ -96,10 +124,6 @@ export default function Stockmovements(props) {
     return Movementoptions.find(u => u.value === value)?.text || t('Common.NoDataFound')
   }
 
-  const boolCellhandler = (value) => {
-    return value !== null && (value ? t('Common.Yes') : t('Common.No'))
-  }
-
   const Columns = [
     { Header: t('Common.Column.Id'), accessor: 'Id', },
     { Header: t('Common.Column.Uuid'), accessor: 'Uuid', },
@@ -108,14 +132,13 @@ export default function Stockmovements(props) {
     { Header: t('Pages.Stockmovements.Column.Movementdate'), accessor: row => dateCellhandler(row?.Movementdate), Subtitle: true },
     { Header: t('Pages.Stockmovements.Column.Movementtype'), accessor: row => movementCellhandler(row?.Movementtype), Lowtitle: true, Withtext: true },
     { Header: t('Pages.Stockmovements.Column.Amount'), accessor: row => amountCellhandler(row), Lowtitle: true, Withtext: true },
-    { Header: t('Pages.Stockmovements.Column.Isapproved'), accessor: row => boolCellhandler(row?.Isapproved) },
     { Header: t('Common.Column.Createduser'), accessor: 'Createduser', },
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser', },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true }
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, role: privileges.stockmovementapprove, keys: ['created'] },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.stockmovementupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.stockmovementdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "stockmovement"
@@ -134,6 +157,20 @@ export default function Stockmovements(props) {
         setDeleteOpen(true)
       }} />
     }
+  })
+
+  const createdList = list.filter(u => !u.Isapproved)
+  const approvedList = list.filter(u => u.Isapproved)
+
+  const tabOrder = [
+    'approved',
+    'created',
+  ]
+
+  const { activeTab, setActiveTab } = useTabNavigation({
+    history,
+    tabOrder,
+    mainRoute: 'Stockmovements'
   })
 
   useEffect(() => {
@@ -172,17 +209,39 @@ export default function Stockmovements(props) {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.stockmovementadd}
+                ReportRole={privileges.stockmovementgetreport}
+                ViewRole={privileges.stockmovementmanageview}
               />
             </Grid>
           </Headerwrapper>
           <Pagedivider />
-          {list.length > 0 ?
-            <div className='w-full mx-auto '>
-              {Profile.Ismobile ?
-                <MobileTable Columns={Columns} Data={list} Config={initialConfig} Profile={Profile} /> :
-                <DataTable Columns={Columns} Data={list} Config={initialConfig} />}
-            </div> : <NoDataScreen message={t('Common.NoDataFound')} />
-          }
+          <Contentwrapper>
+            <Tab
+              onTabChange={(_, { activeIndex }) => {
+                setActiveTab(activeIndex)
+              }}
+              activeIndex={activeTab}
+              className="w-full !bg-transparent"
+              panes={[
+                {
+                  menuItem: `${t('Pages.Stockmovements.Page.Tab.ApproveHeader')} (${(approvedList || []).length})`,
+                  pane: {
+                    key: 'approved',
+                    content: renderView({ list: approvedList, Columns, keys: ['approved'], initialConfig })
+                  }
+                },
+                {
+                  menuItem: `${t('Pages.Stockmovements.Page.Tab.CreateHeader')} (${(createdList || []).length})`,
+                  pane: {
+                    key: 'created',
+                    content: renderView({ list: createdList, Columns, keys: ['created'], initialConfig })
+                  }
+                },
+              ]}
+              renderActiveOnly={false}
+            />
+          </Contentwrapper>
         </Pagewrapper>
         <StockmovementsDelete
           open={deleteOpen}

@@ -88,6 +88,12 @@ const isCountryID = (tcNumber) => {
   return false;
 };
 
+const isHavePermission = (role, Roles) => {
+  const roles = (Roles || [])
+  return roles.includes('admin') || roles.includes(role)
+  // return roles.includes(role)
+}
+
 const validator = {
   isValidURL,
   isIpAddress,
@@ -104,7 +110,8 @@ const validator = {
   isUUID,
   isCountryID,
   isFile,
-  isNotNullorEmpty
+  isNotNullorEmpty,
+  isHavePermission
 }
 
 export default validator

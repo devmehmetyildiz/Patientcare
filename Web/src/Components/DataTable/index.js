@@ -7,16 +7,17 @@ import {
 import { Icon, Pagination, Select, Popup, Input, } from 'semantic-ui-react'
 import "./index.css"
 import { useSelector } from 'react-redux'
+import validator from '../../Utils/Validator'
 
 const TWO_HUNDRED_MS = 200;
-
-
 
 export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disableGlobalFilter, additionalCountPrefix }) => {
 
     const Profile = useSelector(state => state.Profile)
 
     const t = Profile?.i18n?.t
+
+    const { roles } = Profile
 
     const [selectedRowId, setSelectedRowId] = useState([])
     const columns = useMemo(() => {
@@ -238,8 +239,9 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                             <tr {...row.getRowProps()} style={{ ...(selectedRowId.includes(index) && ({ backgroundColor: '#ebf5f8' })) }} >
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
+                                                    const IsDisable = cell?.column?.role !== null ? !validator.isHavePermission(cell?.column?.role, roles) : false
                                                     return (
-                                                        <td  {...cell.getCellProps({ className: cell.column.className })} onClick={(e) => {
+                                                        <td className={`${IsDisable ? 'opacity-50 cursor-none pointer-events-none' : ''}`} {...cell.getCellProps({ className: cell.column.className })} onClick={(e) => {
                                                             if (!Isicon) {
                                                                 setSelectedRowId(prev => prev.includes(index) ? prev.filter(u => u !== index) : [...prev, index])
                                                             }

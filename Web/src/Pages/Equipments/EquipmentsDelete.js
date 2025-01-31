@@ -1,48 +1,45 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 
-export default class EquipmentsDelete extends Component {
-  render() {
-    const { Profile, Equipments, DeleteEquipments, handleDeletemodal, handleSelectedEquipment } = this.props
+export default function EquipmentsDelete(props) {
 
-    const t = Profile?.i18n?.t
+  const { Profile, Equipments, DeleteEquipments, open, setOpen, record, setRecord } = props
 
-    const { isDeletemodalopen, selected_record } = Equipments
-    return (
-      <Modal
-        onClose={() => handleDeletemodal(false)}
-        onOpen={() => handleDeletemodal(true)}
-        open={isDeletemodalopen}
-      >
-        <Modal.Header>{t('Pages.Equipments.Page.DeleteHeader')}</Modal.Header>
-        <Modal.Content image>
-          <Modal.Description>
-            <p>
-              <span className='font-bold'>{selected_record?.Name} </span>
-              {t('Pages.Equipments.Delete.Label.Check')}
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='black' onClick={() => {
-            handleDeletemodal(false)
-            handleSelectedEquipment({})
-          }}>
-            {t('Common.Button.Giveup')}
-          </Button>
-          <Button
-            content={t('Common.Button.Delete')}
-            labelPosition='right'
-            icon='checkmark'
-            onClick={() => {
-              DeleteEquipments(selected_record)
-              handleDeletemodal(false)
-              handleSelectedEquipment({})
-            }}
-            positive
-          />
-        </Modal.Actions>
-      </Modal>
-    )
-  }
+  const t = Profile?.i18n?.t
+
+  return <Modal
+    onClose={() => setOpen(false)}
+    onOpen={() => setOpen(true)}
+    open={open}
+  >
+    <Modal.Header>{t('Pages.Equipments.Page.DeleteHeader')}</Modal.Header>
+    <Modal.Content image>
+      <Modal.Description>
+        <p>
+          <span className='font-bold'>{record?.Name} </span>
+          {t('Pages.Equipments.Delete.Label.Check')}
+        </p>
+      </Modal.Description>
+    </Modal.Content>
+    <Modal.Actions>
+      <Button color='black' onClick={() => {
+        setOpen(false)
+        setRecord(null)
+      }}>
+        {t('Common.Button.Giveup')}
+      </Button>
+      <Button
+        loading={Equipments.isLoading}
+        content={t('Common.Button.Delete')}
+        labelPosition='right'
+        icon='checkmark'
+        onClick={() => {
+          DeleteEquipments(record)
+          setOpen(false)
+          setRecord(null)
+        }}
+        positive
+      />
+    </Modal.Actions>
+  </Modal>
 }

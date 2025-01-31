@@ -4,6 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import TodogroupdefinesDelete from '../../Containers/Todogroupdefines/TodogroupdefinesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 export default class Todogroupdefines extends Component {
 
     constructor(props) {
@@ -43,8 +44,8 @@ export default class Todogroupdefines extends Component {
             { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.todogroupdefineupdate },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.todogroupdefinedelete }
         ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
         const metaKey = "todogroupdefine"
@@ -85,6 +86,9 @@ export default class Todogroupdefines extends Component {
                                     Showcreatebutton
                                     Showcolumnchooser
                                     Showexcelexport
+                                    CreateRole={privileges.todogroupdefineadd}
+                                    ReportRole={privileges.todogroupdefinegetreport}
+                                    ViewRole={privileges.todogroupdefinemanageview}
                                 />
                             </Grid>
                         </Headerwrapper>

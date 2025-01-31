@@ -5,6 +5,7 @@ import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Set
 import RoomsDelete from '../../Containers/Rooms/RoomsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Rooms(props) {
   const { GetRooms, GetFloors } = props
@@ -33,8 +34,8 @@ export default function Rooms(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.roomupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.roomdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "room"
@@ -80,6 +81,9 @@ export default function Rooms(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.roomadd}
+              ReportRole={privileges.roomgetreport}
+              ViewRole={privileges.roommanageview}
             />
           </Grid>
         </Headerwrapper>

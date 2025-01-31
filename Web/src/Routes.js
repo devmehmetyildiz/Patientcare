@@ -1,6 +1,8 @@
 import React, { Component, Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { ProtectedRoute, Spinner } from './Components'
+import validator from './Utils/Validator';
+import privileges from './Constants/Privileges';
 
 const Login = lazy(() => import('./Containers/Auth/Login'));
 const Register = lazy(() => import('./Containers/Auth/Register'));
@@ -380,9 +382,9 @@ class Routes extends Component {
       { exact: true, path: "/Rules/Create", auth: true, component: RulesCreate, permission: 'ruleadd' },
       { exact: true, path: "/Rules/:RuleID/Edit", auth: true, component: RulesEdit, permission: 'ruleupdate' },
 
-      { exact: true, path: "/Beds", auth: true, component: Beds, permission: 'bedview' },
-      { exact: true, path: "/Beds/Create", auth: true, component: BedsCreate, permission: 'bedadd' },
-      { exact: true, path: "/Beds/:BedID/Edit", auth: true, component: BedsEdit, permission: 'bedupdate' },
+      { exact: true, path: "/Beds", auth: true, component: Beds, permission: privileges.bedview },
+      { exact: true, path: "/Beds/Create", auth: true, component: BedsCreate, permission: privileges.bedadd },
+      { exact: true, path: "/Beds/:BedID/Edit", auth: true, component: BedsEdit, permission: privileges.bedupdate },
 
       { exact: true, path: "/Floors", auth: true, component: Floors, permission: 'floorview' },
       { exact: true, path: "/Floors/Create", auth: true, component: FloorsCreate, permission: 'flooradd' },
@@ -535,7 +537,7 @@ class Routes extends Component {
       <Suspense fallback={<Spinner />}>
         <Switch>
           {routes.map((route, index) => {
-            return route.auth === true ? (((roles || []).includes('admin') || (roles || []).includes(route.permission)) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null) :
+            return route.auth === true ? validator.isHavePermission(route.permission, roles) ? <ProtectedRoute key={index} exact={route.exact} path={route.path} component={route.component} /> : null :
               <Route key={index} exact={route.exact} path={route.path} component={route.component} />
           })}
         </Switch>
