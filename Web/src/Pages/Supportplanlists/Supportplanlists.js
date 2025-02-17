@@ -4,7 +4,8 @@ import { Icon, Breadcrumb, Grid, GridColumn, Loader } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import SupportplanlistsDelete from '../../Containers/Supportplanlists/SupportplanlistsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
-import { SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
+import { COL_PROPS, SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default class Supportplanlists extends Component {
 
@@ -28,12 +29,6 @@ export default class Supportplanlists extends Component {
 
         const t = Profile?.i18n?.t
 
-        const colProps = {
-            sortable: true,
-            canGroupBy: true,
-            canFilter: true
-        }
-
         const Columns = [
             { Header: t('Common.Column.Id'), accessor: 'Id' },
             { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
@@ -45,9 +40,9 @@ export default class Supportplanlists extends Component {
             { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
             { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
             { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-        ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+            { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.supportplanlistupdate },
+            { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.supportplanlistdelete }
+        ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
         const metaKey = "supportplanlist"
         let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -87,6 +82,9 @@ export default class Supportplanlists extends Component {
                                     Showcreatebutton
                                     Showcolumnchooser
                                     Showexcelexport
+                                    CreateRole={privileges.supportplanlistadd}
+                                    ReportRole={privileges.supportplanlistgetreport}
+                                    ViewRole={privileges.supportplanlistmanageview}
                                 />
                             </Grid>
                         </Headerwrapper>

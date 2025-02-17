@@ -4,6 +4,8 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import PatientcashregistersDelete from '../../Containers/Patientcashregisters/PatientcashregistersDelete'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
+import { COL_PROPS } from '../../Utils/Constants'
 
 export default class Patientcashregisters extends Component {
 
@@ -20,12 +22,6 @@ export default class Patientcashregisters extends Component {
 
     const { isLoading } = Patientcashregisters
 
-    const colProps = {
-      sortable: true,
-      canGroupBy: true,
-      canFilter: true
-    }
-
     const Columns = [
       { Header: t('Common.Column.Id'), accessor: 'Id' },
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
@@ -35,9 +31,9 @@ export default class Patientcashregisters extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.patientcashregisterupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.patientcashregisterdelete }
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "patientcashregister"
     let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -76,6 +72,9 @@ export default class Patientcashregisters extends Component {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.patientcashregisteradd}
+                ReportRole={privileges.patientcashregistergetreport}
+                ViewRole={privileges.patientcashregistermanageview}
               />
             </Grid>
           </Headerwrapper>

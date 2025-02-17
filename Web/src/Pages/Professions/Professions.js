@@ -5,6 +5,7 @@ import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Set
 import ProfessionsDelete from '../../Containers/Professions/ProfessionsDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Professions(props) {
   const { Floors, Professions, Profile, GetProfessions, GetFloors } = props
@@ -37,8 +38,8 @@ export default function Professions(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.professionupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.professiondelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "profession"
@@ -83,6 +84,9 @@ export default function Professions(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.professionadd}
+              ReportRole={privileges.professiongetreport}
+              ViewRole={privileges.professionmanageview}
             />
           </Grid>
         </Headerwrapper>

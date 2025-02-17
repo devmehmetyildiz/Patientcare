@@ -17,23 +17,23 @@ async function UpdateTraining(req, res, next) {
 }
 
 async function ApproveTraining(req, res, next) {
-    PermissionHandler(req, next, 'trainingupdate')
+    PermissionHandler(req, next, 'trainingapprove')
 }
 
 async function SavepreviewTraining(req, res, next) {
-    PermissionHandler(req, next, 'trainingupdate')
+    PermissionHandler(req, next, 'trainingsavepreview')
 }
 
 async function CompleteTraininguser(req, res, next) {
-    PermissionHandler(req, next, 'trainingupdate')
+    PermissionHandler(req, next, 'trainingcompleteuser')
 }
 
 async function CompleteTraining(req, res, next) {
-    PermissionHandler(req, next, 'trainingupdate')
+    PermissionHandler(req, next, 'trainingcomplete')
 }
 
 async function CompleteTrainingAll(req, res, next) {
-    PermissionHandler(req, next, 'trainingupdate')
+    PermissionHandler(req, next, 'trainingcompleteall')
 }
 
 async function DeleteTraining(req, res, next) {

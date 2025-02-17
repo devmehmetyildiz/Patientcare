@@ -17,15 +17,15 @@ async function UpdatePersonelshift(req, res, next) {
 }
 
 async function ApprovePersonelshift(req, res, next) {
-    PermissionHandler(req, next, 'personelshiftupdate')
+    PermissionHandler(req, next, 'personelshiftapprove')
 }
 
 async function CompletePersonelshift(req, res, next) {
-    PermissionHandler(req, next, 'personelshiftupdate')
+    PermissionHandler(req, next, 'personelshiftcomplete')
 }
 
 async function SavepreviewPersonelshift(req, res, next) {
-    PermissionHandler(req, next, 'personelshiftupdate')
+    PermissionHandler(req, next, 'personelshiftsavepreview')
 }
 
 async function ActivatePersonelshift(req, res, next) {
@@ -33,7 +33,7 @@ async function ActivatePersonelshift(req, res, next) {
 }
 
 async function DeactivatePersonelshift(req, res, next) {
-    PermissionHandler(req, next, 'personelshiftdelete')
+    PermissionHandler(req, next, 'personelshiftupdate')
 }
 
 async function DeletePersonelshift(req, res, next) {
@@ -41,7 +41,7 @@ async function DeletePersonelshift(req, res, next) {
 }
 
 async function GetFastCreatedPersonelshift(req, res, next) {
-    PermissionHandler(req, next, 'personelshiftscreen')
+    PermissionHandler(req, next, 'personelshiftfastcreate')
 }
 
 module.exports = {

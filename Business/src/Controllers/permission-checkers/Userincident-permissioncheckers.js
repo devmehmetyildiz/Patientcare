@@ -18,15 +18,15 @@ async function UpdateUserincident(req, res, next) {
 }
 
 async function SavepreviewUserincident(req, res, next) {
-    PermissionHandler(req, next, 'userincidentupdate')
+    PermissionHandler(req, next, 'userincidentsavepreview')
 }
 
 async function ApproveUserincident(req, res, next) {
-    PermissionHandler(req, next, 'userincidentupdate')
+    PermissionHandler(req, next, 'userincidentapprove')
 }
 
 async function CompleteUserincident(req, res, next) {
-    PermissionHandler(req, next, 'userincidentupdate')
+    PermissionHandler(req, next, 'userincidentcomplete')
 }
 
 async function DeleteUserincident(req, res, next) {

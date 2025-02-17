@@ -5,6 +5,7 @@ import FilesDelete from '../../Containers/Files/FilesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { Headerwrapper, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable, Filepreview } from '../../Components'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Files(props) {
   const { GetFiles, GetUsagetypes, fillFilenotification } = props
@@ -40,8 +41,8 @@ export default function Files(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.preview'), accessor: 'preview', disableProps: true, },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.preview'), accessor: 'preview', disableProps: true, role: privileges.filedownload },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.filedelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const defaultHiddenColumns = ["Id", "ParentID", "Filename", "Filefolder", "Filepath", "Uuid", "Createduser", "Updateduser", "Createtime", "Updatetime"]
@@ -90,6 +91,9 @@ export default function Files(props) {
               metaKey={metaKey}
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.fileadd}
+              ReportRole={privileges.filegetreport}
+              ViewRole={privileges.filemanageview}
             />
           </Grid>
         </Headerwrapper>

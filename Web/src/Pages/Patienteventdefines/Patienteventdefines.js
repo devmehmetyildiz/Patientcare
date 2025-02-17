@@ -5,6 +5,8 @@ import { Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
 import PatienteventdefinesDelete from '../../Containers/Patienteventdefines/PatienteventdefinesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default class Patienteventdefines extends Component {
 
@@ -18,11 +20,6 @@ export default class Patienteventdefines extends Component {
     const t = Profile?.i18n?.t
     const { isLoading } = Patienteventdefines
 
-    const colProps = {
-      sortable: true,
-      canGroupBy: true,
-      canFilter: true
-    }
 
     const Columns = [
       { Header: t('Common.Column.Id'), accessor: 'Id' },
@@ -32,9 +29,9 @@ export default class Patienteventdefines extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.patienteventdefineupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.patienteventdefinedelete }
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "patienteventdefine"
     let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -73,6 +70,9 @@ export default class Patienteventdefines extends Component {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.patienteventdefineadd}
+                ReportRole={privileges.patienteventdefinegetreport}
+                ViewRole={privileges.patienteventdefinemanageview}
               />
             </Grid>
           </Headerwrapper>

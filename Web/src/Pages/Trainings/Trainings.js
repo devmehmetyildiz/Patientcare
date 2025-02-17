@@ -12,6 +12,7 @@ import TrainingsApprove from '../../Containers/Trainings/TrainingsApprove'
 import TrainingsComplete from '../../Containers/Trainings/TrainingsComplete'
 import TrainingsDelete from '../../Containers/Trainings/TrainingsDelete'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Trainings(props) {
 
@@ -112,11 +113,11 @@ export default function Trainings(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview', 'waitingapprove'] },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.trainingsavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.trainingapprove },
+        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.trainingcomplete },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.trainingupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.trainingdelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "traning"
@@ -216,6 +217,9 @@ export default function Trainings(props) {
                                 Showcreatebutton
                                 Showcolumnchooser
                                 Showexcelexport
+                                CreateRole={privileges.trainingadd}
+                                ReportRole={privileges.traininggetreport}
+                                ViewRole={privileges.trainingmanageview}
                             />
                         </Grid>
                     </Headerwrapper>

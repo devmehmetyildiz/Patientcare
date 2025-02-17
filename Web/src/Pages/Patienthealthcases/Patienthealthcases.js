@@ -6,6 +6,8 @@ import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Paged
 import PatienthealthcasesDelete from '../../Containers/Patienthealthcases/PatienthealthcasesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import validator from '../../Utils/Validator'
+import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Patienthealthcases(props) {
 
@@ -22,12 +24,6 @@ export default function Patienthealthcases(props) {
 
   const t = Profile?.i18n?.t
   const { isLoading } = Patienthealthcases
-
-  const colProps = {
-    sortable: true,
-    canGroupBy: true,
-    canFilter: true
-  }
 
   const patientCellhandler = (value) => {
     if (Patients.isLoading || Patientdefines.isLoading) {
@@ -57,9 +53,9 @@ export default function Patienthealthcases(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-  ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.patienthealthcaseupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.patienthealthcasedelete }
+  ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "patienthealthcase"
   let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -114,6 +110,9 @@ export default function Patienthealthcases(props) {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.patienthealthcaseadd}
+                ReportRole={privileges.patienthealthcasegetreport}
+                ViewRole={privileges.patienthealthcasemanageview}
               />
             </Grid>
           </Headerwrapper>

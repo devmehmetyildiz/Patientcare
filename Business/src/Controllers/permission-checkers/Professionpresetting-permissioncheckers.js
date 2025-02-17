@@ -17,15 +17,15 @@ async function UpdateProfessionpresetting(req, res, next) {
 }
 
 async function SavepreviewProfessionpresetting(req, res, next) {
-    PermissionHandler(req, next, 'professionpresettingupdate')
+    PermissionHandler(req, next, 'professionpresettingsavepreview')
 }
 
 async function ApproveProfessionpresetting(req, res, next) {
-    PermissionHandler(req, next, 'professionpresettingupdate')
+    PermissionHandler(req, next, 'professionpresettingapprove')
 }
 
 async function CompleteProfessionpresetting(req, res, next) {
-    PermissionHandler(req, next, 'professionpresettingupdate')
+    PermissionHandler(req, next, 'professionpresettingcomplete')
 }
 
 async function ActivateProfessionpresetting(req, res, next) {

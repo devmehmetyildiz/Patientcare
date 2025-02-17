@@ -18,15 +18,15 @@ async function UpdatePatientactivity(req, res, next) {
 }
 
 async function SavepreviewPatientactivity(req, res, next) {
-    PermissionHandler(req, next, 'patientactivityupdate')
+    PermissionHandler(req, next, 'patientactivitysavepreview')
 }
 
 async function ApprovePatientactivity(req, res, next) {
-    PermissionHandler(req, next, 'patientactivityupdate')
+    PermissionHandler(req, next, 'patientactivityapprove')
 }
 
 async function CompletePatientactivity(req, res, next) {
-    PermissionHandler(req, next, 'patientactivityupdate')
+    PermissionHandler(req, next, 'patientactivitycomplete')
 }
 
 async function DeletePatientactivity(req, res, next) {

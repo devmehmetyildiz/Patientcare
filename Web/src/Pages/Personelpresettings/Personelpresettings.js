@@ -13,6 +13,7 @@ import PersonelpresettingsSavepreview from '../../Containers/Personelpresettings
 import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
 import { COL_PROPS } from '../../Utils/Constants'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Personelpresettings(props) {
   const { Personelpresettings, Profile, GetPersonelpresettings, GetFloors, GetShiftdefines, GetUsers, history } = props
@@ -115,11 +116,11 @@ export default function Personelpresettings(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.personelpresettingsavepreview },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.personelpresettingapprove },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.personelpresettingcomplete },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.personelpresettingupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.personelpresettingdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "personelpresetting"
@@ -196,6 +197,9 @@ export default function Personelpresettings(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.personelpresettingadd}
+              ReportRole={privileges.personelpresettinggetreport}
+              ViewRole={privileges.personelpresettingmanageview}
             />
           </Grid>
         </Headerwrapper>

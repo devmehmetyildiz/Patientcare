@@ -6,6 +6,7 @@ import MainteanciesDelete from '../../Containers/Mainteancies/MainteanciesDelete
 import MainteanciesComplete from '../../Containers/Mainteancies/MainteanciesComplete'
 import validator from '../../Utils/Validator'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
+import privileges from '../../Constants/Privileges'
 
 export default class Mainteancies extends Component {
 
@@ -43,9 +44,9 @@ export default class Mainteancies extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, role: privileges.mainteancecomplete },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.mainteanceupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.mainteancedelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "mainteance"
@@ -90,6 +91,9 @@ export default class Mainteancies extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  CreateRole={privileges.mainteanceadd}
+                  ReportRole={privileges.mainteancegetreport}
+                  ViewRole={privileges.mainteancemanageview}
                 />
               </Grid>
             </Headerwrapper>

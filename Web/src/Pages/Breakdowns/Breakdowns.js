@@ -6,6 +6,7 @@ import BreakdownsDelete from '../../Containers/Breakdowns/BreakdownsDelete'
 import BreakdownsComplete from '../../Containers/Breakdowns/BreakdownsComplete'
 import validator from '../../Utils/Validator'
 import { DataTable, Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings } from '../../Components'
+import privileges from '../../Constants/Privileges'
 
 export default class Breakdowns extends Component {
 
@@ -43,9 +44,9 @@ export default class Breakdowns extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, role: privileges.breakdowncomplete },
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.breakdownupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.breakdowndelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "breakdown"
@@ -90,6 +91,9 @@ export default class Breakdowns extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  CreateRole={privileges.breakdownadd}
+                  ReportRole={privileges.breakdowngetreport}
+                  ViewRole={privileges.breakdownmanageview}
                 />
               </Grid>
             </Headerwrapper>

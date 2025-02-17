@@ -12,7 +12,7 @@ async function GetPatientByPlace(req, res, next) {
 }
 
 async function AddPatient(req, res, next) {
-    PermissionHandler(req, next, 'patientadd')
+    PermissionHandler(req, next, 'preregistrationadd')
 }
 
 async function UpdatePatient(req, res, next) {
@@ -24,45 +24,53 @@ async function UpdatePatientDates(req, res, next) {
 }
 
 async function CheckPatient(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'preregistrationcheck')
 }
 
 async function ApprovePatient(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'preregistrationapprove')
 }
 
 async function CompletePatient(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'preregistrationcomplete')
 }
 
 async function CancelCheckPatient(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'preregistrationapprove')
 }
 
 async function CancelApprovePatient(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'preregistrationcomplete')
 }
+
 async function PatientsRemove(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
+
 async function PatientsDead(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
+
 async function PatientsMakeactive(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
+
 async function Createfromtemplate(req, res, next) {
-    PermissionHandler(req, next, 'patientadd')
+    PermissionHandler(req, next, 'admin')
 }
+
 async function UpdatePatientcase(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'patientupdatecase')
 }
+
 async function UpdatePatientscase(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'patientupdatecase')
 }
+
 async function UpdatePatientplace(req, res, next) {
-    PermissionHandler(req, next, 'patientupdate')
+    PermissionHandler(req, next, 'patientupdateplace')
 }
+
 async function UpdatePatientmovements(req, res, next) {
     PermissionHandler(req, next, 'patientupdate')
 }
@@ -92,7 +100,7 @@ async function DeletePreregisrations(req, res, next) {
 }
 
 async function AddPatienteventmovement(req, res, next) {
-    PermissionHandler(req, next, 'patientadd')
+    PermissionHandler(req, next, 'patientupdate')
 }
 
 async function UpdatePatienteventmovements(req, res, next) {

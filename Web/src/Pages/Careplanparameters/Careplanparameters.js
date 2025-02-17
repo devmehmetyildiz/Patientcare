@@ -5,6 +5,7 @@ import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pag
 import CareplanparametersDelete from '../../Containers/Careplanparameters/CareplanparametersDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import { CAREPLANPARAMETER_TYPE_CURRENTSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_HELPSTATU, CAREPLANPARAMETER_TYPE_PLANNEDSITUATIONRATİNG, CAREPLANPARAMETER_TYPE_PRESENTATIONMAKINGTYPE, CAREPLANPARAMETER_TYPE_PRESENTATIONPERIOD, CAREPLANPARAMETER_TYPE_PURPOSETARGET, CAREPLANPARAMETER_TYPE_PURPOSETARGETWORKS, CAREPLANPARAMETER_TYPE_RATING } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default class Careplanparameters extends Component {
 
@@ -35,8 +36,8 @@ export default class Careplanparameters extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.careplanparameterview },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.careplanparameterdelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "careplanparameter"
@@ -77,6 +78,9 @@ export default class Careplanparameters extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  CreateRole={privileges.careplanparameteradd}
+                  ReportRole={privileges.careplanparametergetreport}
+                  ViewRole={privileges.careplanparametermanageview}
                 />
               </Grid>
             </Headerwrapper>

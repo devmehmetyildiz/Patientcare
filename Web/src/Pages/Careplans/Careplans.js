@@ -14,6 +14,7 @@ import CareplansDetail from '../../Containers/Careplans/CareplansDetail'
 import { COL_PROPS, SUPPORTPLAN_TYPE_CAREPLAN, SUPPORTPLAN_TYPE_PSYCHOSOCIAL, SUPPORTPLAN_TYPE_RATING } from '../../Utils/Constants'
 import Formatdate from '../../Utils/Formatdate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Careplans(props) {
   const { GetCareplans, GetPatients, GetPatientdefines } = props
@@ -100,10 +101,10 @@ export default function Careplans(props) {
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
     { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['isonpreview'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['isonpreview',] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['isonpreview', 'waitingapprove'] },
+    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['isonpreview'], role: privileges.careplansavepreview },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.careplanapprove },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['isonpreview',], role: privileges.careplanupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['isonpreview', 'waitingapprove'], role: privileges.careplandelete },
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "careplan"
@@ -179,6 +180,9 @@ export default function Careplans(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.careplanadd}
+              ReportRole={privileges.careplangetreport}
+              ViewRole={privileges.careplanmanageview}
             />
           </Grid>
         </Headerwrapper>

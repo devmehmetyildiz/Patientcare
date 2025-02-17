@@ -13,11 +13,11 @@ async function AddClaimpayment(req, res, next) {
 }
 
 async function ApproveClaimpayment(req, res, next) {
-    PermissionHandler(req, next, 'claimpaymentupdate')
+    PermissionHandler(req, next, 'claimpaymentapprove')
 }
 
 async function SavepreviewClaimpayment(req, res, next) {
-    PermissionHandler(req, next, 'claimpaymentupdate')
+    PermissionHandler(req, next, 'claimpaymentsavepreview')
 }
 
 async function DeleteClaimpayment(req, res, next) {

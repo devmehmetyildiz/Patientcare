@@ -13,6 +13,7 @@ import ProfessionpresettingsComplete from '../../Containers/Professionpresetting
 import Formatdate, { Getdateoptions } from '../../Utils/Formatdate'
 import { COL_PROPS } from '../../Utils/Constants'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Professionpresettings(props) {
   const { Professionpresettings, Profile, Floors, Professions, Shiftdefines, GetProfessionpresettings, GetFloors, GetShiftdefines, GetProfessions, history } = props
@@ -116,11 +117,11 @@ export default function Professionpresettings(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.professionpresettingsavepreview },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.professionpresettingapprove },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.professionpresettingcomplete },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.professionpresettingupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: ProfessionpresettingsDelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "professionpresetting"
@@ -197,6 +198,9 @@ export default function Professionpresettings(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.professionpresettingadd}
+              ReportRole={privileges.professionpresettinggetreport}
+              ViewRole={privileges.professionpresettingmanageview}
             />
           </Grid>
         </Headerwrapper>
@@ -237,8 +241,6 @@ export default function Professionpresettings(props) {
                   content: renderView({ list: onpreviewList, Columns, keys: ['onpreview'], initialConfig })
                 }
               },
-
-
             ]}
             renderActiveOnly={false}
           />

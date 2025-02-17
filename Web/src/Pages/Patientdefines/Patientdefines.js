@@ -4,6 +4,7 @@ import { Icon, Loader, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import PatientdefinesDelete from "../../Containers/Patientdefines/PatientdefinesDelete"
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 export default class Patientdefines extends Component {
 
   componentDidMount() {
@@ -67,8 +68,8 @@ export default class Patientdefines extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.patientdefineupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.patientdefinedelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "patientdefine"
@@ -109,6 +110,9 @@ export default class Patientdefines extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  CreateRole={privileges.patientdefineadd}
+                  ReportRole={privileges.patientdefinegetreport}
+                  ViewRole={privileges.patientdefineview}
                 />
               </Grid>
             </Headerwrapper>

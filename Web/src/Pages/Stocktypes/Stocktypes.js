@@ -4,6 +4,7 @@ import { Icon, Breadcrumb, Grid, GridColumn } from 'semantic-ui-react'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import StocktypesDelete from '../../Containers/Stocktypes/StocktypesDelete'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 
 export default class Stocktypes extends Component {
 
@@ -37,8 +38,8 @@ export default class Stocktypes extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.stocktypeupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.stocktypedelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
 
     const metaKey = "stocktype"
@@ -78,6 +79,9 @@ export default class Stocktypes extends Component {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.stocktypeadd}
+                ReportRole={privileges.stocktypegetreport}
+                ViewRole={privileges.stocktypemanageview}
               />
             </Grid>
           </Headerwrapper>

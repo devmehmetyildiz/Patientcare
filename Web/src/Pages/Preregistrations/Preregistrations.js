@@ -13,6 +13,7 @@ import GetInitialconfig from '../../Utils/GetInitialconfig'
 import Formatdate from '../../Utils/Formatdate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
 import { COL_PROPS } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Preregistrations(props) {
 
@@ -147,15 +148,15 @@ export default function Preregistrations(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-    { Header: t('Common.Column.define'), accessor: 'define', disableProps: true },
-    { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, keys: ['created'] },
-    { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, keys: ['checked'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['checked'] },
-    { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['created', 'checked', 'approved'] }
+    { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true, role: privileges.preregistrationview },
+    { Header: t('Common.Column.define'), accessor: 'define', disableProps: true, role: privileges.patientdefineview },
+    { Header: t('Common.Column.check'), accessor: 'check', disableProps: true, keys: ['created'], role: privileges.preregistrationcheck },
+    { Header: t('Common.Column.cancelcheck'), accessor: 'cancelcheck', disableProps: true, keys: ['checked'], role: privileges.preregistrationapprove },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['checked'], role: privileges.preregistrationapprove },
+    { Header: t('Common.Column.cancelapprove'), accessor: 'cancelapprove', disableProps: true, keys: ['approved'], role: privileges.preregistrationcomplete },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.preregistrationcomplete },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'], role: privileges.preregistrationupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['created', 'checked', 'approved'], role: privileges.preregistrationdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "preregistration"
@@ -243,6 +244,9 @@ export default function Preregistrations(props) {
               Pagecreateheader={t('Pages.Preregistrations.Page.CreateHeader')}
               Pagecreatelink={"/Preregistrations/Create"}
               Showcreatebutton
+              CreateRole={privileges.preregistrationadd}
+              ReportRole={privileges.preregistrationgetreport}
+              ViewRole={privileges.preregistrationmanageview}
             />
           </Grid>
         </Headerwrapper>

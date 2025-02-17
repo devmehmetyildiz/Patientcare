@@ -11,6 +11,7 @@ import ClaimpaymentparametersActivate from '../../Containers/Claimpaymentparamet
 import ClaimpaymentparametersDeactivate from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersDeactivate'
 import ClaimpaymentparametersSavepreview from '../../Containers/Claimpaymentparameters/ClaimpaymentparametersSavepreview'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Claimpaymentparameters(props) {
 
@@ -69,12 +70,12 @@ export default function Claimpaymentparameters(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true, key: 'nonworking' },
-        { Header: t('Common.Column.deactivate'), accessor: 'deactivate', disableProps: true, key: 'working' },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, key: 'onpreview' },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'waitingapprove' },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, key: 'onpreview' },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+        { Header: t('Common.Column.activate'), accessor: 'activate', disableProps: true, key: 'nonworking', role: privileges.claimpaymentparameterupdate },
+        { Header: t('Common.Column.deactivate'), accessor: 'deactivate', disableProps: true, key: 'working', role: privileges.claimpaymentparameterupdate },
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, key: 'onpreview', role: privileges.claimpaymentparametersavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, key: 'waitingapprove', role: privileges.claimpaymentparameterapprove },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, key: 'onpreview', role: privileges.claimpaymentparameterupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.claimpaymentparameterdelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "claimpaymentperpayment"
@@ -154,6 +155,9 @@ export default function Claimpaymentparameters(props) {
                                 Showcreatebutton
                                 Showcolumnchooser
                                 Showexcelexport
+                                CreateRole={privileges.claimpaymentparameteradd}
+                                ReportRole={privileges.claimpaymentparametergetreport}
+                                ViewRole={privileges.claimpaymentparametermanageview}
                             />
                         </Grid>
                     </Headerwrapper>

@@ -13,13 +13,14 @@ import PatientvisitsApprove from '../../Containers/Patientvisits/PatientvisitsAp
 import PatientvisitsComplete from '../../Containers/Patientvisits/PatientvisitsComplete'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Patientvisits(props) {
     const { Profile, Users, Patientvisits, Patients, Patientdefines, history } = props
     const { GetPatientvisits, GetUsers, GetPatientdefines, GetPatients, } = props
 
     const t = Profile?.i18n?.t
-    
+
     const [deleteOpen, setDeleteOpen] = useState(false)
     const [previewOpen, setPreviewOpen] = useState(false)
     const [completeOpen, setCompleteOpen] = useState(false)
@@ -95,11 +96,11 @@ export default function Patientvisits(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.patientvisitsavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.patientvisitapprove },
+        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.patientvisitcomplete },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.patientvisitupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.patientvisitdelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "patientvisit"
@@ -177,6 +178,9 @@ export default function Patientvisits(props) {
                             Showcreatebutton
                             Showcolumnchooser
                             Showexcelexport
+                            CreateRole={privileges.patientvisitadd}
+                            ReportRole={privileges.patientvisitgetreport}
+                            ViewRole={privileges.patientvisitmanageview}
                         />
                     </Grid>
                 </Headerwrapper>

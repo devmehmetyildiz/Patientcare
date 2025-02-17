@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import Pagedivider from '../Pagedivider';
 import { Tb3DRotate, TbActivity, TbGauge, TbCalendar, TbReportMoney } from "react-icons/tb"
 import { MdSettings } from "react-icons/md"
-import validator from '../../Utils/Validator';
 import privileges from '../../Constants/Privileges';
 
 export function Sidebar(props) {
@@ -164,21 +163,19 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth('overviewview') },
-                { id: 2, subtitle: t('Pages.Patientsrollcall.Page.Header'), url: "/Patientsrollcall", permission: checkAuth('patientsrollcallview') },
-                { id: 3, subtitle: t('Pages.Overviewcard.Page.Header'), url: "/Overviewcard", permission: checkAuth('overviewcardview') },
-                { id: 4, subtitle: t('Pages.Overviewhealthcarecard.Page.Header'), url: "/Overviewhealthcarecard", permission: checkAuth('overviewhealthcarecardview') },
-                { id: 4, subtitle: t('Pages.Companyfiles.Page.Header'), url: "/Companyfiles", permission: checkAuth('companyfileview') },
-                { id: 5, subtitle: t('Pages.Patienteventmovements.Page.Header'), url: "/Patienteventmovements", permission: checkAuth('patienteventmovementview') },
-                { id: 6, subtitle: t('Pages.Userincidents.Page.Header'), url: "/Userincidents", permission: checkAuth('userincidentview') },
-                { id: 7, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth('roleview') },
-                { id: 8, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth('roleview') },
-                { id: 9, subtitle: t('Pages.Surveys.Page.Header'), url: "/Surveys", permission: checkAuth('surveyview') },
-                { id: 10, subtitle: t('Pages.Breakdowns.Page.Header'), url: "/Breakdowns", permission: checkAuth('breakdownview') },
-                { id: 11, subtitle: t('Pages.Mainteancies.Page.Header'), url: "/Mainteancies", permission: checkAuth('mainteanceview') },
-                { id: 12, subtitle: t('Pages.Mainteanceplans.Page.Header'), url: "/Mainteanceplans", permission: checkAuth('mainteanceplanview') },
-
-
+                { id: 1, subtitle: t('Pages.Overview.Page.Header'), url: "/Overview", permission: checkAuth(privileges.overviewview) },
+                { id: 2, subtitle: t('Pages.Patientsrollcall.Page.Header'), url: "/Patientsrollcall", permission: checkAuth(privileges.patientsrollcallview) },
+                { id: 3, subtitle: t('Pages.Overviewcard.Page.Header'), url: "/Overviewcard", permission: checkAuth(privileges.overviewcardview) },
+                { id: 4, subtitle: t('Pages.Overviewhealthcarecard.Page.Header'), url: "/Overviewhealthcarecard", permission: checkAuth(privileges.overviewhealthcarecardview) },
+                { id: 4, subtitle: t('Pages.Companyfiles.Page.Header'), url: "/Companyfiles", permission: checkAuth(privileges.companyfileview) },
+                { id: 5, subtitle: t('Pages.Patienteventmovements.Page.Header'), url: "/Patienteventmovements", permission: checkAuth(privileges.patienteventmovementview) },
+                { id: 6, subtitle: t('Pages.Userincidents.Page.Header'), url: "/Userincidents", permission: checkAuth(privileges.userincidentview) },
+                { id: 7, subtitle: t('Pages.Approve.Page.Header'), url: "/Approve", permission: checkAuth(privileges.approveview) },
+                { id: 8, subtitle: t('Pages.Trainings.Page.Header'), url: "/Trainings", permission: checkAuth(privileges.trainingview) },
+                { id: 9, subtitle: t('Pages.Surveys.Page.Header'), url: "/Surveys", permission: checkAuth(privileges.surveyview) },
+                { id: 10, subtitle: t('Pages.Breakdowns.Page.Header'), url: "/Breakdowns", permission: checkAuth(privileges.breakdownview) },
+                { id: 11, subtitle: t('Pages.Mainteancies.Page.Header'), url: "/Mainteancies", permission: checkAuth(privileges.mainteanceview) },
+                { id: 12, subtitle: t('Pages.Mainteanceplans.Page.Header'), url: "/Mainteanceplans", permission: checkAuth(privileges.mainteanceplanview) },
             ]
         },
         {
@@ -187,17 +184,15 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <Tb3DRotate className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Preregistrations.Page.Header'), url: "/Preregistrations", permission: checkAuth('preregistrationview') },
-                { id: 2, subtitle: t('Pages.Patients.Page.Header'), url: "/Patients", permission: checkAuth('patientview') },
-                { id: 3, subtitle: t('Pages.Patientdefines.Page.Header'), url: "/Patientdefines", permission: checkAuth('patientdefineview') },
-                { id: 4, subtitle: t('Pages.Placeviews.Page.Header'), url: "/Placeviews", permission: checkAuth('placeviewview') },
-                { id: 5, subtitle: t('Pages.Careplans.Page.Header'), url: "/Careplans", permission: checkAuth('careplanview') },
-                { id: 6, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth('patientview') },
-                { id: 7, subtitle: t('Pages.Patientvisits.Page.Header'), url: "/Patientvisits", permission: checkAuth('patientvisitview') },
-                { id: 8, subtitle: t('Pages.Patientactivities.Page.Header'), url: "/Patientactivities", permission: checkAuth('patientactivityview') },
-                { id: 9, subtitle: t('Pages.Patienthealthcases.Page.Header'), url: "/Patienthealthcases", permission: checkAuth('patienthealthcaseview') },
-
-
+                { id: 1, subtitle: t('Pages.Preregistrations.Page.Header'), url: "/Preregistrations", permission: checkAuth(privileges.preregistrationview) },
+                { id: 2, subtitle: t('Pages.Patients.Page.Header'), url: "/Patients", permission: checkAuth(privileges.patientview) },
+                { id: 3, subtitle: t('Pages.Patientdefines.Page.Header'), url: "/Patientdefines", permission: checkAuth(privileges.patientdefineview) },
+                { id: 4, subtitle: t('Pages.Placeviews.Page.Header'), url: "/Placeviews", permission: checkAuth(privileges.placeviewview) },
+                { id: 5, subtitle: t('Pages.Careplans.Page.Header'), url: "/Careplans", permission: checkAuth(privileges.careplanview) },
+                { id: 6, subtitle: t('Pages.Patientfollowup.Page.Header'), url: "/Patientfollowup", permission: checkAuth(privileges.patientfollowupview) },
+                { id: 7, subtitle: t('Pages.Patientvisits.Page.Header'), url: "/Patientvisits", permission: checkAuth(privileges.patientvisitview) },
+                { id: 8, subtitle: t('Pages.Patientactivities.Page.Header'), url: "/Patientactivities", permission: checkAuth(privileges.patientactivityview) },
+                { id: 9, subtitle: t('Pages.Patienthealthcases.Page.Header'), url: "/Patienthealthcases", permission: checkAuth(privileges.patienthealthcaseview) },
             ]
         },
         {
@@ -206,10 +201,9 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbReportMoney className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Claimpayments.Page.Header'), url: "/Claimpayments", permission: checkAuth('claimpaymentview') },
-                { id: 2, subtitle: t('Pages.Companycashmovements.Page.Header'), url: "/Companycashmovements", permission: checkAuth('companycashmovementview') },
-                { id: 3, subtitle: t('Pages.Patientcashmovements.Page.Header'), url: "/Patientcashmovements", permission: checkAuth('patientcashmovementview') },
-
+                { id: 1, subtitle: t('Pages.Claimpayments.Page.Header'), url: "/Claimpayments", permission: checkAuth(privileges.claimpaymentview) },
+                { id: 2, subtitle: t('Pages.Companycashmovements.Page.Header'), url: "/Companycashmovements", permission: checkAuth(privileges.companycashmovementview) },
+                { id: 3, subtitle: t('Pages.Patientcashmovements.Page.Header'), url: "/Patientcashmovements", permission: checkAuth(privileges.patientcashmovementview) },
             ]
         },
         {
@@ -218,10 +212,10 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbCalendar className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth('userview') },
-                { id: 2, subtitle: t('Pages.Personelshifts.Page.Header'), url: "/Personelshifts", permission: checkAuth('personelshiftview') },
-                { id: 3, subtitle: t('Pages.Personelpresettings.Page.Header'), url: "/Personelpresettings", permission: checkAuth('personelpresettingview') },
-                { id: 4, subtitle: t('Pages.Professionpresettings.Page.Header'), url: "/Professionpresettings", permission: checkAuth('professionpresettingview') },
+                { id: 1, subtitle: t('Pages.Users.Page.Header'), url: "/Users", permission: checkAuth(privileges.userview) },
+                { id: 2, subtitle: t('Pages.Personelshifts.Page.Header'), url: "/Personelshifts", permission: checkAuth(privileges.personelshiftview) },
+                { id: 3, subtitle: t('Pages.Personelpresettings.Page.Header'), url: "/Personelpresettings", permission: checkAuth(privileges.personelpresettingview) },
+                { id: 4, subtitle: t('Pages.Professionpresettings.Page.Header'), url: "/Professionpresettings", permission: checkAuth(privileges.professionpresettingview) },
             ]
         },
         {
@@ -230,12 +224,12 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbActivity className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Purchaseorder.Page.Header'), url: "/Purchaseorders", permission: checkAuth('purchaseorderview') },
-                { id: 2, subtitle: t('Pages.Warehouses.Page.Header'), url: "/Warehouses", permission: checkAuth('warehouseview') },
-                { id: 3, subtitle: t('Pages.Stocks.Page.Header'), url: "/Stocks", permission: checkAuth('stockview') },
-                { id: 4, subtitle: t('Pages.Stockmovements.Page.Header'), url: "/Stockmovements", permission: checkAuth('stockmovementview') },
-                { id: 5, subtitle: t('Pages.Equipmentgroups.Page.Header'), url: "/Equipmentgroups", permission: checkAuth('equipmentgroupview') },
-                { id: 6, subtitle: t('Pages.Equipments.Page.Header'), url: "/Equipments", permission: checkAuth('equipmentview') },
+                { id: 1, subtitle: t('Pages.Purchaseorder.Page.Header'), url: "/Purchaseorders", permission: checkAuth(privileges.purchaseorderview) },
+                { id: 2, subtitle: t('Pages.Warehouses.Page.Header'), url: "/Warehouses", permission: checkAuth(privileges.warehouseview) },
+                { id: 3, subtitle: t('Pages.Stocks.Page.Header'), url: "/Stocks", permission: checkAuth(privileges.stockview) },
+                { id: 4, subtitle: t('Pages.Stockmovements.Page.Header'), url: "/Stockmovements", permission: checkAuth(privileges.stockmovementview) },
+                { id: 5, subtitle: t('Pages.Equipmentgroups.Page.Header'), url: "/Equipmentgroups", permission: checkAuth(privileges.equipmentgroupview) },
+                { id: 6, subtitle: t('Pages.Equipments.Page.Header'), url: "/Equipments", permission: checkAuth(privileges.equipmentview) },
 
             ]
         },
@@ -245,12 +239,12 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <TbGauge className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Files.Page.Header'), url: "/Files", permission: checkAuth('fileview') },
-                { id: 2, subtitle: t('Pages.Rules.Page.Header'), url: "/Rules", permission: checkAuth('ruleview') },
-                { id: 3, subtitle: t('Pages.Mailsettings.Page.Header'), url: "/Mailsettings", permission: checkAuth('mailsettingview') },
-                { id: 4, subtitle: t('Pages.Printtemplates.Page.Header'), url: "/Printtemplates", permission: checkAuth('printtemplateview') },
-                { id: 5, subtitle: t('Pages.Appreports.Page.Header'), url: "/Appreports", permission: checkAuth('admin') },
-                { id: 6, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth('admin') },
+                { id: 1, subtitle: t('Pages.Files.Page.Header'), url: "/Files", permission: checkAuth(privileges.fileview) },
+                { id: 2, subtitle: t('Pages.Rules.Page.Header'), url: "/Rules", permission: checkAuth(privileges.ruleview) },
+                { id: 3, subtitle: t('Pages.Mailsettings.Page.Header'), url: "/Mailsettings", permission: checkAuth(privileges.mailsettingview) },
+                { id: 4, subtitle: t('Pages.Printtemplates.Page.Header'), url: "/Printtemplates", permission: checkAuth(privileges.printtemplateview) },
+                { id: 5, subtitle: t('Pages.Appreports.Page.Header'), url: "/Appreports", permission: checkAuth(privileges.admin) },
+                { id: 6, subtitle: t('Pages.Log.Page.Header'), url: "/Logs", permission: checkAuth(privileges.admin) },
             ]
         },
         {
@@ -259,31 +253,31 @@ export const getSidebarroutes = (Profile) => {
             isOpened: false,
             icon: <MdSettings className=' text-[#2355a0]' />,
             items: [
-                { id: 1, subtitle: t('Pages.Roles.Page.Header'), url: "/Roles", permission: checkAuth('roleview') },
-                { id: 2, subtitle: t('Pages.Shiftdefines.Page.Header'), url: "/Shiftdefines", permission: checkAuth('shiftdefineview') },
-                { id: 3, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth('departmentview') },
-                { id: 4, subtitle: t('Pages.Claimpaymentparameters.Page.Header'), url: "/Claimpaymentparameters", permission: checkAuth('claimpaymentparameterview') },
-                { id: 5, subtitle: t('Pages.Cases.Page.Header'), url: "/Cases", permission: checkAuth('caseview') },
-                { id: 6, subtitle: t('Pages.Patienteventdefines.Page.Header'), url: "/Patienteventdefines", permission: checkAuth('patienteventdefineview') },
-                { id: 7, subtitle: t('Pages.Patienthealthcasedefines.Page.Header'), url: "/Patienthealthcasedefines", permission: checkAuth('patienthealthcasedefineview') },
-                { id: 8, subtitle: t('Pages.Units.Page.Header'), url: "/Units", permission: checkAuth('unitview') },
-                { id: 9, subtitle: t('Pages.Stocktypes.Page.Header'), url: "/Stocktypes", permission: checkAuth('stocktypeview') },
-                { id: 10, subtitle: t('Pages.Stocktypegroups.Page.Header'), url: "/Stocktypegroups", permission: checkAuth('stocktypegroupview') },
-                { id: 11, subtitle: t('Pages.Stockdefines.Page.Header'), url: "/Stockdefines", permission: checkAuth('stockdefineview') },
-                { id: 12, subtitle: t('Pages.Floors.Page.Header'), url: "/Floors", permission: checkAuth('floorview') },
-                { id: 13, subtitle: t('Pages.Rooms.Page.Header'), url: "/Rooms", permission: checkAuth('roomview') },
-                { id: 14, subtitle: t('Pages.Beds.Page.Header'), url: "/Beds", permission: validator.isHavePermission(privileges.bedview, roles) },
-                { id: 15, subtitle: t('Pages.Patientcashregisters.Page.Header'), url: "/Patientcashregisters", permission: checkAuth('patientcashregisterview') },
-                { id: 16, subtitle: t('Pages.Patienttypes.Page.Header'), url: "/Patienttypes", permission: checkAuth('patienttypeview') },
-                { id: 17, subtitle: t('Pages.Costumertypes.Page.Header'), url: "/Costumertypes", permission: checkAuth('costumertypeview') },
-                { id: 18, subtitle: t('Pages.Periods.Page.Header'), url: "/Periods", permission: checkAuth('periodview') },
-                { id: 19, subtitle: t('Pages.Tododefines.Page.Header'), url: "/Tododefines", permission: checkAuth('tododefineview') },
-                { id: 20, subtitle: t('Pages.Todogroupdefines.Page.Header'), url: "/Todogroupdefines", permission: checkAuth('todogroupdefineview') },
-                { id: 21, subtitle: t('Pages.Usagetypes.Page.Header'), url: "/Usagetypes", permission: checkAuth('usagetypeview') },
-                { id: 22, subtitle: t('Pages.Professions.Page.Header'), url: "/Professions", permission: checkAuth('professionview') },
-                { id: 23, subtitle: t('Pages.Supportplans.Page.Header'), url: "/Supportplans", permission: checkAuth('supportplanview') },
-                { id: 24, subtitle: t('Pages.Supportplanlists.Page.Header'), url: "/Supportplanlists", permission: checkAuth('supportplanlistview') },
-                { id: 25, subtitle: t('Pages.Careplanparameters.Page.Header'), url: "/Careplanparameters", permission: checkAuth('helpstatuview') },
+                { id: 1, subtitle: t('Pages.Roles.Page.Header'), url: "/Roles", permission: checkAuth(privileges.roleview) },
+                { id: 2, subtitle: t('Pages.Shiftdefines.Page.Header'), url: "/Shiftdefines", permission: checkAuth(privileges.shiftdefineview) },
+                { id: 3, subtitle: t('Pages.Departments.Page.Header'), url: "/Departments", permission: checkAuth(privileges.departmentview) },
+                { id: 4, subtitle: t('Pages.Claimpaymentparameters.Page.Header'), url: "/Claimpaymentparameters", permission: checkAuth(privileges.claimpaymentparameterview) },
+                { id: 5, subtitle: t('Pages.Cases.Page.Header'), url: "/Cases", permission: checkAuth(privileges.caseview) },
+                { id: 6, subtitle: t('Pages.Patienteventdefines.Page.Header'), url: "/Patienteventdefines", permission: checkAuth(privileges.patienteventdefineview) },
+                { id: 7, subtitle: t('Pages.Patienthealthcasedefines.Page.Header'), url: "/Patienthealthcasedefines", permission: checkAuth(privileges.patienthealthcasedefineview) },
+                { id: 8, subtitle: t('Pages.Units.Page.Header'), url: "/Units", permission: checkAuth(privileges.unitview) },
+                { id: 9, subtitle: t('Pages.Stocktypes.Page.Header'), url: "/Stocktypes", permission: checkAuth(privileges.stocktypeview) },
+                { id: 10, subtitle: t('Pages.Stocktypegroups.Page.Header'), url: "/Stocktypegroups", permission: checkAuth(privileges.stocktypegroupview) },
+                { id: 11, subtitle: t('Pages.Stockdefines.Page.Header'), url: "/Stockdefines", permission: checkAuth(privileges.stockdefineview) },
+                { id: 12, subtitle: t('Pages.Floors.Page.Header'), url: "/Floors", permission: checkAuth(privileges.floorview) },
+                { id: 13, subtitle: t('Pages.Rooms.Page.Header'), url: "/Rooms", permission: checkAuth(privileges.roomview) },
+                { id: 14, subtitle: t('Pages.Beds.Page.Header'), url: "/Beds", permission: checkAuth(privileges.bedview) },
+                { id: 15, subtitle: t('Pages.Patientcashregisters.Page.Header'), url: "/Patientcashregisters", permission: checkAuth(privileges.patientcashregisterview) },
+                { id: 16, subtitle: t('Pages.Patienttypes.Page.Header'), url: "/Patienttypes", permission: checkAuth(privileges.patienttypeview) },
+                { id: 17, subtitle: t('Pages.Costumertypes.Page.Header'), url: "/Costumertypes", permission: checkAuth(privileges.costumertypeview) },
+                { id: 18, subtitle: t('Pages.Periods.Page.Header'), url: "/Periods", permission: checkAuth(privileges.periodview) },
+                { id: 19, subtitle: t('Pages.Tododefines.Page.Header'), url: "/Tododefines", permission: checkAuth(privileges.tododefineview) },
+                { id: 20, subtitle: t('Pages.Todogroupdefines.Page.Header'), url: "/Todogroupdefines", permission: checkAuth(privileges.todogroupdefineview) },
+                { id: 21, subtitle: t('Pages.Usagetypes.Page.Header'), url: "/Usagetypes", permission: checkAuth(privileges.usagetypeview) },
+                { id: 22, subtitle: t('Pages.Professions.Page.Header'), url: "/Professions", permission: checkAuth(privileges.professionview) },
+                { id: 23, subtitle: t('Pages.Supportplans.Page.Header'), url: "/Supportplans", permission: checkAuth(privileges.supportplanview) },
+                { id: 24, subtitle: t('Pages.Supportplanlists.Page.Header'), url: "/Supportplanlists", permission: checkAuth(privileges.supportplanlistview) },
+                { id: 25, subtitle: t('Pages.Careplanparameters.Page.Header'), url: "/Careplanparameters", permission: checkAuth(privileges.careplanparameterview) },
             ]
         },
     ]

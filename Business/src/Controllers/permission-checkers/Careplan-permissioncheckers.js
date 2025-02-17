@@ -17,11 +17,11 @@ async function UpdateCareplan(req, res, next) {
 }
 
 async function ApproveCareplan(req, res, next) {
-    PermissionHandler(req, next, 'careplanupdate')
+    PermissionHandler(req, next, 'careplanapprove')
 }
 
 async function SavepreviewCareplan(req, res, next) {
-    PermissionHandler(req, next, 'careplanupdate')
+    PermissionHandler(req, next, 'careplansavepreview')
 }
 
 async function DeleteCareplan(req, res, next) {

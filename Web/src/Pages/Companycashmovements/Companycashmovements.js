@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon, Loader, Breadcrumb, Grid, GridColumn, Label } from 'semantic-ui-react'
 import CompanycashmovementsDelete from '../../Containers/Companycashmovements/CompanycashmovementsDelete'
-import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME } from '../../Utils/Constants'
+import { CASH_TYPE_INCOME, CASH_TYPE_OUTCOME, COL_PROPS } from '../../Utils/Constants'
 import { Headerwrapper, LoadingPage, MobileTable, NoDataScreen, Pagedivider, Pagewrapper, Settings, DataTable } from '../../Components'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
+import privileges from '../../Constants/Privileges'
 
 export default class Companycashmovements extends Component {
 
@@ -21,12 +22,6 @@ export default class Companycashmovements extends Component {
 
     const { isLoading } = Companycashmovements
 
-    const colProps = {
-      sortable: true,
-      canGroupBy: true,
-      canFilter: true
-    }
-
     const Columns = [
       { Header: t('Common.Column.Id'), accessor: 'Id' },
       { Header: t('Common.Column.Uuid'), accessor: 'Uuid' },
@@ -37,9 +32,9 @@ export default class Companycashmovements extends Component {
       { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
       { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
       { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
-    ].map(u => { return u.disableProps ? u : { ...u, ...colProps } })
+      { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.companycashmovementupdate },
+      { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.companycashmovementdelete }
+    ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "companycashmovement"
     let initialConfig = GetInitialconfig(Profile, metaKey)
@@ -85,6 +80,9 @@ export default class Companycashmovements extends Component {
                   Showcreatebutton
                   Showcolumnchooser
                   Showexcelexport
+                  CreateRole={privileges.companycashmovementadd}
+                  ReportRole={privileges.companycashmovementgetreport}
+                  ViewRole={privileges.companycashmovementmanageview}
                 />
               </Grid>
             </Headerwrapper>

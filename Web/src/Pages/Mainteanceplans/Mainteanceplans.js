@@ -12,6 +12,7 @@ import MainteanceplansWork from '../../Containers/Mainteanceplans/Mainteanceplan
 import MainteanceplansStop from '../../Containers/Mainteanceplans/MainteanceplansStop'
 import MainteanceplansDelete from '../../Containers/Mainteanceplans/MainteanceplansDelete'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Mainteanceplans(props) {
 
@@ -98,13 +99,13 @@ export default function Mainteanceplans(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.work'), accessor: 'work', disableProps: true, keys: ['completed'] },
-        { Header: t('Common.Column.stop'), accessor: 'stop', disableProps: true, keys: ['completed'] },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+        { Header: t('Common.Column.work'), accessor: 'work', disableProps: true, keys: ['completed'], role: privileges.mainteanceplanupdate },
+        { Header: t('Common.Column.stop'), accessor: 'stop', disableProps: true, keys: ['completed'], role: privileges.mainteanceplanupdate },
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.mainteanceplansavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.mainteanceplanapprove },
+        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.mainteanceplancomplete },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.mainteanceplanupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.mainteanceplandelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "mainteanceplan"
@@ -189,6 +190,9 @@ export default function Mainteanceplans(props) {
                             Showcreatebutton
                             Showcolumnchooser
                             Showexcelexport
+                            CreateRole={privileges.mainteanceplanadd}
+                            ReportRole={privileges.mainteanceplangetreport}
+                            ViewRole={privileges.mainteanceplanmanageview}
                         />
                     </Grid>
                 </Headerwrapper>

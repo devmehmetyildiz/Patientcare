@@ -17,15 +17,15 @@ async function UpdateMainteanceplan(req, res, next) {
 }
 
 async function SavepreviewMainteanceplan(req, res, next) {
-    PermissionHandler(req, next, 'mainteanceplanupdate')
+    PermissionHandler(req, next, 'mainteanceplansavepreview')
 }
 
 async function ApproveMainteanceplan(req, res, next) {
-    PermissionHandler(req, next, 'mainteanceplanupdate')
+    PermissionHandler(req, next, 'mainteanceplanapprove')
 }
 
 async function CompleteMainteanceplan(req, res, next) {
-    PermissionHandler(req, next, 'mainteanceplanupdate')
+    PermissionHandler(req, next, 'mainteanceplancomplete')
 }
 
 async function WorkMainteanceplan(req, res, next) {

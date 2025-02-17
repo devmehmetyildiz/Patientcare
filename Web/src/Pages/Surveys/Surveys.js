@@ -13,6 +13,7 @@ import SurveysFill from '../../Containers/Surveys/SurveysFill'
 import validator from '../../Utils/Validator'
 import SurveysDetail from '../../Containers/Surveys/SurveysDetail'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Surveys(props) {
     const { Profile, Users, Surveys, Patients, Patientdefines } = props
@@ -110,7 +111,11 @@ export default function Surveys(props) {
                                                     {result?.Answer}
                                                 </Table.Cell>
                                                 {!selectedSurvey.Iscompleted ? <Table.Cell>
-                                                    <Icon link size='large' color='red' name='alternate trash' onClick={() => { setConfirmResult(result) }} />
+                                                    <Icon link size='large' color='red' name='alternate trash' onClick={() => {
+                                                        if (validator.isHavePermission(privileges.surveyremoveanswer, Profile?.roles || [])) {
+                                                            setConfirmResult(result)
+                                                        }
+                                                    }} />
                                                 </Table.Cell> : null}
                                             </Table.Row>
                                         })}
@@ -167,14 +172,14 @@ export default function Surveys(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.fill'), accessor: 'fill', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.clear'), accessor: 'clear', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true, },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.surveysavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.surveyapprove },
+        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.surveycomplete },
+        { Header: t('Common.Column.fill'), accessor: 'fill', disableProps: true, keys: ['approved'], role: privileges.surveyfill },
+        { Header: t('Common.Column.clear'), accessor: 'clear', disableProps: true, keys: ['approved'], role: privileges.surveyclear },
+        { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.surveyupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.surveydelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "survey"
@@ -263,6 +268,9 @@ export default function Surveys(props) {
                             Showcreatebutton
                             Showcolumnchooser
                             Showexcelexport
+                            CreateRole={privileges.surveyadd}
+                            ReportRole={privileges.surveygetreport}
+                            ViewRole={privileges.surveymanageview}
                         />
                     </Grid>
                 </Headerwrapper>

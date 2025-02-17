@@ -8,6 +8,7 @@ import GetInitialconfig from '../../Utils/GetInitialconfig'
 
 import { Formatfulldate } from '../../Utils/Formatdate'
 import { COL_PROPS, PATIENTEVENT_MOVEMENT_TYPE_INDOOR, PATIENTEVENT_MOVEMENT_TYPE_OUTDOOR } from '../../Utils/Constants'
+import privileges from '../../Constants/Privileges'
 
 export default function Patienteventmovements(props) {
 
@@ -90,8 +91,8 @@ export default function Patienteventmovements(props) {
     { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.patienteventmovementupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.patienteventmovementdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "patienteventmovement"
@@ -141,6 +142,9 @@ export default function Patienteventmovements(props) {
                 Showcreatebutton
                 Showcolumnchooser
                 Showexcelexport
+                CreateRole={privileges.patienteventmovementadd}
+                ReportRole={privileges.patienteventmovementgetreport}
+                ViewRole={privileges.patienteventmovementmanageview}
               />
             </Grid>
           </Headerwrapper>

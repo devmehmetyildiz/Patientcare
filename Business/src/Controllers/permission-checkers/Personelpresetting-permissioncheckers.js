@@ -17,15 +17,15 @@ async function UpdatePersonelpresetting(req, res, next) {
 }
 
 async function SavepreviewPersonelpresetting(req, res, next) {
-    PermissionHandler(req, next, 'personelpresettingupdate')
+    PermissionHandler(req, next, 'personelpresettingsavepreview')
 }
 
 async function ApprovePersonelpresetting(req, res, next) {
-    PermissionHandler(req, next, 'personelpresettingupdate')
+    PermissionHandler(req, next, 'personelpresettingapprove')
 }
 
 async function CompletePersonelpresetting(req, res, next) {
-    PermissionHandler(req, next, 'personelpresettingupdate')
+    PermissionHandler(req, next, 'personelpresettingcomplate')
 }
 
 async function ActivatePersonelpresetting(req, res, next) {

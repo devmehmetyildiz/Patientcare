@@ -13,6 +13,7 @@ import UserincidentsApprove from '../../Containers/Userincidents/UserincidentsAp
 import UserincidentsComplete from '../../Containers/Userincidents/UserincidentsComplete'
 import { Formatfulldate } from '../../Utils/Formatdate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
+import privileges from '../../Constants/Privileges'
 
 export default function Userincidents(props) {
 
@@ -95,11 +96,11 @@ export default function Userincidents(props) {
         { Header: t('Common.Column.Updateduser'), accessor: 'Updateduser' },
         { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
         { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
-        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+        { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.userincidentsavepreview },
+        { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.userincidentapprove },
+        { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.userincidentcomplete },
+        { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.userincidentupdate },
+        { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.userincidentdelete }
     ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
     const metaKey = "userincident"
@@ -174,6 +175,9 @@ export default function Userincidents(props) {
                             Showcreatebutton
                             Showcolumnchooser
                             Showexcelexport
+                            CreateRole={privileges.userincidentadd}
+                            ReportRole={privileges.userincidentgetreport}
+                            ViewRole={privileges.userincidentmanageview}
                         />
                     </Grid>
                 </Headerwrapper>

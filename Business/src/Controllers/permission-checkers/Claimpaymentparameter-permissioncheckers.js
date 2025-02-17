@@ -17,7 +17,7 @@ async function UpdateClaimpaymentparameter(req, res, next) {
 }
 
 async function ApproveClaimpaymentparameter(req, res, next) {
-    PermissionHandler(req, next, 'claimpaymentparameterupdate')
+    PermissionHandler(req, next, 'claimpaymentparameterapprove')
 }
 
 async function DeactivateClaimpaymentparameter(req, res, next) {
@@ -29,7 +29,7 @@ async function ActivateClaimpaymentparameter(req, res, next) {
 }
 
 async function SavepreviewClaimpaymentparameter(req, res, next) {
-    PermissionHandler(req, next, 'claimpaymentparameterupdate')
+    PermissionHandler(req, next, 'claimpaymentparametersavepreview')
 }
 
 async function DeleteClaimpaymentparameter(req, res, next) {

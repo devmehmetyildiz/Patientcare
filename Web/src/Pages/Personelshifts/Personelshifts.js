@@ -14,6 +14,7 @@ import PersonelshiftsActivate from '../../Containers/Personelshifts/Personelshif
 import PersonelshiftsDeactivate from '../../Containers/Personelshifts/PersonelshiftsDeactivate'
 import useTabNavigation from '../../Hooks/useTabNavigation'
 import PersonelshiftsDetail from '../../Containers/Personelshifts/PersonelshiftsDetail'
+import privileges from '../../Constants/Privileges'
 
 export default function Personelshifts(props) {
 
@@ -102,11 +103,11 @@ export default function Personelshifts(props) {
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime' },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime' },
     { Header: t('Common.Column.detail'), accessor: 'detail', disableProps: true },
-    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'] },
-    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'] },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'] }
+    { Header: t('Common.Column.savepreview'), accessor: 'savepreview', disableProps: true, keys: ['onpreview'], role: privileges.personelshiftsavepreview },
+    { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, keys: ['waitingapprove'], role: privileges.personelshiftapprove },
+    { Header: t('Common.Column.complete'), accessor: 'complete', disableProps: true, keys: ['approved'], role: privileges.personelshiftcomplete },
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['onpreview'], role: privileges.personelshiftupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['onpreview', 'waitingapprove'], role: privileges.personelshiftdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "personelshift"
@@ -186,6 +187,9 @@ export default function Personelshifts(props) {
               Showcreatebutton
               Showcolumnchooser
               Showexcelexport
+              CreateRole={privileges.personelshiftadd}
+              ReportRole={privileges.personelshiftgetreport}
+              ViewRole={privileges.personelshiftmanageview}
             />
           </Grid>
         </Headerwrapper>

@@ -18,27 +18,27 @@ async function UpdateSurvey(req, res, next) {
 }
 
 async function SavepreviewSurvey(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveysavepreview')
 }
 
 async function ApproveSurvey(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveyapprove')
 }
 
 async function ClearSurvey(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveyclear')
 }
 
 async function CompleteSurvey(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveycomplete')
 }
 
 async function FillSurvey(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveyfill')
 }
 
 async function RemoveSurveyanswer(req, res, next) {
-    PermissionHandler(req, next, 'surveyupdate')
+    PermissionHandler(req, next, 'surveyremoveanswer')
 }
 
 async function DeleteSurvey(req, res, next) {
