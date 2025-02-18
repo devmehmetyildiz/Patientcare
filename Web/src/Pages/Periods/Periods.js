@@ -6,6 +6,7 @@ import PeriodsDelete from '../../Containers/Periods/PeriodsDelete'
 import PeriodsFastcreate from '../../Containers/Periods/PeriodsFastcreate'
 import GetInitialconfig from '../../Utils/GetInitialconfig'
 import privileges from '../../Constants/Privileges'
+import validator from '../../Utils/Validator'
 export default class Periods extends Component {
 
 

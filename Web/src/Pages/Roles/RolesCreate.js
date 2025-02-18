@@ -48,7 +48,7 @@ export default class RolesCreate extends Component {
                         {closeModal && <Button className='absolute right-5 top-5' color='red' onClick={() => { closeModal() }}>Kapat</Button>}
                     </Headerwrapper>
                     <Pagedivider />
-                    <Contentwrapper>
+                    <Contentwrapper additionalStyle={" max-h-[70vh] overflow-y-auto"}>
                         <Form>
                             <div className='w-full'>
                                 <Button className='!bg-[#2355a0] !text-white !cursor-pointer' floated='right' onClick={this.handleAddall} >{t('Pages.Roles.Column.AddAll')}</Button>

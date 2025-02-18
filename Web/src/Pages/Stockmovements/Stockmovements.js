@@ -12,7 +12,7 @@ import useTabNavigation from '../../Hooks/useTabNavigation'
 
 export default function Stockmovements(props) {
   const { GetStockmovements, GetStocks, GetUnits, GetStockdefines, GetStocktypes,
-    GetWarehouses, GetPatients, GetPatientdefines, GetPurchaseorders } = props
+    GetWarehouses, GetPatients, GetPatientdefines, GetPurchaseorders, history } = props
   const { Stocktypes, Stocks, Stockdefines, Units, Stockmovements, Profile, Purchaseorders, Patients, Patientdefines, Warehouses, } = props
 
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -137,8 +137,8 @@ export default function Stockmovements(props) {
     { Header: t('Common.Column.Createtime'), accessor: 'Createtime', },
     { Header: t('Common.Column.Updatetime'), accessor: 'Updatetime', },
     { Header: t('Common.Column.approve'), accessor: 'approve', disableProps: true, role: privileges.stockmovementapprove, keys: ['created'] },
-    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, role: privileges.stockmovementupdate },
-    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, role: privileges.stockmovementdelete }
+    { Header: t('Common.Column.edit'), accessor: 'edit', disableProps: true, keys: ['created'], role: privileges.stockmovementupdate },
+    { Header: t('Common.Column.delete'), accessor: 'delete', disableProps: true, keys: ['created'], role: privileges.stockmovementdelete }
   ].map(u => { return u.disableProps ? u : { ...u, ...COL_PROPS } })
 
   const metaKey = "stockmovement"

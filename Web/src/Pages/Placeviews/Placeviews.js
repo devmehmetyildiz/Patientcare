@@ -150,8 +150,8 @@ function Viewrender(props) {
     return list.length > 0 ?
         <div className='w-full mx-auto '>
             {(roomList || []).map((room, roomIndex) => {
-                return <React.Fragment key={`${roomIndex}-${Math.random()}`}>
-                    <div key={`${roomIndex}-div${Math.random()}`} className='flex flex-row justify-start items-start flex-wrap w-full'>
+                return <div key={`${room}-${roomIndex}`}>
+                    <div key={`${room}-div${roomIndex}`} className='flex flex-row justify-start items-start flex-wrap w-full'>
                         {list.filter(u => u.roomID === room).map((card, index) => {
                             return <Patientcard
                                 header={card.header}
@@ -161,8 +161,8 @@ function Viewrender(props) {
                             />
                         })}
                     </div>
-                    <Pagedivider key={`${roomIndex}-divider${Math.random()}`} />
-                </React.Fragment>
+                    <Pagedivider key={`${room}-divider${roomIndex}`} />
+                </div>
             })}
         </div> : <NoDataScreen message={t('Common.NoDataFound')} />
 }

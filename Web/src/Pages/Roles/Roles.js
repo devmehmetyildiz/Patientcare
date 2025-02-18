@@ -41,8 +41,8 @@ export default function Roles(props) {
     return itemPrivilegestxt.length - 35 > 20 ?
       (
         !privilegesStatus.includes(itemId) ?
-          [itemPrivilegestxt.slice(0, 35) + ' ...(' + (itemPrivileges || []).length + ')', <Link to='#' className='showMoreOrLess' onClick={() => expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
-          [itemPrivilegestxt, <Link to='#' className='showMoreOrLess' onClick={() => shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
+          [itemPrivilegestxt.slice(0, 35) + ' ...(' + (itemPrivileges || []).length + ')', <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => expandAuthory(itemId)}> ...Daha Fazla Göster</Link>] :
+          [itemPrivilegestxt, <Link key={itemId} to='#' className='showMoreOrLess' onClick={() => shrinkAuthory(itemId)}> ...Daha Az Göster</Link>]
       ) : itemPrivilegestxt
   }
 

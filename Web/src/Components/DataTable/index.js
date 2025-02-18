@@ -239,7 +239,7 @@ export const DataTable = ({ Columns, Data, Config, renderRowSubComponent, disabl
                                             <tr {...row.getRowProps()} style={{ ...(selectedRowId.includes(index) && ({ backgroundColor: '#ebf5f8' })) }} >
                                                 {row.cells.map(cell => {
                                                     const Isicon = cell?.column?.disableProps
-                                                    const IsDisable = cell?.column?.role !== null ? !validator.isHavePermission(cell?.column?.role, roles) : false
+                                                    const IsDisable = cell?.column?.role ? !validator.isHavePermission(cell?.column?.role, roles) : false
                                                     return (
                                                         <td className={`${IsDisable ? 'opacity-50 cursor-none pointer-events-none' : ''}`} {...cell.getCellProps({ className: cell.column.className })} onClick={(e) => {
                                                             if (!Isicon) {

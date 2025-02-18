@@ -374,9 +374,9 @@ class Routes extends Component {
       { exact: true, path: "/Printtemplates/Create", auth: true, component: PrinttemplatesCreate, permission: privileges.printtemplateadd },
       { exact: true, path: "/Printtemplates/:PrinttemplateID/Edit", auth: true, component: PrinttemplatesEdit, permission: privileges.printtemplateupdate },
 
-      { exact: true, path: "/Periods", auth: true, component: Periods, permission: privileges.requiredperiodview },
-      { exact: true, path: "/Periods/Create", auth: true, component: PeriodsCreate, permission: privileges.requiredperiodadd },
-      { exact: true, path: "/Periods/:PeriodID/Edit", auth: true, component: PeriodsEdit, permission: privileges.requiredperiodupdate },
+      { exact: true, path: "/Periods", auth: true, component: Periods, permission: privileges.periodview },
+      { exact: true, path: "/Periods/Create", auth: true, component: PeriodsCreate, permission: privileges.periodadd },
+      { exact: true, path: "/Periods/:PeriodID/Edit", auth: true, component: PeriodsEdit, permission: privileges.periodupdate },
 
       { exact: true, path: "/Rules", auth: true, component: Rules, permission: privileges.ruleview },
       { exact: true, path: "/Rules/Create", auth: true, component: RulesCreate, permission: privileges.ruleadd },

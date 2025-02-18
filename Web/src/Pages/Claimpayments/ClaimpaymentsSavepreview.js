@@ -34,7 +34,7 @@ export default function ClaimpaymentsSavepreview(props) {
           labelPosition='right'
           icon='checkmark'
           onClick={() => {
-            SavepreviewClaimpayments(record)
+            SavepreviewClaimpayments({ data: record })
             setOpen(false)
             setRecord(null)
           }}
