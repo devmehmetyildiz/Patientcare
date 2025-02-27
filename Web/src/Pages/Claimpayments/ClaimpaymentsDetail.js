@@ -1,6 +1,6 @@
-import React, { Component, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Breadcrumb, Button, Card, Icon, Label, Menu, Table, Transition } from 'semantic-ui-react'
+import { Breadcrumb, Card, Icon, Label, Table, Transition } from 'semantic-ui-react'
 import validator from '../../Utils/Validator'
 import { FormContext } from '../../Provider/FormProvider'
 import {
@@ -8,9 +8,12 @@ import {
     Headerwrapper, LoadingPage, Pagedivider, Pagewrapper,
     Submitbutton
 } from '../../Components'
-import Formatdate, { Formatfulldate } from '../../Utils/Formatdate'
-import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS } from '../../Utils/Constants'
+import Formatdate from '../../Utils/Formatdate'
+import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, ROUTES } from '../../Utils/Constants'
 import usePreviousUrl from '../../Hooks/usePreviousUrl'
+import config from '../../Config'
+import AxiosErrorHelper from '../../Utils/AxiosErrorHelper'
+import ClaimpaymentsExcelExport from '../../Containers/Claimpayments/ClaimpaymentsExcelExport'
 
 export default function ClaimpaymentsDetail(props) {
 
@@ -26,6 +29,26 @@ export default function ClaimpaymentsDetail(props) {
     const { calculateRedirectUrl } = usePreviousUrl()
     const context = useContext(FormContext)
     const [detailOpen, setDetailOpen] = useState(false)
+    const [claimpaymentID, setClaimpaymentID] = useState(null)
+    const [excelOpen, setExcelOpen] = useState(false)
+
+    const {
+        Name,
+        Uuid,
+        Info,
+        Type,
+        Totaldaycount,
+        Totalcalculatedpayment,
+        Totalcalculatedkdv,
+        Totalcalculatedfinal,
+        Totalcalculatedwithholding,
+        Isonpreview,
+        Isapproved,
+        Reportdate,
+        Details
+    } = selected_record
+
+    const isByksorKys = Type === CLAIMPAYMENT_TYPE_BHKS || Type === CLAIMPAYMENT_TYPE_KYS;
 
     const getReportDate = (_date) => {
         const date = new Date(_date)
@@ -71,6 +94,11 @@ export default function ClaimpaymentsDetail(props) {
         return <span>{formatter.format(value)}</span>;
     };
 
+    const exportExcelReport = () => {
+        setClaimpaymentID(Id)
+        setExcelOpen(true)
+    }
+
     useEffect(() => {
         if (validator.isUUID(Id)) {
             GetClaimpayment(Id)
@@ -91,24 +119,6 @@ export default function ClaimpaymentsDetail(props) {
             context.setForm(PAGE_NAME, selected_record)
         }
     }, [isLoading, selected_record])
-
-
-    const {
-        Name,
-        Info,
-        Type,
-        Totaldaycount,
-        Totalcalculatedpayment,
-        Totalcalculatedkdv,
-        Totalcalculatedfinal,
-        Totalcalculatedwithholding,
-        Isonpreview,
-        Isapproved,
-        Reportdate,
-        Details
-    } = selected_record
-
-    const isByksorKys = Type === CLAIMPAYMENT_TYPE_BHKS || Type === CLAIMPAYMENT_TYPE_KYS;
 
     return (
         isLoading ? <LoadingPage /> :
@@ -256,15 +266,26 @@ export default function ClaimpaymentsDetail(props) {
                         redirectUrl={"/Claimpayments"}
                         buttonText={t('Common.Button.Goback')}
                     />
-                    {Isonpreview ?
+                    <div>
                         <Submitbutton
                             isLoading={isLoading}
-                            buttonText={t('Common.Button.Save')}
-                            submitFunction={handleSubmit}
+                            buttonText={t('Common.Button.Excel')}
+                            submitFunction={exportExcelReport}
                         />
-                        : null}
+                        {Isonpreview ?
+                            <Submitbutton
+                                isLoading={isLoading}
+                                buttonText={t('Common.Button.Save')}
+                                submitFunction={handleSubmit}
+                            />
+                            : null}
+                    </div>
                 </Footerwrapper>
-
+                <ClaimpaymentsExcelExport
+                    open={excelOpen}
+                    setOpen={setExcelOpen}
+                    ClaimpaymentID={claimpaymentID}
+                />
             </Pagewrapper >
     )
 }

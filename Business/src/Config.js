@@ -6,6 +6,7 @@ const config = {
   session: {
     name: process.env.APP_SESSION_NAME,
     secret: process.env.APP_SESSION_SECRET,
+    organization: process.env.APP_SESSION_ORGANIZATION,
     corsdomains: parseDomain(process.env.CORS_DOMAINS),
     logger: process.env.APP_SESSION_LOGGER
   },
@@ -24,7 +25,7 @@ const config = {
     Warehouse: process.env.WAREHOUSE_URL,
     File: process.env.FILE_URL,
     Log: process.env.LOG_URL,
-    Web : process.env.WEB_URL
+    Web: process.env.WEB_URL
   }
 }
 

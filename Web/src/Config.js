@@ -4,6 +4,9 @@ let config = {
   version: process.env.REACT_APP_VERSION,
   session: {
     name: process.env.REACT_APP_SESSION_NAME,
+  },
+  business: {
+    organization: process.env.REACT_APP_ORGANIZATION_NAME
   }
 }
 

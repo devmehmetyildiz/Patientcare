@@ -5,33 +5,6 @@ import instanse from "./axios";
 import config from "../Config";
 import axios from 'axios';
 
-const Literals = {
-    addcode: {
-        en: 'Data Save',
-        tr: 'Veri Kaydetme'
-    },
-    adddescription: {
-        en: 'File added successfully',
-        tr: 'Dosya Başarı ile eklendi'
-    },
-    updatecode: {
-        en: 'Data Update',
-        tr: 'Veri Güncelleme'
-    },
-    updatedescription: {
-        en: 'File updated successfully',
-        tr: 'Dosya Başarı ile güncellendi'
-    },
-    deletecode: {
-        en: 'Data Delete',
-        tr: 'Veri Silme'
-    },
-    deletedescription: {
-        en: 'File Deleted successfully',
-        tr: 'Dosya Başarı ile Silindi'
-    },
-}
-
 export const GetFiles = createAsyncThunk(
     'Files/GetFiles',
     async (_, { dispatch }) => {
@@ -93,7 +66,7 @@ export const AddFiles = createAsyncThunk(
     async ({ data, history, url, closeModal }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await axios({
                 method: `post`,
                 url: config.services.File + `${ROUTES.FILE}`,
@@ -102,13 +75,8 @@ export const AddFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: Literals.addcode[Language],
-                description: Literals.adddescription[Language],
-            }));
-            dispatch(fillFilenotification({
-                type: 'Clear',
-                code: 'FilesCreate',
-                description: '',
+                code: t('Common.Code.Add'),
+                description: t('Redux.Files.Messages.Add'),
             }));
             closeModal && closeModal()
             history && history.push(url ? url : '/Files')
@@ -126,7 +94,7 @@ export const EditFiles = createAsyncThunk(
     async ({ data, history, url }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
+            const t = state?.Profile?.i18n?.t || null
             const response = await axios({
                 method: `put`,
                 url: config.services.File + `${ROUTES.FILE}`,
@@ -135,13 +103,8 @@ export const EditFiles = createAsyncThunk(
             })
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: Literals.updatecode[Language],
-                description: Literals.updatedescription[Language],
-            }));
-            dispatch(fillFilenotification({
-                type: 'Clear',
-                code: 'FilesEdit',
-                description: '',
+                code: t('Common.Code.Add'),
+                description: t('Redux.Files.Messages.Update'),
             }));
             history && history.push(url ? url : '/Files')
             return response.data;
@@ -158,13 +121,12 @@ export const DeleteFiles = createAsyncThunk(
     async ({ guid, onSuccess }, { dispatch, getState }) => {
         try {
             const state = getState()
-            const Language = state.Profile.Language || 'en'
-
+            const t = state?.Profile?.i18n?.t || null
             const response = await instanse.delete(config.services.File, `${ROUTES.FILE}/${guid}`);
             dispatch(fillFilenotification({
                 type: 'Success',
-                code: Literals.deletecode[Language],
-                description: Literals.deletedescription[Language],
+                code: t('Common.Code.Delete'),
+                description: t('Redux.Files.Messages.Delete'),
             }));
             onSuccess && onSuccess()
             return response.data;

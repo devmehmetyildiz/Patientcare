@@ -8,6 +8,10 @@ async function GetClaimpayment(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentscreen')
 }
 
+async function GetClaimpaymentReport(req, res, next) {
+    PermissionHandler(req, next, 'claimpaymentgetreport')
+}
+
 async function AddClaimpayment(req, res, next) {
     PermissionHandler(req, next, 'claimpaymentadd')
 }
@@ -30,5 +34,6 @@ module.exports = {
     AddClaimpayment,
     ApproveClaimpayment,
     DeleteClaimpayment,
+    GetClaimpaymentReport,
     SavepreviewClaimpayment
 }
