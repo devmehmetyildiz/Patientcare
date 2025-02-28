@@ -533,53 +533,27 @@ async function CreateClaimpaymentByPatient({ Reportdate, req, next, }) {
 
         for (const day of dayArray) {
 
-            const dayStart = new Date(day)
-            dayStart.setHours(0, 0, 0, 0);
-            const dayEnd = new Date(day)
-            dayEnd.setHours(23, 59, 59, 999);
+            const dayCheck = new Date(day)
+            dayCheck.setHours(0, 0, 0, 0)
+            dayCheck.setDate(dayCheck.getDate() + 1)
 
-            const now = new Date()
-            now.setHours(23, 59, 59, 999);
-
-            const occuredMovementsAfterDayStart = await db.patientmovementModel.findAll({
+            const occuredMovement = await db.patientmovementModel.findOne({
                 where: {
                     PatientID: patient?.Uuid || '',
                     Isactive: true,
                     Occureddate: {
-                        [Sequelize.Op.gte]: dayStart.getTime(),
+                        [Sequelize.Op.lt]: dayCheck,
                     }
-                }
+                },
+                order: [['Occureddate', 'DESC']],
             })
 
-            if ((occuredMovementsAfterDayStart || []).length > 0) {
-                const isOccuredMovementsHasClaim = (occuredMovementsAfterDayStart || []).filter(movement => {
-                    const movementcase = cases.find(u => u.Uuid === movement?.CaseID)
-                    const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                    return isCalculateclaimpayment
-                })
+            if (!!occuredMovement) {
+                const occuredMovementCase = cases.find(u => u.Uuid === occuredMovement?.CaseID)
+                const isMovementHasClaim = occuredMovementCase?.Iscalculateprice || false
 
-                if (isOccuredMovementsHasClaim.length > 0) {
+                if (isMovementHasClaim) {
                     daycount += 1
-                }
-            } else {
-
-                const occuredMovementBeforeDayStart = await db.patientmovementModel.findOne({
-                    where: {
-                        PatientID: patient?.Uuid || '',
-                        Isactive: true,
-                        Occureddate: {
-                            [Sequelize.Op.lt]: dayStart.getTime(),
-                        },
-                    },
-                    order: [['Occureddate', 'DESC']],
-                });
-
-                if (occuredMovementBeforeDayStart) {
-                    const movementcase = cases.find(u => u.Uuid === occuredMovementBeforeDayStart?.CaseID)
-                    const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                    if (isCalculateclaimpayment) {
-                        daycount += 1
-                    }
                 }
             }
         }
