@@ -7,7 +7,7 @@ import { CASE_PATIENT_STATUS_ONORGANIZATION } from '../../Utils/Constants'
 
 const Patientsrollcall = (props) => {
 
-    const { GetPatienttypes, GetCostumertypes, GetCases, GetPatientsRollCall } = props
+    const { GetPatienttypes, GetCostumertypes, GetCases, GetPatientsRollCall, removePatientRollCall } = props
     const { Patients, Patienttypes, Costumertypes, Cases, Profile } = props
 
     const [startDate, setStartDate] = useState(null)
@@ -91,6 +91,10 @@ const Patientsrollcall = (props) => {
     }, [])
 
 
+    useEffect(() => {
+        removePatientRollCall()
+    }, [startDate, removePatientRollCall])
+
     return (
         isLoading ? <LoadingPage /> :
             <React.Fragment>
@@ -163,33 +167,32 @@ const Patientsrollcall = (props) => {
                                                             <Table celled>
                                                                 <Table.Header>
                                                                     <Table.Row>
-                                                                        <Table.HeaderCell>{t('Pages.Patientsrollcall.Column.Patient')}</Table.HeaderCell>
+                                                                        <Table.HeaderCell width={2}>{t('Pages.Patientsrollcall.Column.Patient')}</Table.HeaderCell>
                                                                         {generateDateArray(startDate).map((day, index) => {
-                                                                            return <Table.HeaderCell collapsing className='!text-sm' key={index}>{`${day.getDate()}`}</Table.HeaderCell>
+                                                                            return <Table.HeaderCell collapsing key={index}>{`${day.getDate()}`}</Table.HeaderCell>
                                                                         })}
                                                                     </Table.Row>
                                                                 </Table.Header>
                                                                 <Table.Body>
                                                                     {patientRollCallList.filter(u => u.CostumertypeID === costumerTypeID).map((rollCall, index) => {
                                                                         return <Table.Row key={index}>
-                                                                            <Table.Cell className='!p-[8px]'>
+                                                                            <Table.Cell
+                                                                                className='rollcallscreen-header'
+                                                                            >
                                                                                 <Link to={`/Patients/${rollCall.Uuid}`}>
-                                                                                    <div className='w-full flex justify-start items-center text-sm'>
-                                                                                        {rollCall.Name}
-                                                                                    </div>
+                                                                                    {rollCall.Name}
                                                                                 </Link>
                                                                             </Table.Cell>
                                                                             {(rollCall.Rollcall || []).map((roll, i) => {
                                                                                 const dayCase = (Cases.list || []).find(u => u.Uuid === roll.CaseID)
                                                                                 return <Table.Cell
                                                                                     index={i}
+                                                                                    className='rollcallscreen-td'
                                                                                     style={{
                                                                                         backgroundColor: CASE_PATIENT_STATUS_ONORGANIZATION !== dayCase?.Patientstatus ? dayCase?.Casecolor || "transparent" : "transparent",
                                                                                     }}
-                                                                                    className={`!p-[8px] text-sm`}>
-                                                                                    <div className='w-full flex justify-center items-center'>
-                                                                                        {dayCase?.Shortname || '-'}
-                                                                                    </div>
+                                                                                >
+                                                                                    {dayCase?.Shortname || '-'}
                                                                                 </Table.Cell>
                                                                             })}
                                                                         </Table.Row>

@@ -706,6 +706,9 @@ export const PatientsSlice = createSlice({
         handleDetailmodal: (state, action) => {
             state.isDetailmodalopen = action.payload
         },
+        removePatientRollCall: (state) => {
+            state.patientRollCallList = []
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -1038,7 +1041,8 @@ export const {
     handleApprovemodal,
     handleCheckmodal,
     handleCompletemodal,
-    handleDetailmodal
+    handleDetailmodal,
+    removePatientRollCall
 } = PatientsSlice.actions;
 
 export default PatientsSlice.reducer;

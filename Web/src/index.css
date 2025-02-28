@@ -936,3 +936,22 @@ code {
 .highcharts-point {
   cursor: pointer !important;
 }
+
+
+.rollcallscreen-header {
+  padding: 2px !important;
+  width: 10px !important;
+  height: 2px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rollcallscreen-td {
+  padding: 2px !important;
+  width: 2px !important;
+  height: 2px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}

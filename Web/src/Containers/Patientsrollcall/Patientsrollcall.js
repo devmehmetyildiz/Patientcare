@@ -3,7 +3,7 @@ import Patientsrollcall from '../../Pages/Patientsrollcall/Patientsrollcall'
 import { GetPatienttypes } from '../../Redux/PatienttypeSlice'
 import { GetCostumertypes } from '../../Redux/CostumertypeSlice'
 import { GetCases } from '../../Redux/CaseSlice'
-import { GetPatientsRollCall } from '../../Redux/PatientSlice'
+import { GetPatientsRollCall, removePatientRollCall } from '../../Redux/PatientSlice'
 
 const mapStateToProps = (state) => ({
     Patients: state.Patients,
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    GetPatienttypes, GetCostumertypes, GetCases, GetPatientsRollCall
+    GetPatienttypes, GetCostumertypes, GetCases, GetPatientsRollCall, removePatientRollCall
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Patientsrollcall)
