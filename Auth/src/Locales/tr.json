@@ -5,6 +5,7 @@
     "Oauth.Error.AccessTokenNotFound": "Access Token Bulunamadı",
     "Oauth.Error.AccessTokenInvalid": "Access Token Geçersiz",
     "Oauth.Error.UserNotFound": "Kullanıcı Bulunamadı",
+    "Oauth.Error.UserNotWorking": "Personel Çalışmadığı İçin Hesabı Pasif Durumda",
     "Oauth.Error.UsernameRequired": "Kullanıcı Adı Gerekli",
     "Oauth.Error.PasswordRequired": "Parola Gerekli",
     "Oauth.Error.PasswordDindtMatch": "Kullanıcı Adı Veya Parola Hatalı",

@@ -101,6 +101,10 @@ async function responseToGetTokenByGrantPassword(req, res, next) {
         if (!user) {
             return next(createAuthError(req.t('Oauth.Error.PasswordDindtMatch'), req.t('Oauth'), req.language))
         }
+        if (user.Isworker && !user.Isworking) {
+            return next(createAuthError(req.t('Oauth.Error.UserNotWorking'), req.t('Oauth'), req.language))
+        }
+
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
@@ -207,6 +211,9 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
         if (!user) {
             return next(createAuthError(req.t('Oauth.Error.UserNotFound'), req.t('Oauth'), req.language))
         }
+        if (user.Isworker && !user.Isworking) {
+            return next(createAuthError(req.t('Oauth.Error.UserNotWorking'), req.t('Oauth'), req.language))
+        }
     } catch (error) {
         return next(requestErrorCatcher(error, "USERROLE"))
     }
@@ -223,11 +230,6 @@ async function responseToGetTokenByRefreshToken(req, res, next) {
     }
 
     try {
-        await db.accesstokenModel.update({
-            Deleteduser: "System",
-            Deletetime: new Date(),
-            Isactive: false
-        }, { where: { Userid: user.Uuid } })
 
         await db.accesstokenModel.create({
             Userid: user.Uuid,
