@@ -153,12 +153,6 @@ const messages = {
                 tr: 'Bu işlem için CaseID gerekli',
             }
         },
-        ISONINSTITUTION_REQUIRED: {
-            code: 'ISONINSTITUTION_REQUIRED', description: {
-                en: 'The Isoninstitution required',
-                tr: 'Bu işlem için Isoninstitution gerekli',
-            }
-        },
         ISTRANSFERSTOCKS_REQUIRED: {
             code: 'ISTRANSFERSTOCKS_REQUIRED', description: {
                 en: 'The isTransferstocks required',

@@ -85,7 +85,6 @@
     "Patients.Error.SktRequired": "Skt Gerekli",
     "Patients.Error.PatientdefineIDRequired": "Hasta Tanım ID'si Gerekli",
     "Patients.Error.IsTransferstocksRequired": "Stokarın Transfer Edilip Edilmeyeceği Bilgisi Gerekli",
-    "Patients.Error.IsoninstitutionRequired": "Hastanın Kurumdamı Bilgisi Gerekli",
     "Patients.Error.FloorRequired": "Kat Gerekli",
     "Patients.Error.RoomRequired": "Oda Gerekli",
     "Patients.Error.BedRequired": "Yatak Gerekli",

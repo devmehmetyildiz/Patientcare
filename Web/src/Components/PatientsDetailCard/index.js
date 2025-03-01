@@ -50,7 +50,6 @@ export default function PatientsDetailCard(props) {
         Movements,
         Approvaldate,
         Happensdate,
-        Isoninstitution
     } = selected_record
 
     const isLoadingstatus =
@@ -226,9 +225,6 @@ export default function PatientsDetailCard(props) {
                             </Label>
                         </Card.Content>
                         <Card.Content className='w-full flex justify-end items-end flex-col'>
-                            <Label basic >
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Isoninstitution')} : ${Isoninstitution ? t('Pages.Preregistrations.DetailCard.Label.Oninstitution') : t('Pages.Preregistrations.DetailCard.Label.Onnotinstitution')}`}
-                            </Label>
                             <Label basic >
                                 {`${t('Pages.Preregistrations.DetailCard.Label.Case')} : ${casedata?.Name || Notfound}`}
                             </Label>

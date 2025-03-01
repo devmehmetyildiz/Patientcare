@@ -49,12 +49,10 @@ export default function PreregistrationsCancelCheck(props) {
   const {
     CaseID,
     Uuid,
-    Isoninstitution
   } = record || {}
 
   const [selectedcase, setSelectedcase] = useState(CaseID)
   const [selectedinfo, setSelectedinfo] = useState(null)
-  const [selectedIsoninstitution, setSelectedIsoninstitution] = useState(Isoninstitution)
 
   useEffect(() => {
     if (open && !Users.isLoading) {
@@ -113,12 +111,10 @@ export default function PreregistrationsCancelCheck(props) {
         setOpen(false)
         setSelectedcase(null)
         setSelectedinfo(null)
-        setSelectedIsoninstitution(false)
       }}
       onOpen={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        setSelectedIsoninstitution(false)
         setOpen(false)
       }}
       open={open}
@@ -171,18 +167,6 @@ export default function PreregistrationsCancelCheck(props) {
                 fluid
               />
             </Form.Group>
-            <Form.Group widths={'equal'}>
-              <Form.Field>
-                <label
-                  className='text-[#000000de]'>
-                  {t('Pages.Preregistrations.Complete.Label.Isoninstitution')}
-                </label>
-                <Checkbox toggle className='m-2'
-                  checked={selectedIsoninstitution}
-                  onClick={() => { setSelectedIsoninstitution(prev => !prev) }}
-                />
-              </Form.Field>
-            </Form.Group>
           </Form>
         </Contentwrapper>
       </Modal.Content>
@@ -191,7 +175,6 @@ export default function PreregistrationsCancelCheck(props) {
           setOpen(false)
           setSelectedcase(null)
           setSelectedinfo(null)
-          setSelectedIsoninstitution(false)
           setRecord(null)
         }}>
           {t('Common.Button.Goback')}
@@ -220,7 +203,6 @@ export default function PreregistrationsCancelCheck(props) {
                 Uuid,
                 Cancelcheckinfo: selectedinfo,
                 CaseID: selectedcase,
-                Isoninstitution: selectedIsoninstitution
               })
               setOpen(false)
               setRecord(null)

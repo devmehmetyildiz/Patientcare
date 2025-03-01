@@ -54,14 +54,12 @@ export default function PreregistrationsComplete(props) {
     CaseID,
     Uuid,
     Approvaldate,
-    Isoninstitution
   } = record || {}
 
   const [selectedcase, setSelectedcase] = useState(CaseID)
   const [selectedapprovaldate, setSelectedapprovaldate] = useState(Formatdate(Approvaldate))
   const [selectedinfo, setSelectedinfo] = useState(null)
   const [selectedbed, setSelectedbed] = useState(null)
-  const [selectedIsoninstitution, setSelectedIsoninstitution] = useState(Isoninstitution)
 
   const t = Profile?.i18n?.t || null
 
@@ -150,12 +148,10 @@ export default function PreregistrationsComplete(props) {
         setOpen(false)
         setSelectedcase(null)
         setSelectedinfo(null)
-        setSelectedIsoninstitution(false)
       }}
       onOpen={() => {
         setSelectedcase(null)
         setSelectedinfo(null)
-        setSelectedIsoninstitution(false)
         setOpen(true)
       }}
       open={open}
@@ -247,18 +243,6 @@ export default function PreregistrationsComplete(props) {
                   />
                 </Form.Field>
               </Form.Group>
-              <Form.Group widths={'equal'}>
-                <Form.Field>
-                  <label
-                    className='text-[#000000de]'>
-                    {t('Pages.Preregistrations.Complete.Label.Isoninstitution')}
-                  </label>
-                  <Checkbox toggle className='m-2'
-                    checked={selectedIsoninstitution}
-                    onClick={() => { setSelectedIsoninstitution(prev => !prev) }}
-                  />
-                </Form.Field>
-              </Form.Group>
             </Form>
           </Contentwrapper>
           : null}
@@ -268,7 +252,6 @@ export default function PreregistrationsComplete(props) {
           setOpen(false)
           setSelectedcase(null)
           setSelectedinfo(null)
-          setSelectedIsoninstitution(false)
           setRecord(null)
         }}>
           {t('Common.Button.Goback')}
@@ -311,7 +294,6 @@ export default function PreregistrationsComplete(props) {
                   Uuid,
                   Completeinfo: selectedinfo,
                   CaseID: selectedcase,
-                  Isoninstitution: selectedIsoninstitution || false,
                   Approvaldate: selectedapprovaldate,
                   FloorID: floor?.Uuid,
                   RoomID: room?.Uuid,

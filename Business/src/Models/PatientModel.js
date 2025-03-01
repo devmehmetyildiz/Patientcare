@@ -89,9 +89,6 @@ module.exports = sequelize.define('patientModel', {
     Isalive: {
         type: Sequelize.BOOLEAN
     },
-    Isoninstitution: {
-        type: Sequelize.BOOLEAN
-    },
     Isleft: {
         type: Sequelize.BOOLEAN
     },

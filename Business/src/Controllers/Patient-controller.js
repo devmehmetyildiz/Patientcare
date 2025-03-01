@@ -154,6 +154,7 @@ async function AddPatient(req, res, next) {
             }, { transaction: t })
             req.body.PatientdefineID = patientdefineuuid
         }
+
         await db.patientModel.create({
             ...req.body,
             Uuid: patientuuid,
@@ -164,7 +165,6 @@ async function AddPatient(req, res, next) {
             Ispreregistration: true,
             Ischecked: false,
             Isapproved: false,
-            Isoninstitution: false,
             Isalive: true,
             Isleft: false,
             Isactive: true
@@ -679,7 +679,6 @@ async function CheckPatient(req, res, next) {
         Uuid,
         CaseID,
         Checkinfo,
-        Isoninstitution
     } = req.body
 
     if (!Uuid) {
@@ -745,7 +744,6 @@ async function CheckPatient(req, res, next) {
             Ispreregistration: true,
             Ischecked: true,
             Isapproved: false,
-            Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -793,7 +791,6 @@ async function ApprovePatient(req, res, next) {
         Uuid,
         CaseID,
         Approveinfo,
-        Isoninstitution
     } = req.body
 
     if (!Uuid) {
@@ -860,7 +857,6 @@ async function ApprovePatient(req, res, next) {
             Ispreregistration: true,
             Ischecked: true,
             Isapproved: true,
-            Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -909,7 +905,6 @@ async function CancelCheckPatient(req, res, next) {
         Uuid,
         CaseID,
         Cancelcheckinfo,
-        Isoninstitution
     } = req.body
 
     if (!Uuid) {
@@ -975,7 +970,6 @@ async function CancelCheckPatient(req, res, next) {
             Ispreregistration: true,
             Ischecked: false,
             Isapproved: false,
-            Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -1023,7 +1017,6 @@ async function CancelApprovePatient(req, res, next) {
         Uuid,
         CaseID,
         Cancelapproveinfo,
-        Isoninstitution
     } = req.body
 
     if (!Uuid) {
@@ -1089,7 +1082,6 @@ async function CancelApprovePatient(req, res, next) {
             Ispreregistration: true,
             Ischecked: true,
             Isapproved: false,
-            Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -1138,7 +1130,6 @@ async function CompletePatient(req, res, next) {
         CaseID,
         Completeinfo,
         isTransferstocks,
-        Isoninstitution,
         FloorID,
         RoomID,
         BedID
@@ -1152,9 +1143,6 @@ async function CompletePatient(req, res, next) {
     }
     if (!validator.isBoolean(isTransferstocks)) {
         validationErrors.push(req.t('Patients.Error.IsTransferstocksRequired'))
-    }
-    if (!validator.isBoolean(Isoninstitution)) {
-        validationErrors.push(req.t('Patients.Error.IsoninstitutionRequired'))
     }
     if (!validator.isUUID(FloorID)) {
         validationErrors.push(req.t('Patients.Error.FloorRequired'))
@@ -1250,7 +1238,6 @@ async function CompletePatient(req, res, next) {
             Ispreregistration: false,
             Ischecked: true,
             Isapproved: true,
-            Isoninstitution: Isoninstitution || false,
             Updateduser: username,
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
@@ -1447,7 +1434,6 @@ async function PatientsRemove(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
-            Isoninstitution: false,
             Isleft: true,
             Leftinfo: Leftinfo,
             BedID: null,
@@ -1598,7 +1584,6 @@ async function PatientsDead(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
-            Isoninstitution: false,
             Isalive: false,
             BedID: null,
             RoomID: null,
@@ -1721,7 +1706,6 @@ async function PatientsMakeactive(req, res, next) {
         await db.patientModel.update({
             ...patient,
             CaseID: CaseID,
-            Isoninstitution: true,
             Isalive: true,
             BedID: null,
             RoomID: null,
@@ -2911,7 +2895,6 @@ async function Createfromtemplate(req, res, next) {
                 Isapproved: true,
                 Ispreregistration: false,
                 Isalive: true,
-                Isoninstitution: true,
                 Isleft: false,
                 Leftinfo: null,
                 Deadinfo: null,
