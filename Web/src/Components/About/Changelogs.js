@@ -474,8 +474,37 @@ const version1_0_1_19 = {
     ],
 }
 
+const version1_0_1_20 = {
+    version: "1.0.1.20",
+    bugs: [
+
+        {
+            title: "Hakedişler", commits: [
+                "Hakediş hesaplama hatası giderildi",
+            ],
+        },
+
+    ],
+    changes: [
+        {
+            title: "Hastalar", commits: [
+                "Hasta kayıt işlemlerinde tamamlama yapılırken geçmiş tarihli giriş ayarı eklendi, geçmiş tarih eklendiğinde sistem otomatik düzeltecek",
+                "Hasta kayıt işlemlerindeki kurumda mı seçeneği kaldırıldı.",
+                "Hasta yatak seçiminde tasarım güncellemesi yapıldı",
+            ],
+        },
+        {
+            title: "Sistem", commits: [
+                "İşten ayrılmış kullanıcıların sisteme girişi engellendi",
+                "Uygulamadaki tüm fonskiyonlara ait roller eklendi",
+            ],
+        },
+    ],
+}
+
 export default
     [
+        version1_0_1_20,
         version1_0_1_19,
         version1_0_1_18,
         version1_0_1_17,
