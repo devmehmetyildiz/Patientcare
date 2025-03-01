@@ -1130,6 +1130,8 @@ async function CompletePatient(req, res, next) {
         CaseID,
         Completeinfo,
         isTransferstocks,
+        ispastdatemovement,
+        Occureddate,
         FloorID,
         RoomID,
         BedID
@@ -1137,6 +1139,11 @@ async function CompletePatient(req, res, next) {
 
     if (!Uuid) {
         validationErrors.push(req.t('Patients.Error.PatientIDRequired'))
+    }
+    if (ispastdatemovement === true) {
+        if (!validator.isISODate(Occureddate)) {
+            validationErrors.push(req.t('Patients.Error.PastOccureddateRequired'))
+        }
     }
     if (!validator.isUUID(Uuid)) {
         validationErrors.push(req.t('Patients.Error.UnsupportedPatientID'))
@@ -1242,18 +1249,53 @@ async function CompletePatient(req, res, next) {
             Updatetime: new Date(),
         }, { where: { Uuid: Uuid }, transaction: t })
 
-        await db.patientmovementModel.create({
-            Uuid: uuid(),
-            PatientID: Uuid,
-            Type: patientmovementtypes.Patientcomplete,
-            CaseID: CaseID,
-            UserID: req?.identity?.user?.Uuid || username,
-            Info: Completeinfo || '',
-            Occureddate: new Date(),
-            Createduser: username,
-            Createtime: new Date(),
-            Isactive: true
-        }, { transaction: t })
+        if (ispastdatemovement) {
+            const oldMovements = await db.patientmovementModel.findAll(
+                {
+                    where: { PatientID: Uuid, Isactive: true },
+                    order: [['Id', 'DESC']],
+                })
+            let index = 1
+            for (const movement of oldMovements) {
+
+                const newOccuredDate = new Date(Occureddate)
+
+                newOccuredDate.setMinutes(newOccuredDate.getMinutes() - index)
+
+                await db.patientmovementModel.update({
+                    Occureddate: newOccuredDate,
+                }, { where: { Uuid: movement?.Uuid ?? '' }, transaction: t })
+
+                index++
+            }
+
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                PatientID: Uuid,
+                Type: patientmovementtypes.Patientcomplete,
+                CaseID: CaseID,
+                UserID: req?.identity?.user?.Uuid || username,
+                Info: Completeinfo || '',
+                Occureddate: Occureddate,
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+
+        } else {
+            await db.patientmovementModel.create({
+                Uuid: uuid(),
+                PatientID: Uuid,
+                Type: patientmovementtypes.Patientcomplete,
+                CaseID: CaseID,
+                UserID: req?.identity?.user?.Uuid || username,
+                Info: Completeinfo || '',
+                Occureddate: new Date(),
+                Createduser: username,
+                Createtime: new Date(),
+                Isactive: true
+            }, { transaction: t })
+        }
 
         await t.commit();
 

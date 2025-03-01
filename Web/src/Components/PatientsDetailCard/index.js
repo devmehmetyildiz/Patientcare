@@ -14,6 +14,7 @@ import { Filepreview, Profilephoto } from '..'
 
 export default function PatientsDetailCard(props) {
 
+    const [open, setOpen] = useState(false)
     const [movementsOpen, setMovementsOpen] = useState(false)
     const {
         record,
@@ -173,66 +174,60 @@ export default function PatientsDetailCard(props) {
                         <Card.Header>
                         </Card.Header>
                     </Card.Content>
-                    <Card.Content>
-                        <Card.Description className='w-full flex flex-row justify-between items-top gap-2'>
-                            <div className='w-full'>
-                                <Card fluid>
-                                    <Card.Content>
-                                        <Card.Header>{t('Pages.Preregistrations.DetailCard.Label.Stocks')}</Card.Header>
-                                        <Card.Meta>{`${(stocks || []).length} ${t('Pages.Preregistrations.DetailCard.Label.Stocksprefix')}`}</Card.Meta>
-                                        <Card.Description>
-                                            {stocks.map(stock => {
-                                                const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
-                                                const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
-                                                return `${stock?.Amount || Notfound} ${unit?.Name || Notfound} ${stockdefine?.Name || Notfound}`
-                                            }).join(',')}
-                                        </Card.Description>
-                                    </Card.Content>
-                                </Card>
-                            </div>
-                            <div className='w-full'>
-                                <Card fluid>
-                                    <Card.Content>
-                                        <Card.Header>{t('Pages.Preregistrations.DetailCard.Label.Files')}</Card.Header>
-                                        <Card.Meta>{`${(files || []).length} ${t('Pages.Preregistrations.DetailCard.Label.Filesprefix')}`}</Card.Meta>
-                                        <Card.Description>
-                                            <div className='w-full gap-2 justify-start items-start flex flex-col'>
-                                                {files.map((file, index) => {
-                                                    return <div key={index} className='cursor-pointer flex flex-row'
-                                                        onClick={() => {
-                                                            if (!usecontext) {
-                                                                setSelectedfile(file?.Uuid)
-                                                            }
-                                                        }}
-                                                    >
-                                                        <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p>{!usecontext ? <Icon color='blue' name='download' /> : null}
+                    <Card fluid >
+                        <Card.Content onClick={() => { setOpen(prev => !prev) }} className='w-full flex flex-row justify-between items-center cursor-pointer'>
+                            <Card.Header className='whitespace-nowrap'>{t('Pages.Preregistrations.DetailCard.Label.StoksFiles')}</Card.Header>
+                            <Card.Header className='w-full flex justify-end items-end'>
+                                <div >
+                                    {open ? <Icon name='angle up' /> : <Icon name='angle down' />}
+                                </div>
+                            </Card.Header>
+                        </Card.Content>
+                        <Transition visible={open} animation='slide down' duration={500}>
+                            <Card.Content>
+                                <Card.Description className='w-full flex flex-row justify-between items-top gap-2'>
+                                    <div className='w-full'>
+                                        <Card fluid>
+                                            <Card.Content>
+                                                <Card.Header>{t('Pages.Preregistrations.DetailCard.Label.Stocks')}</Card.Header>
+                                                <Card.Meta>{`${(stocks || []).length} ${t('Pages.Preregistrations.DetailCard.Label.Stocksprefix')}`}</Card.Meta>
+                                                <Card.Description>
+                                                    {stocks.map(stock => {
+                                                        const stockdefine = (Stockdefines.list || []).find(u => u.Uuid === stock?.StockdefineID)
+                                                        const unit = (Units.list || []).find(u => u.Uuid === stockdefine?.UnitID)
+                                                        return `${stock?.Amount || Notfound} ${unit?.Name || Notfound} ${stockdefine?.Name || Notfound}`
+                                                    }).join(',')}
+                                                </Card.Description>
+                                            </Card.Content>
+                                        </Card>
+                                    </div>
+                                    <div className='w-full'>
+                                        <Card fluid>
+                                            <Card.Content>
+                                                <Card.Header>{t('Pages.Preregistrations.DetailCard.Label.Files')}</Card.Header>
+                                                <Card.Meta>{`${(files || []).length} ${t('Pages.Preregistrations.DetailCard.Label.Filesprefix')}`}</Card.Meta>
+                                                <Card.Description>
+                                                    <div className='w-full gap-2 justify-start items-start flex flex-col'>
+                                                        {files.map((file, index) => {
+                                                            return <div key={index} className='cursor-pointer flex flex-row'
+                                                                onClick={() => {
+                                                                    if (!usecontext) {
+                                                                        setSelectedfile(file?.Uuid)
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <p>{`${file?.Name || Notfound} (${file?.Usagetype || Notfound})`}</p>{!usecontext ? <Icon color='blue' name='download' /> : null}
+                                                            </div>
+                                                        })}
                                                     </div>
-                                                })}
-                                            </div>
-                                        </Card.Description>
-                                    </Card.Content>
-                                </Card>
-                            </div>
-                        </Card.Description>
-                    </Card.Content>
-                    <Card.Content className='w-full flex flex-row justify-between items-center'>
-                        <Card.Content className='flex flex-col justify-start items-start'>
-                            <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Approvaldate')} : ${Formatdate(Approvaldate, true) || Notfound}`}
-                            </Label>
-                            <Label basic ribbon>
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Happensdate')} : ${Formatdate(Happensdate, true) || Notfound}`}
-                            </Label>
-                        </Card.Content>
-                        <Card.Content className='w-full flex justify-end items-end flex-col'>
-                            <Label basic >
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Case')} : ${casedata?.Name || Notfound}`}
-                            </Label>
-                            <Label basic >
-                                {`${t('Pages.Preregistrations.DetailCard.Label.Department')} : ${department?.Name || Notfound}`}
-                            </Label>
-                        </Card.Content>
-                    </Card.Content>
+                                                </Card.Description>
+                                            </Card.Content>
+                                        </Card>
+                                    </div>
+                                </Card.Description>
+                            </Card.Content>
+                        </Transition>
+                    </Card>
                     <Card fluid >
                         <Card.Content onClick={() => { setMovementsOpen(prev => !prev) }} className='w-full flex flex-row justify-between items-center cursor-pointer'>
                             <Card.Header>{t('Pages.Preregistrations.DetailCard.Label.Movements')}</Card.Header>
@@ -263,6 +258,24 @@ export default function PatientsDetailCard(props) {
                             </Card.Content>
                         </Transition>
                     </Card>
+                    <Card.Content className='w-full flex flex-row justify-between items-center'>
+                        <Card.Content className='flex flex-col justify-start items-start'>
+                            <Label basic ribbon>
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Approvaldate')} : ${Formatdate(Approvaldate, true) || Notfound}`}
+                            </Label>
+                            <Label basic ribbon>
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Happensdate')} : ${Formatdate(Happensdate, true) || Notfound}`}
+                            </Label>
+                        </Card.Content>
+                        <Card.Content className='w-full flex justify-end items-end flex-col'>
+                            <Label basic >
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Case')} : ${casedata?.Name || Notfound}`}
+                            </Label>
+                            <Label basic >
+                                {`${t('Pages.Preregistrations.DetailCard.Label.Department')} : ${department?.Name || Notfound}`}
+                            </Label>
+                        </Card.Content>
+                    </Card.Content>
                 </Card>
             }
         </Modal.Content>

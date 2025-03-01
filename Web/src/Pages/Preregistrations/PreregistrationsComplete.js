@@ -60,6 +60,8 @@ export default function PreregistrationsComplete(props) {
   const [selectedapprovaldate, setSelectedapprovaldate] = useState(Formatdate(Approvaldate))
   const [selectedinfo, setSelectedinfo] = useState(null)
   const [selectedbed, setSelectedbed] = useState(null)
+  const [selectedOccureddate, setSelectedOccureddate] = useState(null)
+  const [ispastdatemovement, setIspastdatemovement] = useState(false)
 
   const t = Profile?.i18n?.t || null
 
@@ -80,26 +82,7 @@ export default function PreregistrationsComplete(props) {
     Rooms.isLoading ||
     Beds.isLoading
 
-  useEffect(() => {
-    if (open && !Users.isLoading) {
-      GetPatientdefines()
-      GetStocks()
-      GetStockdefines()
-      GetUnits()
-      GetCases()
-      GetDepartments()
-      GetStocktypes()
-      GetStocktypegroups()
-      GetUsers()
-      GetUsagetypes()
-      GetFiles()
-      GetCostumertypes()
-      GetPatienttypes()
-      GetFloors()
-      GetRooms()
-      GetBeds()
-    }
-  }, [open])
+
 
 
   const Notfound = t('Common.NoDataFound')
@@ -141,19 +124,39 @@ export default function PreregistrationsComplete(props) {
   const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
   const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
 
+  const onClose = (isOpened) => {
+    setOpen(isOpened ?? false)
+    setSelectedcase(null)
+    setSelectedinfo(null)
+    setIspastdatemovement(false)
+    setSelectedOccureddate(null)
+  }
+
+  useEffect(() => {
+    if (open && !Users.isLoading) {
+      GetPatientdefines()
+      GetStocks()
+      GetStockdefines()
+      GetUnits()
+      GetCases()
+      GetDepartments()
+      GetStocktypes()
+      GetStocktypegroups()
+      GetUsers()
+      GetUsagetypes()
+      GetFiles()
+      GetCostumertypes()
+      GetPatienttypes()
+      GetFloors()
+      GetRooms()
+      GetBeds()
+    }
+  }, [open])
 
   return (
     <Modal
-      onClose={() => {
-        setOpen(false)
-        setSelectedcase(null)
-        setSelectedinfo(null)
-      }}
-      onOpen={() => {
-        setSelectedcase(null)
-        setSelectedinfo(null)
-        setOpen(true)
-      }}
+      onClose={() => onClose()}
+      onOpen={() => onClose(true)}
       open={open}
     >
       <Modal.Header>{t('Pages.Preregistrations.Complete.Page.ModalHeader')}</Modal.Header>
@@ -243,17 +246,35 @@ export default function PreregistrationsComplete(props) {
                   />
                 </Form.Field>
               </Form.Group>
+              <Form.Group widths={'equal'}>
+                <Form.Field>
+                  <Checkbox
+                    toggle
+                    className='m-2'
+                    id={'ispastdatemovement'}
+                    checked={ispastdatemovement}
+                    onClick={(e) => {
+                      setIspastdatemovement(e.target.checked ? true : false)
+                    }}
+                    label={t('Pages.Preregistrations.Complete.Label.PreviousDateSet')} />
+                </Form.Field>
+                {ispastdatemovement ?
+                  <Form.Input
+                    label={t('Pages.Preregistrations.Complete.Label.Occureddate')}
+                    value={selectedOccureddate || ''}
+                    type='datetime-local'
+                    defaultValue={new Date()}
+                    onChange={(e) => { setSelectedOccureddate(e.target.value) }}
+                    fluid
+                  />
+                  : null}
+              </Form.Group>
             </Form>
           </Contentwrapper>
           : null}
       </Modal.Content>
       <Modal.Actions>
-        <Button color='black' onClick={() => {
-          setOpen(false)
-          setSelectedcase(null)
-          setSelectedinfo(null)
-          setRecord(null)
-        }}>
+        <Button color='black' onClick={() => onClose()}>
           {t('Common.Button.Goback')}
         </Button>
         <Button
@@ -264,6 +285,11 @@ export default function PreregistrationsComplete(props) {
           className=' !bg-[#2355a0] !text-white'
           onClick={() => {
             let errors = []
+            if (ispastdatemovement) {
+              if (!validator.isISODate(selectedOccureddate)) {
+                errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.OccureddateRequired') })
+              }
+            }
             if (!validator.isUUID(selectedcase)) {
               errors.push({ type: 'Error', code: t('Pages.Preregistrations.Complete.Page.ModalHeader'), description: t('Pages.Preregistrations.Complete.Messages.CaseRequired') })
             }
@@ -294,16 +320,15 @@ export default function PreregistrationsComplete(props) {
                   Uuid,
                   Completeinfo: selectedinfo,
                   CaseID: selectedcase,
+                  ispastdatemovement: ispastdatemovement,
+                  Occureddate: selectedOccureddate,
                   Approvaldate: selectedapprovaldate,
                   FloorID: floor?.Uuid,
                   RoomID: room?.Uuid,
                   BedID: bed?.Uuid,
                   isTransferstocks: false
                 },
-                onSuccess: () => {
-                  setOpen(false)
-                  setRecord(null)
-                }
+                onSuccess: () => onClose()
               })
             }
           }}

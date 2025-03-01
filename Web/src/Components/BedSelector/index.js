@@ -31,12 +31,12 @@ function BedSelector({
             <div key={Math.random()} className='
                 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8   overflow-y-auto max-h-[60vh]
                 '>
-                {list.map((option, index) => {
+                {list.sort((a, b) => a.index - b.index).map((option) => {
 
                     const patient = (Patients?.list || []).find(u => u.BedID === option?.BedID)
                     const patientdefine = (Patientdefines?.list || []).find(u => u.Uuid === patient?.PatientdefineID)
                     return <div
-                        key={index}
+                        key={option?.index}
                         className={`!cursor-pointer !hover:shadow-lg`}
                         onClick={() => {
                             if (
@@ -54,39 +54,27 @@ function BedSelector({
 
                         }}
                     >
-                        <Segment className='!p-1'>
-                            <div className='mb-1 flex flex-row justify-between items-start max-w-[150px]'>
-                                <Icon name='bed' />
-                                {option?.Isoccupied
-                                    ? <Popup
-                                        on={'hover'}
-                                        content={`${patientdefine?.Firstname} ${patientdefine?.Lastname}  - ${patientdefine?.CountryID}`}
-                                        trigger={<div className=' overflow-hidden whitespace-nowrap text-ellipsis'>{`${patientdefine?.Firstname} ${patientdefine?.Lastname} - ${patientdefine?.CountryID}`}</div>}
-                                    />
-                                    : null
-                                }
-                            </div>
-                            <Label
-                                size='large'
-                                color={option?.BedID === record ? 'blue' : option?.Isoccupied ? 'red' : 'green'}
-                                className='!flex !flex-col !justify-start !items-start'
+                        <div className='p-2'>
+                            <Card
+                                className={option?.BedID === record ? '!bg-[blue]' : option?.Isoccupied ? '!bg-[red]' : '!bg-[green] '}
                             >
-                                {option?.Bedname}
-                                <Label.Detail className='!ml-0'>
-                                    {option?.Floorname}
-                                </Label.Detail>
-                                <Label.Detail className='!ml-0'>
-                                    {option?.Roomname}
-                                </Label.Detail>
-                            </Label>
-                        </Segment>
+                                <Card.Content className='!p-2' header={`${option?.Floorname} ${option?.Roomname} ${option?.Bedname}`} />
+                                <Card.Content className='!p-2' description={option?.Isoccupied ? t('Components.BedSelector.Messages.Filled') : t('Components.BedSelector.Messages.Empty')} />
+                                <Card.Content className='!p-2 flex flex-row justify-start items-start'>
+                                    <Icon name='user' />
+                                    <div className='whitespace-nowrap overflow-hidden overflow-ellipsis'>
+                                        {option?.Isoccupied ? `${patientdefine?.Firstname} ${patientdefine?.Lastname}  - ${patientdefine?.CountryID}` : ''}
+                                    </div>
+                                </Card.Content>
+                            </Card>
+                        </div>
                     </div>
                 })}
             </div>
             : null
     }
 
-    const Bedsoption = (Beds.list || []).map(bed => {
+    const Bedsoption = (Beds.list || []).map((bed, index) => {
         const room = (Rooms.list || []).find(u => u.Uuid === bed?.RoomID)
         const floor = (Floors.list || []).find(u => u.Uuid === room?.FloorID)
         const Isoccupied = bed?.Isoccupied
@@ -99,7 +87,8 @@ function BedSelector({
             RoomID: room?.Uuid,
             FloorID: floor?.Uuid,
             Isoccupied: Isoccupied,
-            Gender: floor?.Gender
+            Gender: floor?.Gender,
+            index: index
         }
     })
 
@@ -168,7 +157,7 @@ function BedSelector({
                                 </Label>}
                             />
                         </div>
-                        <Tab panes={panes} renderActiveOnly={false} />
+                        <Tab menu={{ fluid: true, vertical: true, tabular: true }} panes={panes} renderActiveOnly={false} />
                     </div>
                 </Modal.Content>
                 <Modal.Actions>

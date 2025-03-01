@@ -65,6 +65,7 @@
     "Patients.Error.PatienteventmovementNotActive": "Hasta Vaka Hareketi Aktif Değil",
     "Patients.Error.PatientIDRequired": "Hasta ID'si Gerekli",
     "Patients.Error.UnsupportedPatientID": "Tanımsız Hasta ID Değeri",
+    "Patients.Error.PastOccureddateRequired": "Geçmiş Tarihli Hareketlerde Gerçeklşme Tarihi Gerekli",
     "Patients.Error.PatientmovementIDRequired": "Hasta Hareket ID'si Gerekli",
     "Patients.Error.UnsupportedPatientmovementID": "Tanımsız Hasta Hareket ID Değeri",
     "Patients.Error.PatienteventmovementIDRequired": "Hasta Vaka Hareket ID'si Gerekli",
