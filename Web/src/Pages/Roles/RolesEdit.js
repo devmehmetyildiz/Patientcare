@@ -64,7 +64,7 @@ export default class RolesEdit extends Component {
                         </Headerbredcrump>
                     </Headerwrapper>
                     <Pagedivider />
-                    <Contentwrapper>
+                   <Contentwrapper additionalStyle={" max-h-[70vh] overflow-y-auto"}>
                         <Form>
                             <div className='w-full'>
                                 <Button className='!bg-[#2355a0] !text-white !cursor-pointer' floated='right' onClick={this.handleAddall} >{t('Pages.Roles.Column.AddAll')}</Button>
