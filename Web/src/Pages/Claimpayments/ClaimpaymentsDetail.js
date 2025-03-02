@@ -9,7 +9,7 @@ import {
     Submitbutton
 } from '../../Components'
 import Formatdate from '../../Utils/Formatdate'
-import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, ROUTES } from '../../Utils/Constants'
+import { CLAIMPAYMENT_TYPE_BHKS, CLAIMPAYMENT_TYPE_KYS, CLAIMPAYMENT_TYPE_PATIENT, ROUTES } from '../../Utils/Constants'
 import usePreviousUrl from '../../Hooks/usePreviousUrl'
 import config from '../../Config'
 import AxiosErrorHelper from '../../Utils/AxiosErrorHelper'
@@ -64,6 +64,22 @@ export default function ClaimpaymentsDetail(props) {
         }
 
         return `${categories[Profile.Language][date.getMonth()]} - ${date.getFullYear()}`
+    }
+
+    const excelTitle = (claimpaymentType, reportDate) => {
+
+        const date = getReportDate(reportDate)
+
+        switch (claimpaymentType) {
+            case CLAIMPAYMENT_TYPE_PATIENT:
+                return `${date} HAKEDİŞ FATURA DÖKÜMÜ`
+            case CLAIMPAYMENT_TYPE_BHKS:
+                return `${date} BAKIM HİZMETLERİ KALİTE STANDARTLARI TEŞVİK ÖDEMESİ YAPILACAK ENGELLİ FATURA DÖKÜMÜ`
+            case CLAIMPAYMENT_TYPE_KYS:
+                return `${date} TSE KYS TEŞVİK ÖDEMESİ YAPILACAK FATURA DÖKÜMÜ`
+            default:
+                return `${date} HAKEDİŞ FATURA DÖKÜMÜ`
+        }
     }
 
     const handleSubmit = (e) => {
@@ -285,6 +301,7 @@ export default function ClaimpaymentsDetail(props) {
                     open={excelOpen}
                     setOpen={setExcelOpen}
                     ClaimpaymentID={claimpaymentID}
+                    title={excelTitle(Type, Reportdate)}
                 />
             </Pagewrapper >
     )

@@ -8,7 +8,7 @@ const uuid = require('uuid').v4
 const { claimpaymenttypes } = require('../Constants/Claimpaymenttypes')
 const DoGet = require("../Utilities/DoGet")
 const config = require("../Config")
-const ExcelJS = require("exceljs");
+
 
 async function GetClaimpayments(req, res, next) {
     try {
@@ -44,114 +44,6 @@ async function GetClaimpayment(req, res, next) {
     }
 }
 
-async function GetClaimpaymentReport(req, res, next) {
-
-    let validationErrors = []
-    if (!req.params.claimpaymentId) {
-        validationErrors.push(req.t('Claimpayments.Error.ClaimpaymentIDRequired'))
-    }
-    if (!validator.isUUID(req.params.claimpaymentId)) {
-        validationErrors.push(req.t('Claimpayments.Error.UnsupportedClaimpaymentID'))
-    }
-    if (validationErrors.length > 0) {
-        return next(createValidationError(validationErrors, req.language))
-    }
-
-    try {
-        const claimpayment = await db.claimpaymentModel.findOne({ where: { Uuid: req.params.claimpaymentId } });
-        const details = await db.claimpaymentdetailModel.findAll({ where: { ParentID: claimpayment?.Uuid, Isactive: true } })
-
-        const patients = await db.patientModel.findAll()
-        const patientdefines = await db.patientdefineModel.findAll()
-
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Rapor");
-
-        worksheet.mergeCells("A1:H1");
-        worksheet.getCell("A1").value = config.session.organization;
-        worksheet.getCell("A1").font = { bold: true, size: 11, };
-        worksheet.getCell("A1").alignment = { horizontal: "center", vertical: "middle" };
-
-        worksheet.mergeCells("A2:H2");
-        worksheet.getCell("A2").value = "2025 YILI OCAK  AYI  HAKEDİŞ FATURA DÖKÜMÜ";
-        worksheet.getCell("A2").font = { bold: true, size: 11, };
-        worksheet.getCell("A2").alignment = { horizontal: "center", vertical: "middle" };
-
-        worksheet.getRow(1).height = 40;
-        worksheet.getRow(2).height = 40;
-
-        const headers = [
-            "S.NO", "ENGELLİNİN ADI SOYADI", "HİZMET VERİLEN GÜN", "GÜNLÜK ÜCRET TUTARI",
-            "Aylık Memmur Maaş katsayısı", "KDV %10", "FATURA TUTARI (TL)", "KDV TEVKİFATI (5/10 Oranında)"
-        ];
-
-        worksheet.addRow(headers);
-        worksheet.getRow(3).font = { bold: true };
-        worksheet.getRow(3).alignment = { horizontal: "center", vertical: "middle" };
-
-        worksheet.getRow(3).eachCell((cell) => {
-            cell.border = {
-                top: { style: "thin" },
-                left: { style: "thin" },
-                bottom: { style: "thin" },
-                right: { style: "thin" }
-            };
-        });
-
-        let data = [];
-        details.forEach((detailItem, index) => {
-            const patient = patients.find(u => u.Uuid === detailItem?.PatientID);
-            const patientdefine = patientdefines.find(u => u.Uuid === patient?.PatientdefineID);
-
-            data.push([
-                index + 1,
-                `${patientdefine?.Firstname} ${patientdefine?.Lastname}`,
-                Number(detailItem?.Daycount ?? 0),
-                Number(detailItem?.Unitpayment ?? 0),
-                Number(detailItem?.Calculatedpayment ?? 0),
-                Number(detailItem?.Calculatedkdv ?? 0),
-                Number(detailItem?.Calculatedfinal ?? 0),
-                Number(detailItem?.Calculatedwithholding ?? 0)
-            ]);
-        });
-
-        worksheet.addRows(data);
-
-        const startDate = new Date(claimpayment?.Reportdate)
-        startDate.setMonth(startDate.getMonth() + 1)
-        startDate.setDate(0)
-        const endDate = startDate.getDate()
-        for (let rowIndex = 3; rowIndex <= data.length + 3; rowIndex++) {
-            worksheet.getRow(rowIndex).eachCell((cell, colNumber) => {
-                cell.border = {
-                    top: { style: "thin" },
-                    left: { style: "thin" },
-                    bottom: { style: "thin" },
-                    right: { style: "thin" }
-                };
-
-                if (colNumber === 3) {
-                    const dayCountValue = cell.value;
-                    if (dayCountValue !== endDate) {
-                        cell.font = { bold: true };
-                    }
-                }
-            });
-        }
-
-        const buffer = await workbook.xlsx.writeBuffer()
-        res.setHeader("Content-Length", buffer.length);
-
-        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        res.setHeader("Content-Disposition", "attachment; filename=styled_export.xlsx");
-
-        await workbook.xlsx.write(res);
-        res.end();
-
-    } catch (error) {
-        return next(sequelizeErrorCatcher(error))
-    }
-}
 
 async function AddClaimpayment(req, res, next) {
 
@@ -665,47 +557,37 @@ async function CreateClaimpaymentByBhks({ Reportdate, req, next, }) {
         return next(createValidationError(req.t('Claimpayments.Error.NoPatientFound'), req.t('Claimpayments'), req.language))
     }
 
+    const dayArray = generateDateArray(startOfMonth, endtOfMonth)
+
     for (const patient of patients) {
 
         let daycount = 0
 
-        const occuredMovementsAfterDayStart = await db.patientmovementModel.findAll({
-            where: {
-                PatientID: patient?.Uuid || '',
-                Isactive: true,
-                Occureddate: {
-                    [Sequelize.Op.gte]: startOfMonth.getTime(),
-                }
+        for (const day of dayArray) {
+
+            if (daycount > 0) {
+                break;
             }
-        })
+            const dayCheck = new Date(day)
+            dayCheck.setHours(0, 0, 0, 0)
+            dayCheck.setDate(dayCheck.getDate() + 1)
 
-        if ((occuredMovementsAfterDayStart || []).length > 0) {
-            const isOccuredMovementsHasClaim = (occuredMovementsAfterDayStart || []).filter(movement => {
-                const movementcase = cases.find(u => u.Uuid === movement?.CaseID)
-                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                return isCalculateclaimpayment
-            })
-
-            if (isOccuredMovementsHasClaim.length > 0) {
-                daycount += 1
-            }
-        } else {
-
-            const occuredMovementBeforeDayStart = await db.patientmovementModel.findOne({
+            const occuredMovement = await db.patientmovementModel.findOne({
                 where: {
                     PatientID: patient?.Uuid || '',
                     Isactive: true,
                     Occureddate: {
-                        [Sequelize.Op.lt]: startOfMonth.getTime(),
-                    },
+                        [Sequelize.Op.lt]: dayCheck,
+                    }
                 },
                 order: [['Occureddate', 'DESC']],
-            });
+            })
 
-            if (occuredMovementBeforeDayStart) {
-                const movementcase = cases.find(u => u.Uuid === occuredMovementBeforeDayStart?.CaseID)
-                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                if (isCalculateclaimpayment) {
+            if (!!occuredMovement) {
+                const occuredMovementCase = cases.find(u => u.Uuid === occuredMovement?.CaseID)
+                const isMovementHasClaim = occuredMovementCase?.Iscalculateprice || false
+
+                if (isMovementHasClaim) {
                     daycount += 1
                 }
             }
@@ -746,6 +628,7 @@ async function CreateClaimpaymentByBhks({ Reportdate, req, next, }) {
             })
         }
     }
+
 
     return {
         details,
@@ -821,52 +704,45 @@ async function CreateClaimpaymentByKys({ Reportdate, req, next, }) {
     if ((patients || []).length <= 0) {
         return next(createValidationError(req.t('Claimpayments.Error.NoPatientFound'), req.t('Claimpayments'), req.language))
     }
+
+    const dayArray = generateDateArray(startOfMonth, endtOfMonth)
+
     for (const patient of patients) {
+
         let daycount = 0
 
-        const occuredMovementsAfterDayStart = await db.patientmovementModel.findAll({
-            where: {
-                PatientID: patient?.Uuid || '',
-                Isactive: true,
-                Occureddate: {
-                    [Sequelize.Op.gte]: startOfMonth.getTime(),
-                }
+        for (const day of dayArray) {
+
+            if (daycount > 0) {
+                break;
             }
-        })
+            const dayCheck = new Date(day)
+            dayCheck.setHours(0, 0, 0, 0)
+            dayCheck.setDate(dayCheck.getDate() + 1)
 
-        if ((occuredMovementsAfterDayStart || []).length > 0) {
-            const isOccuredMovementsHasClaim = (occuredMovementsAfterDayStart || []).filter(movement => {
-                const movementcase = cases.find(u => u.Uuid === movement?.CaseID)
-                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                return isCalculateclaimpayment
-            })
-
-            if (isOccuredMovementsHasClaim.length > 0) {
-                daycount += 1
-            }
-        } else {
-
-            const occuredMovementBeforeDayStart = await db.patientmovementModel.findOne({
+            const occuredMovement = await db.patientmovementModel.findOne({
                 where: {
                     PatientID: patient?.Uuid || '',
                     Isactive: true,
                     Occureddate: {
-                        [Sequelize.Op.lt]: startOfMonth.getTime(),
-                    },
+                        [Sequelize.Op.lt]: dayCheck,
+                    }
                 },
                 order: [['Occureddate', 'DESC']],
-            });
+            })
 
-            if (occuredMovementBeforeDayStart) {
-                const movementcase = cases.find(u => u.Uuid === occuredMovementBeforeDayStart?.CaseID)
-                const isCalculateclaimpayment = movementcase?.Iscalculateprice || false
-                if (isCalculateclaimpayment) {
+            if (!!occuredMovement) {
+                const occuredMovementCase = cases.find(u => u.Uuid === occuredMovement?.CaseID)
+                const isMovementHasClaim = occuredMovementCase?.Iscalculateprice || false
+
+                if (isMovementHasClaim) {
                     daycount += 1
                 }
             }
         }
 
         if (daycount > 0) {
+
             const roundToFour = (num) => Math.round((num + Number.EPSILON) * 10000) / 10000;
 
             const perpayment = claimpaymentparameter?.Patientclaimpaymentperpayment || 0
@@ -899,7 +775,6 @@ async function CreateClaimpaymentByKys({ Reportdate, req, next, }) {
                 Calculatedwithholding: calculatedwithholding
             })
         }
-
     }
 
     return {
@@ -937,6 +812,5 @@ module.exports = {
     AddClaimpayment,
     ApproveClaimpayment,
     DeleteClaimpayment,
-    GetClaimpaymentReport,
     SavepreviewClaimpayment
 }

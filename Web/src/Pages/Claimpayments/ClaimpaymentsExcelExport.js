@@ -9,7 +9,7 @@ import Bytetosize from '../../Utils/Bytetosize'
 
 export default function ClaimpaymentsExcelExport(props) {
 
-    const { open, setOpen, ClaimpaymentID, fillClaimpaymentnotification, Claimpayments, Profile } = props
+    const { open, setOpen, ClaimpaymentID, fillClaimpaymentnotification, Profile, title } = props
 
     const t = Profile?.i18n?.t
 
@@ -17,7 +17,6 @@ export default function ClaimpaymentsExcelExport(props) {
     const [downloadProgress, setDownloadProgress] = useState(0)
     const [totalSize, setTotalSize] = useState(0)
     const [file, setFile] = useState(null)
-
 
     const getExcelReport = (paymentId) => {
         setOnDownloading(true)
@@ -42,8 +41,7 @@ export default function ClaimpaymentsExcelExport(props) {
             const blob = new Blob([res.data], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             });
-            const file = new File([blob], "ClaimPaymentReport.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
-            console.log('file: ', file);
+            const file = new File([blob], `${title ?? "Report"}.xlsx`, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
             setFile(file)
 
         }).catch((err) => {
@@ -72,7 +70,7 @@ export default function ClaimpaymentsExcelExport(props) {
         const url = window.URL.createObjectURL(file);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "ClaimPaymentReport.xlsx";
+        a.download = `${title ?? "Report"}.xlsx`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -114,7 +112,7 @@ export default function ClaimpaymentsExcelExport(props) {
                     </div> :
                         <div className='cursor-pointer' onClick={() => downloadFile()}>
                             <Label color='blue' size='large' >
-                                {` Hakediş Dosyası ${validator.isNumber(totalSize) && totalSize > 0 ? `  (${Bytetosize(totalSize)}) ` : ''}`}
+                                {` ${title ?? 'Report'} ${validator.isNumber(totalSize) && totalSize > 0 ? `  (${Bytetosize(totalSize)}) ` : ''}`}
                                 <Label.Detail>
                                     <Icon name='download' />
                                 </Label.Detail>
